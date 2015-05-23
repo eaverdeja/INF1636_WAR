@@ -27,14 +27,14 @@ public class MainFrame extends JFrame{
         MapPanel Map = new MapPanel();
         
         defineTerritories();
-        mapCountries(Map);
+        mapTerritories(Map);
         
         //Add map to pane
         getContentPane().add(Map);
         
     }
     
-    private void mapCountries(MapPanel Map){
+    private void mapTerritories(MapPanel Map){
         for(Territory t : paises){
 
             //Listen for click
