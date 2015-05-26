@@ -1,17 +1,25 @@
+package view;
+
+import com.sun.glass.ui.Size;
+import controller.MapPanel;
+import model.Territory;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.*;
 import java.util.List;
+import java.util.Map;
 
 public class MainFrame extends JFrame{
     public final int DEF_WIDTH = 1000;
     public final int DEF_HEIGHT = 1000;
     
     private BufferedImage image;
-    private List<Territory> paises;
+    private List<Territory> countries;
     
     public MainFrame(){
         setSize(DEF_WIDTH,DEF_HEIGHT);
@@ -35,7 +43,7 @@ public class MainFrame extends JFrame{
     }
     
     private void mapTerritories(MapPanel Map){
-        for(Territory t : paises){
+        for(Territory t : countries){
 
             //Listen for click
             Map.addMouseListener(new MouseAdapter() {
@@ -47,14 +55,10 @@ public class MainFrame extends JFrame{
                     //DEBUG
                     System.out.println(e.getPoint());
 
-                    for(Point p : t.getBorders()){
-                        //Longitude?
-                        if(Xcoord - p.x > 0 && Xcoord - p.x < 40){
-                            //Latitude?
-                            if(Ycoord - p.y > 0 && Ycoord - p.y < 40){
-                                System.out.println("Brasil");
-                            }
-                        }   
+                    for(Rectangle r : t.getBorders()){
+                        if(r.contains(Xcoord,Ycoord)){
+                            System.out.println(t.getName());
+                        }
                     }
                 }
             });
@@ -62,17 +66,21 @@ public class MainFrame extends JFrame{
     }
     
     public void defineTerritories(){
-        paises = new ArrayList<>();
+        countries = new ArrayList<>();
         
-        //Brasil
-        Territory Brasil = new Territory("Brasil");
+        
+        //START Coreia do Sul
+        Territory CoreiaSul = new Territory("Coreia do sul");
 
         //Defining borders
-        List<Point> borders = new ArrayList<>();
-        borders.add(new Point(225,330));
-        borders.add(new Point(270,375));
-        Brasil.setCoordinates(borders);
+        List<Rectangle> borders = new ArrayList<>();
+        Rectangle r1 = new Rectangle(80,20);
+        r1.setLocation(775,270);
+        borders.add(r1);
         
-        paises.add(Brasil);
+        CoreiaSul.setBorders(borders);
+        
+        countries.add(CoreiaSul);
+        //END Coreia do Sul
     }
 }
