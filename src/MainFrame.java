@@ -1,86 +1,57 @@
 package view;
 
-import com.sun.glass.ui.Size;
-import controller.MapPanel;
-import model.Territory;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+
+import controller.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Label;
+
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
 import javax.swing.*;
-import java.util.List;
-import java.util.Map;
 
 public class MainFrame extends JFrame{
     public final int DEF_WIDTH = 1000;
     public final int DEF_HEIGHT = 1000;
     
+    private Mapa mapPanel;
+    private JLabel label;
+    private JTextField textField;
     private BufferedImage image;
-    private List<Territory> countries;
     
     public MainFrame(){
         setSize(DEF_WIDTH,DEF_HEIGHT);
         setLocation(100,100);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
         createMap();
-    }
+        createLabel();
+     }
     
     private void createMap(){
         
         //Load map
-        MapPanel Map = new MapPanel();
-        
-        defineTerritories();
-        mapTerritories(Map);
-        
+        mapPanel = new Mapa();
+       
         //Add map to pane
-        getContentPane().add(Map);
+        getContentPane().add(mapPanel);
         
     }
     
-    private void mapTerritories(MapPanel Map){
-        for(Territory t : countries){
-
-            //Listen for click
-            Map.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e){
-                    float Xcoord = e.getPoint().x;
-                    float Ycoord = e.getPoint().y;
-
-                    //DEBUG
-                    System.out.println(e.getPoint());
-
-                    for(Rectangle r : t.getBorders()){
-                        if(r.contains(Xcoord,Ycoord)){
-                            System.out.println(t.getName());
-                        }
-                    }
-                }
-            });
-        }
+    private void createLabel(){
+        label = new JLabel("Digite o numero de jogadores! (3-6)",JLabel.CENTER);
+        label.setPreferredSize(new Dimension(400, 100));
+        label.setLocation(0, 0);
+        label.setBackground(Color.WHITE);
+        label.setOpaque(true);
+        label.setLabelFor(textField);
+        mapPanel.add(label, BorderLayout.CENTER);
     }
     
-    public void defineTerritories(){
-        countries = new ArrayList<>();
-        
-        
-        //START Coreia do Sul
-        Territory CoreiaSul = new Territory("Coreia do sul");
-
-        //Defining borders
-        List<Rectangle> borders = new ArrayList<>();
-        Rectangle r1 = new Rectangle(80,20);
-        r1.setLocation(775,270);
-        borders.add(r1);
-        
-        CoreiaSul.setBorders(borders);
-        
-        countries.add(CoreiaSul);
-        //END Coreia do Sul
+    private void createTextField(){
+        // No momento um text field é criado fora de lugar se adicionar essa função ao init
+        textField = new JTextField();
+        textField.setPreferredSize(new Dimension(100,80));
+        mapPanel.add(textField, BorderLayout.CENTER);
     }
 }
