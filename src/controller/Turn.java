@@ -5,6 +5,7 @@
  */
 package controller;
 
+import model.Player;
 import java.util.Random;
 
 /**

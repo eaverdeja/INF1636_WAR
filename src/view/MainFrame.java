@@ -1,6 +1,5 @@
 package view;
 
-
 import controller.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,13 +15,10 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 
 public class MainFrame extends JFrame{
-    public final int DEF_WIDTH = 1000;
-    public final int DEF_HEIGHT = 1000;
+    public final int DEF_WIDTH = 960;
+    public final int DEF_HEIGHT = 760;
     
     private Mapa mapPanel;
-    private JLabel label;
-    private JTextField textField;
-    private JPanel box;
     private BufferedImage image;
     private JButton rollButton;
     private JPanel dicesPanel;
@@ -30,25 +26,20 @@ public class MainFrame extends JFrame{
     private JLabel diceTwo;
     private JLabel diceThree;
     private Turn turnController;
+    private final int players;
+    private JPanel box;
     
-    public MainFrame(){
+    public MainFrame(int players){
         setSize(DEF_WIDTH,DEF_HEIGHT);
-        setLocation(100,100);
+        setLocation(0,0);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        
+        this.players = players;
         createMap();
-        createBox();
-        createLabel();
-        createTextField();
-     }
-    
-    private void createMap(){
         
-        //Load map
-        mapPanel = new Mapa();
-        mapPanel.setLayout(new BorderLayout());
-        //Add map to pane
-        getContentPane().add(mapPanel);
-        
+        //createRollButton();
+        //createDices();
+        //turnController = new Turn(players);
     }
     
     private void createBox(){
@@ -62,41 +53,13 @@ public class MainFrame extends JFrame{
         mapPanel.add(box, BorderLayout.PAGE_END);
     }
     
-    private void createLabel(){
-        label = new JLabel("Digite o numero de jogadores! (3-6)",JLabel.CENTER);
-        label.setPreferredSize(new Dimension(200, 100));
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        label.setBackground(Color.WHITE);
-        label.setOpaque(true);
-        box.add(label, BorderLayout.CENTER);
-    }
-    
-    private void createTextField(){
+    private void createMap(){
         
-        
-        textField = new JTextField();
-        textField.setPreferredSize(new Dimension(100,80));
-        textField.addActionListener((ActionEvent e) -> {
-        try {
-            int input = Integer.parseInt(textField.getText());
-            if (input >= 3 && input <= 6) {
-                System.out.println("Ok");
-                textField.setVisible(false);
-                label.setVisible(false);
-                createRollButton();
-                createDices();
-                turnController = new Turn(input);
-            } else {
-                System.out.println("Entre 3 e 6");
-             
-            }
-            }
-            catch (NumberFormatException ne) {
-            System.out.println("NaN");   
-            }
-            
-        });
-        box.add(textField);
+        //Load map
+        mapPanel = new Mapa();
+        mapPanel.setLayout(new BorderLayout());
+        //Add map to pane
+        getContentPane().add(mapPanel);
     }
     
     private void createRollButton(){
@@ -129,4 +92,5 @@ public class MainFrame extends JFrame{
         
         box.repaint();
     }
+    
 }

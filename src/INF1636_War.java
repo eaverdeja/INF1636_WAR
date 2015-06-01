@@ -1,12 +1,12 @@
 
-import view.MainFrame;
+import view.WelcomeFrame;
 
 public class INF1636_War {
 
     public static void main(String[] args) {
-        MainFrame mf = new MainFrame();
-        mf.setTitle("War!");
-        mf.setVisible(true);
+        WelcomeFrame wf = new WelcomeFrame();
+        wf.setTitle("Welcome!");
+        wf.setVisible(true);
     }
     
 }
