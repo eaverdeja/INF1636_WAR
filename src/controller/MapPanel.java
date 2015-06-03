@@ -117,6 +117,14 @@ public class MapPanel extends JPanel {
         paintPlayers(g);
     }
     
+    public void defineTerritories(){
+        for(Territorio t : lstTerritorios){
+            //Transforming path and offsetting borders
+            t.getPoligono().transform(AffineTransform.getScaleInstance(0.94,0.94));
+            t.getPoligono().transform(AffineTransform.getTranslateInstance(3, 3));
+        }
+    }
+    
     private void paintTerritories(Graphics g){
         //Draw the different territories
         Graphics2D g2 = (Graphics2D)g;
@@ -125,11 +133,7 @@ public class MapPanel extends JPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
         
         for(Territorio t : lstTerritorios){
-            
-            //Transforming path and offsetting borders
-            t.getPoligono().transform(AffineTransform.getScaleInstance(0.94,0.94));
-            t.getPoligono().transform(AffineTransform.getTranslateInstance(3, 3));
-            
+           
             //Filling
             switch(t.getContinente()){
                 case("AN"): g2.setColor(new Color(238,64,54)); break;
@@ -148,13 +152,13 @@ public class MapPanel extends JPanel {
         }
     }
     
-    public void paintPlayers(Graphics g){
+    private void paintPlayers(Graphics g){
         Graphics2D g2 = (Graphics2D)g;
         
         int xCoord = 20;
         int diameter = 50;
         float alpha;
-        Player currentPlayer = Turn.getCurrentPlayer();
+        Player currentPlayer = Turn.getInstance().getCurrentPlayer();
         
         for(Color c : playerColors){
            

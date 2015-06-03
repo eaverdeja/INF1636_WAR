@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
 
 import java.awt.image.BufferedImage;
 import javax.swing.*;
@@ -33,7 +34,8 @@ public class MainFrame extends JFrame{
         
         //Define number of players and turn scheme
         this.players = players;
-        turnController = new Turn(players);
+        turnController = Turn.getInstance();
+        turnController.createAndRadomizePlayers(players);
         
         //Create map
         createMap();
@@ -60,6 +62,9 @@ public class MainFrame extends JFrame{
         //Load map
         mapPanel = new MapPanel(turnController.getPlayers());
         mapPanel.setLayout(new BorderLayout());
+        
+        //Define territories
+        mapPanel.defineTerritories();
         
         //Add map to pane
         getContentPane().add(mapPanel);
@@ -97,14 +102,22 @@ public class MainFrame extends JFrame{
     }
     
     private void createNextTurn(){
-        nextTurn = new JButton("Next turn");
+        nextTurn = new JButton("Next turn!");
         nextTurn.setAlignmentY(TOP_ALIGNMENT);
         nextTurn.setPreferredSize(new Dimension(20,20));
         mapPanel.setLayout(null);
         mapPanel.add(nextTurn);
         nextTurn.setBounds(DEF_WIDTH - 120, 30, 100, 30);
         
-        
+        nextTurn.addActionListener((ActionEvent e) -> {
+            try {
+                Turn.getInstance().nextTurn();
+                repaint();
+            }
+            catch (Exception ex){
+                System.out.println("Erro ao passar de turno" + ex.getMessage());   
+            }
+        });
     }
     
 }
