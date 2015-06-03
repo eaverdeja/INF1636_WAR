@@ -6,6 +6,10 @@
 package model;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -15,13 +19,12 @@ public class Player {
     
     private Color color;
     private int playerId;
-    static int playerQuantity = 0;
+    private static int playerQuantity = 0;
     
     public Player(){
         this.playerId = playerQuantity;
         playerQuantity++;
-        this.color = getPlayerColor(this.playerId);
-        System.out.println(playerQuantity);
+        this.color = getPlayerColor(this.playerId);  
     }
     
     private Color getPlayerColor(int id){
@@ -29,7 +32,7 @@ public class Player {
             case 0:
                 return Color.WHITE;
             case 1:
-                return Color.BLACK;
+                return Color.RED;
             case 2:
                 return Color.BLUE;
             case 3:
@@ -60,5 +63,8 @@ public class Player {
     public void setPlayerId(int playerId) {
         this.playerId = playerId;
     }
-   
+    
+    public static int getPlayerQuantity() {
+        return playerQuantity;
+    }
 }

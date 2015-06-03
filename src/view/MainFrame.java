@@ -3,13 +3,8 @@ package view;
 import controller.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Label;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import java.awt.image.BufferedImage;
 import javax.swing.*;
@@ -18,28 +13,35 @@ public class MainFrame extends JFrame{
     public final int DEF_WIDTH = 960;
     public final int DEF_HEIGHT = 760;
     
-    private Mapa mapPanel;
+    private MapPanel mapPanel;
     private BufferedImage image;
     private JButton rollButton;
-    private JPanel dicesPanel;
     private JLabel diceOne;
     private JLabel diceTwo;
     private JLabel diceThree;
+    private JButton nextTurn;
     private Turn turnController;
     private final int players;
     private JPanel box;
     
     public MainFrame(int players){
+        
         setSize(DEF_WIDTH,DEF_HEIGHT);
+        setResizable(false);
         setLocation(0,0);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
+        //Define number of players and turn scheme
         this.players = players;
-        createMap();
+        turnController = new Turn(players);
         
-        //createRollButton();
-        //createDices();
-        //turnController = new Turn(players);
+        //Create map
+        createMap();
+        createBox();
+        createRollButton();
+        createDices();
+        createNextTurn();
+        
     }
     
     private void createBox(){
@@ -56,8 +58,9 @@ public class MainFrame extends JFrame{
     private void createMap(){
         
         //Load map
-        mapPanel = new Mapa();
+        mapPanel = new MapPanel(turnController.getPlayers());
         mapPanel.setLayout(new BorderLayout());
+        
         //Add map to pane
         getContentPane().add(mapPanel);
     }
@@ -91,6 +94,17 @@ public class MainFrame extends JFrame{
         box.add(diceThree);
         
         box.repaint();
+    }
+    
+    private void createNextTurn(){
+        nextTurn = new JButton("Next turn");
+        nextTurn.setAlignmentY(TOP_ALIGNMENT);
+        nextTurn.setPreferredSize(new Dimension(20,20));
+        mapPanel.setLayout(null);
+        mapPanel.add(nextTurn);
+        nextTurn.setBounds(DEF_WIDTH - 120, 30, 100, 30);
+        
+        
     }
     
 }
