@@ -101,12 +101,12 @@ public class MapPanel extends JPanel {
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
          
-        //Paint infos
-        //g.drawImage(infosImage,0,0,null);
-        
         //Paint the sea
         g.drawImage(mapImage,0,0,null);
        
+        //Paint infos
+        g.drawImage(infosImage,0,0,null);
+        
         //Paint Territories/names
         paintTerritories(g);
         
