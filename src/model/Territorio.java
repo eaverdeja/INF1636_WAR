@@ -4,12 +4,14 @@ import java.awt.geom.GeneralPath;
 
 public class Territorio {
 
+        private String Continente;
 	private String Nome;
 	private GeneralPath poligono;
 
-	public Territorio(String nome, Ponto p[], float x, float y) {
+	public Territorio(String continente, String nome, Ponto p[], float x, float y) {
 		super();
 		
+                this.Continente = continente;
 		this.Nome = nome;
 		
 		GeneralPath gp = new GeneralPath(GeneralPath.WIND_EVEN_ODD);				
@@ -32,4 +34,11 @@ public class Territorio {
         public String getNome(){
             return this.Nome;
         }
+
+    /**
+     * @return the Continente
+     */
+    public String getContinente() {
+        return Continente;
+    }
 }

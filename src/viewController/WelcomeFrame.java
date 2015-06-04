@@ -1,8 +1,7 @@
-package view;
+package viewController;
 
-import view.MainFrame;
 import javax.swing.*;
-import controller.Welcome;
+import viewController.Welcome;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -64,30 +63,30 @@ public class WelcomeFrame extends JFrame{
         textField.setPreferredSize(new Dimension(100,80));
         textField.addActionListener((ActionEvent e) -> {
         
-        //How many people are playing?
-        try {
-            int input = Integer.parseInt(textField.getText());
-            if (input >= 3 && input <= 6) {
-                System.out.println("Ok");
-                textField.setVisible(false);
-                label.setVisible(false);
-                
-                //Start the game
-                this.setVisible(false);
-                MainFrame mf = new MainFrame(input);
-                mf.setTitle("War!");
-                mf.setVisible(true);
-                
-            } else {
-                textField.setText(null);
-                JOptionPane.showMessageDialog(null,"Escolha de 3 a 6 jogadores!");
-            }
+            //How many people are playing?
+            try {
+                int input = Integer.parseInt(textField.getText());
+                if (input >= 3 && input <= 6) {
+                    System.out.println("Ok");
+                    textField.setVisible(false);
+                    label.setVisible(false);
+
+                    //Start the game
+                    this.setVisible(false);
+                    MainFrame mf = new MainFrame(input);
+                    mf.setTitle("War!");
+                    mf.setVisible(true);
+
+                } else {
+                    textField.setText(null);
+                    JOptionPane.showMessageDialog(null,"Escolha de 3 a 6 jogadores!");
+                }
             }
             catch (NumberFormatException ne) {
-            System.out.println("NaN");   
+                System.out.println("NaN");   
             }
-            
         });
+        
         box.add(textField);
     }
 }

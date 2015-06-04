@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package viewController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,15 +18,25 @@ import java.util.Random;
 public class Turn {
 
     private Player[] playerArray;
-    private final int playerQuantity;
-    private static Player currentPlayer;
-
-    public Turn(int players) {
+    private static int playerQuantity;
+    private Player currentPlayer;
+    private static Turn turnInstance = null;
+    
+    //Implementing Singleton pattern
+    protected Turn(){}
+    
+    public static Turn getInstance(){
+        if (turnInstance == null ){
+            turnInstance = new Turn();
+        }
+        return turnInstance;
+    }
+    
+    public void createAndRadomizePlayers(int players){
         this.playerArray = new Player[players];
         this.playerQuantity = players;
         createPlayers(players);
-
-
+    
         /* DEBUG
         for (int i = 0; i < this.playerQuantity; i++){
             System.out.print(playerArray[i].getPlayerId() + " ");
@@ -42,8 +52,9 @@ public class Turn {
         */
 
         currentPlayer = this.playerArray[0];
+    
     }
-   
+    
     private void createPlayers (int players){
         for (int i = 0; i < players; i++){
             Player newPlayer = new Player();
@@ -80,7 +91,7 @@ public class Turn {
         return Arrays.asList(playerArray);
     }
     
-    public static Player getCurrentPlayer() {
+    public Player getCurrentPlayer() {
         return currentPlayer;
     }
        

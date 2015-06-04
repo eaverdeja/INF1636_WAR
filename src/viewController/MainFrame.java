@@ -1,6 +1,5 @@
-package view;
+package viewController;
 
-import controller.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -70,10 +69,46 @@ public class MainFrame extends JFrame{
         getContentPane().add(mapPanel);
     }
     
+    private void createNextTurn(){
+        nextTurn = new JButton("Next turn!");
+        nextTurn.setAlignmentY(TOP_ALIGNMENT);
+        nextTurn.setPreferredSize(new Dimension(20,20));
+        mapPanel.setLayout(null);
+        mapPanel.add(nextTurn);
+        nextTurn.setBounds(DEF_WIDTH - 120, 30, 100, 30);
+        
+        nextTurn.addActionListener((ActionEvent e) -> {
+            try {
+                Turn.getInstance().nextTurn();
+                repaint();
+            }
+            catch (Exception ex){
+                System.out.println("Erro ao passar de turno" + ex.getMessage());   
+            }
+        });
+    }
+
     private void createRollButton(){
-           
-        rollButton = new JButton("ROLL DICES!");
-        box.add(rollButton,BorderLayout.CENTER);
+        rollButton = new JButton("Roll Dices!");
+        
+        rollButton.setAlignmentY(TOP_ALIGNMENT);
+        rollButton.setPreferredSize(new Dimension(20,20));
+        mapPanel.setLayout(null);
+        mapPanel.add(rollButton);
+        rollButton.setBounds(DEF_WIDTH - 250, 30, 100, 30);
+        
+        rollButton.addActionListener((ActionEvent e) -> {
+            try {
+                JFrame frame = new JFrame();
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.getContentPane().add(new DicePanel());
+                frame.pack();
+                frame.setVisible(true);
+            }
+            catch (Exception ex){
+                System.out.println("Erro ao rolar os dados" + ex.getMessage());   
+            }
+        });
     }
     
     private void createDices(){
@@ -99,25 +134,5 @@ public class MainFrame extends JFrame{
         box.add(diceThree);
         
         box.repaint();
-    }
-    
-    private void createNextTurn(){
-        nextTurn = new JButton("Next turn!");
-        nextTurn.setAlignmentY(TOP_ALIGNMENT);
-        nextTurn.setPreferredSize(new Dimension(20,20));
-        mapPanel.setLayout(null);
-        mapPanel.add(nextTurn);
-        nextTurn.setBounds(DEF_WIDTH - 120, 30, 100, 30);
-        
-        nextTurn.addActionListener((ActionEvent e) -> {
-            try {
-                Turn.getInstance().nextTurn();
-                repaint();
-            }
-            catch (Exception ex){
-                System.out.println("Erro ao passar de turno" + ex.getMessage());   
-            }
-        });
-    }
-    
+    }    
 }

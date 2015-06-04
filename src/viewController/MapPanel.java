@@ -1,4 +1,4 @@
-package controller;
+package viewController;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -157,7 +157,6 @@ public class MapPanel extends JPanel {
         
         int xCoord = 20;
         int diameter = 50;
-        float alpha;
         Player currentPlayer = Turn.getInstance().getCurrentPlayer();
         
         for(Color c : playerColors){
@@ -176,6 +175,7 @@ public class MapPanel extends JPanel {
            xCoord += 70;
         }
     }
+    
     // Bloco de inicialização dos territ�rios
     // Estou assumindo que a classe territorio tem um nome e um poligono definindo sua área de clique.
     {
