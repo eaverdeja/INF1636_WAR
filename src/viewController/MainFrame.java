@@ -4,10 +4,22 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Polygon;
 import java.awt.event.ActionEvent;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Line2D;
+import java.awt.geom.PathIterator;
 
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.swing.*;
+import model.Territory;
 
 public class MainFrame extends JFrame{
     public final int DEF_WIDTH = 960;
@@ -24,6 +36,8 @@ public class MainFrame extends JFrame{
     private final int players;
     private JPanel box;
     
+    private Map<Territory,List<Territory>> neighbourMap;
+    
     public MainFrame(int players){
         
         setSize(DEF_WIDTH,DEF_HEIGHT);
@@ -38,22 +52,10 @@ public class MainFrame extends JFrame{
         
         //Create map
         createMap();
-        createBox();
+        createNeighbourMap();
         createRollButton();
-        createDices();
         createNextTurn();
         
-    }
-    
-    private void createBox(){
-        
-        box = new JPanel();
-        box.setAlignmentY(BOTTOM_ALIGNMENT);
-        box.setPreferredSize(new Dimension(400, 80));
-        box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
-        box.setBackground(Color.WHITE);
-        box.setOpaque(true);
-        mapPanel.add(box, BorderLayout.PAGE_END);
     }
     
     private void createMap(){
@@ -111,28 +113,98 @@ public class MainFrame extends JFrame{
         });
     }
     
-    private void createDices(){
-           
-        box.setLayout(new FlowLayout());
+    private void createNeighbourMap(){
+        List<Territory> territoryList = mapPanel.getLstTerritorios();
+        List<Territory> neighbourList = new ArrayList<>();
+        neighbourMap = new HashMap<>();
+        
+        ArrayList<Line2D.Double> tLines = new ArrayList<>();
+        ArrayList<Line2D.Double> nLines = new ArrayList<>();
+        
+        //Search for neighbours(n) around territory(t)
+        //For each t
+        for(Territory t : territoryList){
+            tLines = getLineSegments(t.getPoligono());
+                
+            //With n's lines
+            boolean alreadyFriends = false;
+            for(Territory n : territoryList){
+                
+                if(!t.getNome().equals(n.getNome())){
+                    //Try to intersect t's lines
+                    for(Line2D.Double tLine : tLines){
 
-        diceOne = new JLabel("");
-        diceOne.setBackground(Color.red);
-        diceOne.setOpaque(true);
-        diceOne.setPreferredSize(new Dimension(50,50));
-        box.add(diceOne);
+                        nLines = getLineSegments(n.getPoligono());
+                        for(Line2D.Double nLine : nLines){
+                            if(tLine.intersectsLine(nLine)){
+                                neighbourList.add(n);
+                                //After adding a neighbour theres no need to intersect
+                                //remaining line segments
+                                alreadyFriends = true;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            //Removing possible duplicates
+            Set<Territory> neighbourSet = new HashSet<>(neighbourList);
+            
+            neighbourMap.put(t, new ArrayList<>(neighbourSet));
+            neighbourList.clear();
+        }
+    }
+    
+    private ArrayList<Line2D.Double> getLineSegments(GeneralPath p){
         
-        diceTwo = new JLabel("");
-        diceTwo.setBackground(Color.red);
-        diceTwo.setOpaque(true);
-        diceTwo.setPreferredSize(new Dimension(50,50));
-        box.add(diceTwo);
+        ArrayList<double[]> linePoints = new ArrayList<>();
+        ArrayList<Line2D.Double> lineSegments = new ArrayList<>();
+              
+        double[] coords = new double[6];    
         
-        diceThree = new JLabel("");
-        diceThree.setBackground(Color.red);
-        diceThree.setPreferredSize(new Dimension(50,50));
-        diceThree.setOpaque(true);
-        box.add(diceThree);
+        for(PathIterator pi = p.getPathIterator(null); !pi.isDone(); pi.next()){
+            // The type will be SEG_LINETO, SEG_MOVETO, or SEG_CLOSE
+            // since p is composed of straight lines
+            int type = pi.currentSegment(coords);
+            
+            // We record a double array of {segment type, x coord, y coord}
+            double[] pathIteratorCoords = {type,coords[0],coords[1]};
+            linePoints.add(pathIteratorCoords);
+        }
         
-        box.repaint();
-    }    
+        double[] start = new double[3]; // To record where each polygon starts
+
+        for (int i = 0; i < linePoints.size(); i++) {
+            // If we're not on the last point, return a line from this point to the next
+            double[] currentElement = linePoints.get(i);
+
+            // We need a default value in case we've reached the end of the ArrayList
+            double[] nextElement = {-1, -1, -1};
+            if (i < linePoints.size() - 1) {
+                nextElement = linePoints.get(i + 1);
+            }
+
+            // Make the lines
+            if (currentElement[0] == PathIterator.SEG_MOVETO) {
+                start = currentElement; // Record where the polygon started to close it later
+            } 
+
+            if (nextElement[0] == PathIterator.SEG_LINETO) {
+                lineSegments.add(
+                        new Line2D.Double(
+                            currentElement[1], currentElement[2],
+                            nextElement[1], nextElement[2]
+                        )
+                    );
+            } else if (nextElement[0] == PathIterator.SEG_CLOSE) {
+                lineSegments.add(
+                        new Line2D.Double(
+                            currentElement[1], currentElement[2],
+                            start[1], start[2]
+                        )
+                    );
+            }
+        }
+        return lineSegments;
+    }
 }
