@@ -53,6 +53,9 @@ public class MainFrame extends JFrame{
         //Create map
         createMap();
         createNeighbourMap();
+        mapPanel.setNeighbourMap(neighbourMap);
+        
+        //Create dices and next turn buttons
         createRollButton();
         createNextTurn();
         
@@ -206,5 +209,9 @@ public class MainFrame extends JFrame{
             }
         }
         return lineSegments;
+    }
+
+    public Map<Territory,List<Territory>> getNeighbourMap() {
+        return neighbourMap;
     }
 }
