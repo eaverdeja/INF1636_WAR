@@ -125,39 +125,32 @@ public class MainFrame extends JFrame{
         ArrayList<Line2D.Double> nLines = new ArrayList<>();
         
         //Search for neighbours(n) around territory(t)
-        //For each t
         for(Territory t : territoryList){
             tLines = getLineSegments(t.getPoligono());
-                
-            //With n's lines
-            boolean alreadyFriends = false;
             for(Territory n : territoryList){
-                
-                if(!t.getNome().equals(n.getNome())){
-                    //Try to intersect t's lines
+              if(!t.getNome().equals(n.getNome())){
+                    //Try to intersect territory lines with neighbour lines
+                    nLines = getLineSegments(n.getPoligono());
                     for(Line2D.Double tLine : tLines){
-
-                        nLines = getLineSegments(n.getPoligono());
                         for(Line2D.Double nLine : nLines){
                             if(tLine.intersectsLine(nLine)){
                                 neighbourList.add(n);
-                                //After adding a neighbour theres no need to intersect
-                                //remaining line segments
-                                alreadyFriends = true;
                             }
                         }
                     }
                 }
             }
             
-            //Removing possible duplicates
+            //Removing duplicates
             Set<Territory> neighbourSet = new HashSet<>(neighbourList);
-            
             neighbourMap.put(t, new ArrayList<>(neighbourSet));
+            
+            //New neighbours are coming
             neighbourList.clear();
         }
     }
     
+    //getLineSegments's body was written by Peter http://stackoverflow.com/users/559415/peter
     private ArrayList<Line2D.Double> getLineSegments(GeneralPath p){
         
         ArrayList<double[]> linePoints = new ArrayList<>();

@@ -2,13 +2,13 @@ package model;
 
 import java.awt.geom.GeneralPath;
 
-public class Territorio {
+public class Territory {
 
         private String Continente;
 	private String Nome;
 	private GeneralPath poligono;
 
-	public Territorio(String continente, String nome, Ponto p[], float x, float y) {
+	public Territory(String continente, String nome, Ponto p[], float x, float y) {
 		super();
 		
                 this.Continente = continente;
