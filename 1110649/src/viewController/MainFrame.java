@@ -153,6 +153,8 @@ public class MainFrame extends JFrame{
                 turnController.goToMovePhase();
                 finishAttacks.setVisible(false);
                 finishMoves.setVisible(true);
+                mapPanel.setCurrentTerritory(null);
+                repaint();
             }
             catch (Exception ex){
                 System.out.println("Erro ao rolar os dados" + ex.getMessage());   
@@ -172,10 +174,9 @@ public class MainFrame extends JFrame{
         finishMoves.addActionListener((ActionEvent e) -> {
             try {
                 turnController.nextTurn();
-                mapPanel.setCurrentTerritory(null);
                 addArmy.setVisible(true);
                 finishMoves.setVisible(false);
-                repaint();
+                
             }
             catch (Exception ex){
                 System.out.println("Erro ao rolar os dados" + ex.getMessage());   
