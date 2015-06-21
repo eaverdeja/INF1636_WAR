@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.swing.*;
 import model.Territory;
+import viewController.Turn.turnPhase;
 
 public class MainFrame extends JFrame{
     public final int DEF_WIDTH = 960;
@@ -27,11 +28,14 @@ public class MainFrame extends JFrame{
     
     private MapPanel mapPanel;
     private BufferedImage image;
-    private JButton rollButton;
+    private JButton finishAttacks;
+    private JButton finishMoves;
+    private JButton nextTurn;
+    private JButton addArmy;
     private JLabel diceOne;
     private JLabel diceTwo;
     private JLabel diceThree;
-    private JButton nextTurn;
+    
     private Turn turnController;
     private final int players;
     private JPanel box;
@@ -50,14 +54,18 @@ public class MainFrame extends JFrame{
         turnController = Turn.getInstance();
         turnController.createAndRadomizePlayers(players);
         
+
         //Create map
         createMap();
         createNeighbourMap();
         mapPanel.setNeighbourMap(neighbourMap);
-        
+        turnController.setLstTerritorios(mapPanel.getLstTerritorios());
+        turnController.randomizeTerritories();
         //Create dices and next turn buttons
-        createRollButton();
         createNextTurn();
+        createFinishAttacksButton();
+        createFinishMovesButton();
+        createAddArmy();
         
     }
     
@@ -77,14 +85,14 @@ public class MainFrame extends JFrame{
     private void createNextTurn(){
         nextTurn = new JButton("Next turn!");
         nextTurn.setAlignmentY(TOP_ALIGNMENT);
-        nextTurn.setPreferredSize(new Dimension(20,20));
+//        nextTurn.setPreferredSize(new Dimension(20,20));
         mapPanel.setLayout(null);
         mapPanel.add(nextTurn);
         nextTurn.setBounds(DEF_WIDTH - 120, 30, 100, 30);
         
         nextTurn.addActionListener((ActionEvent e) -> {
             try {
-                Turn.getInstance().nextTurn();
+                turnController.nextTurn();
                 repaint();
             }
             catch (Exception ex){
@@ -92,23 +100,82 @@ public class MainFrame extends JFrame{
             }
         });
     }
-
-    private void createRollButton(){
-        rollButton = new JButton("Roll Dices!");
-        
-        rollButton.setAlignmentY(TOP_ALIGNMENT);
-        rollButton.setPreferredSize(new Dimension(20,20));
+    
+    private void createAddArmy(){
+        addArmy = new JButton("Add Army");
+        addArmy.setAlignmentY(TOP_ALIGNMENT);
+        addArmy.setPreferredSize(new Dimension(20,20));
         mapPanel.setLayout(null);
-        mapPanel.add(rollButton);
-        rollButton.setBounds(DEF_WIDTH - 250, 30, 100, 30);
+        mapPanel.add(addArmy);
+        addArmy.setBounds(DEF_WIDTH - 250, 30, 100, 30);
         
-        rollButton.addActionListener((ActionEvent e) -> {
+        addArmy.addActionListener((ActionEvent e) -> {
+            
             try {
-                JFrame frame = new JFrame();
-                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                frame.getContentPane().add(new DicePanel());
-                frame.pack();
-                frame.setVisible(true);
+                if (turnController.getTurnPhase() == turnPhase.newArmyPhase){
+                    if (mapPanel.getCurrentTerritory().getOwnerPlayer() == turnController.getCurrentPlayer()){
+                        if (turnController.getCurrentPlayer().newArmyAmout() > turnController.getArmiesAdded()){
+                            mapPanel.getCurrentTerritory().addArmy();
+                            turnController.setArmiesAdded(turnController.getArmiesAdded()+1);
+                            System.out.print("You have " + (turnController.getCurrentPlayer().newArmyAmout() - turnController.getArmiesAdded()) + " armies left \n" );
+                        }else{
+                            turnController.setArmiesAdded(0);
+                            turnController.goToNextPhase();
+                            finishAttacks.setVisible(true);
+                            addArmy.setVisible(false);
+                            System.out.print("Already added all armies! \n" );
+                        }
+                    }else{
+                        System.out.print("Not your territory");
+                    }
+                repaint();
+                }else{
+                    System.out.print("Not the right turnPhase\n");
+                }
+            }
+            catch (Exception ex){
+                System.out.println("Nenhum pais selecionado!");   
+            }
+        });
+    }
+
+    private void createFinishAttacksButton(){
+        finishAttacks = new JButton("End Attacks");
+        
+        finishAttacks.setAlignmentY(TOP_ALIGNMENT);
+        finishAttacks.setPreferredSize(new Dimension(20,20));
+        mapPanel.setLayout(null);
+        mapPanel.add(finishAttacks);
+        finishAttacks.setBounds(DEF_WIDTH - 250, 30, 100, 30);
+        finishAttacks.setVisible(false);
+        finishAttacks.addActionListener((ActionEvent e) -> {
+            try {
+                turnController.goToMovePhase();
+                finishAttacks.setVisible(false);
+                finishMoves.setVisible(true);
+            }
+            catch (Exception ex){
+                System.out.println("Erro ao rolar os dados" + ex.getMessage());   
+            }
+        });
+    }
+    
+    private void createFinishMovesButton(){
+        finishMoves = new JButton("End Moves");
+        
+        finishMoves.setAlignmentY(TOP_ALIGNMENT);
+        finishMoves.setPreferredSize(new Dimension(20,20));
+        mapPanel.setLayout(null);
+        mapPanel.add(finishMoves);
+        finishMoves.setBounds(DEF_WIDTH - 250, 30, 100, 30);
+        finishMoves.setVisible(false);
+        finishMoves.addActionListener((ActionEvent e) -> {
+            try {
+                turnController.nextTurn();
+                mapPanel.setCurrentTerritory(null);
+                addArmy.setVisible(true);
+                finishMoves.setVisible(false);
+                repaint();
             }
             catch (Exception ex){
                 System.out.println("Erro ao rolar os dados" + ex.getMessage());   
@@ -120,6 +187,7 @@ public class MainFrame extends JFrame{
         List<Territory> territoryList = mapPanel.getLstTerritorios();
         List<Territory> neighbourList = new ArrayList<>();
         neighbourMap = new HashMap<>();
+        
         
         ArrayList<Line2D.Double> tLines = new ArrayList<>();
         ArrayList<Line2D.Double> nLines = new ArrayList<>();
@@ -140,12 +208,12 @@ public class MainFrame extends JFrame{
                     }
                 }
             }
-            
+         
             //Removing duplicates
             Set<Territory> neighbourSet = new HashSet<>(neighbourList);
             neighbourMap.put(t, new ArrayList<>(neighbourSet));
             
-            //New neighbours are coming
+           // New neighbours are coming
             neighbourList.clear();
         }
     }

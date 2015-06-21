@@ -10,17 +10,25 @@ import java.util.Arrays;
 import java.util.List;
 import model.Player;
 import java.util.Random;
-
+import model.Territory;
 /**
  *
  * @author lorenzosaraiva
  */
 public class Turn {
 
+    public enum turnPhase{
+        newArmyPhase,attackPhase,retreatPhase, choseNewAttacker,moveArmyPhase
+      
+    }
     private Player[] playerArray;
     private static int playerQuantity;
     private Player currentPlayer;
     private static Turn turnInstance = null;
+    private turnPhase currentPhase;
+    private List<Territory> lstTerritorios = new ArrayList<>();
+    private int armiesAdded = 0;
+
     
     //Implementing Singleton pattern
     protected Turn(){}
@@ -35,6 +43,7 @@ public class Turn {
     public void createAndRadomizePlayers(int players){
         this.playerArray = new Player[players];
         this.playerQuantity = players;
+        this.currentPhase = turnPhase.newArmyPhase;
         createPlayers(players);
     
         /* DEBUG
@@ -79,6 +88,7 @@ public class Turn {
     
     public void nextTurn(){
         int index = 0;
+        currentPhase = turnPhase.newArmyPhase;
         for(Player p : playerArray){ 
             if (p.getPlayerId() == getCurrentPlayer().getPlayerId()) break;
             else index++;
@@ -94,5 +104,56 @@ public class Turn {
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
+
+    public turnPhase getTurnPhase() {
+        return currentPhase;
+    }
+    
+    public void goToNextPhase(){
+        if (currentPhase == turnPhase.newArmyPhase){
+            currentPhase = turnPhase.attackPhase;
+            return;
+        }
+        if (currentPhase == turnPhase.attackPhase){
+            currentPhase = turnPhase.choseNewAttacker;
+            return;
+        }
+        if (currentPhase == turnPhase.retreatPhase){
+            currentPhase = turnPhase.choseNewAttacker;
+            return;
+        }
+        
+    }
        
+    /**
+     * @param lstTerritorios the lstTerritorios to set
+     */
+    public void setLstTerritorios(List<Territory> lstTerritorios) {
+        this.lstTerritorios = lstTerritorios;
+    }
+    
+    public void randomizeTerritories(){
+        int counter = 0;
+        for (Territory t:lstTerritorios){
+            t.setOwnerPlayer(this.playerArray[counter]);
+            t.setQtdExercitos(1);
+            this.playerArray[counter].setCurrentTerritories(this.playerArray[counter].getCurrentTerritories()+1);
+            counter++;
+            if (counter == playerQuantity)
+                counter = 0;
+        }
+    }
+    
+    public int getArmiesAdded() {
+        return armiesAdded;
+    }
+    
+     public void setArmiesAdded(int armiesAdded) {
+        this.armiesAdded = armiesAdded;
+    }
+    
+     public void goToMovePhase(){
+         this.currentPhase = turnPhase.moveArmyPhase;
+     }
+    
 }

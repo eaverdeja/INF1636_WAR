@@ -1,11 +1,14 @@
 package model;
 
 import java.awt.geom.GeneralPath;
+import viewController.Turn;
 
 public class Territory {
 
         private String Continente;
 	private String Nome;
+        private Player ownerPlayer;
+        private int qtdExercitos;
 	private GeneralPath poligono;
 
 	public Territory(String continente, String nome, Ponto p[], float x, float y) {
@@ -41,4 +44,38 @@ public class Territory {
     public String getContinente() {
         return Continente;
     }
+
+    /**
+     * @return the qtdExercitos
+     */
+    public int getQtdExercitos() {
+        return qtdExercitos;
+    }
+
+    /**
+     * @param qtdExercitos the qtdExercitos to set
+     */
+    public void setQtdExercitos(int qtdExercitos) {
+        this.qtdExercitos = qtdExercitos;
+    }
+
+    /**
+     * @return the ownerPlayer
+     */
+    public Player getOwnerPlayer() {
+        return ownerPlayer;
+    }
+
+    /**
+     * @param ownerPlayer the ownerPlayer to set
+     */
+    public void setOwnerPlayer(Player ownerPlayer) {
+        this.ownerPlayer = ownerPlayer;
+    }
+    
+    public void addArmy(){
+    
+        this.qtdExercitos++;
+    }
+
 }

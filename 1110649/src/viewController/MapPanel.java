@@ -2,6 +2,7 @@ package viewController;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 import javax.swing.*;
@@ -22,12 +25,14 @@ import javax.swing.*;
 import model.Player;
 import model.Ponto;
 import model.Territory;
+import viewController.Turn.turnPhase;
 
 @SuppressWarnings("serial")
 public class MapPanel extends JPanel {
 
     // Lista de territorios
     private List<Territory> lstTerritorios = new ArrayList<>();
+    private List<Territory> neighbourList = new ArrayList<>();
     private Map<Territory,List<Territory>> neighbourMap;
     
     private Territory currentTerritory = null;
@@ -40,20 +45,25 @@ public class MapPanel extends JPanel {
     private BufferedImage infosImage;
     private List<Color> playerColors;
     private Player currentPlayer;
+    private Player defensePlayer;
+    private Turn turnController;
+
 
     public MapPanel(List<Player> playerList) {
         try{
-            File map = new File("images/mapas/war_tabuleiro_fundo.png");
+            File map = new File("images/war_tabuleiro_fundo.png");
             mapImage = ImageIO.read(map);
             
             File line = new File("images/mapas/war_tabuleiro_linhas.png");
             lineImage = ImageIO.read(line);
             
-            File infos = new File("images/mapas/war_tabuleiro.png");
-            infosImage = ImageIO.read(infos);
+//            File infos = new File("images/mapas/war_tabuleiro.png");
+//            infosImage = ImageIO.read(infos);
             
             playerColors = new ArrayList<>();
             playerList.forEach((Player) -> playerColors.add(Player.getColor()));
+            turnController = Turn.getInstance();
+
         } 
         catch(IOException e){
             System.out.print("Erro ao carregar a imagem" + e.getMessage());
@@ -65,12 +75,12 @@ public class MapPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 // Para cada territorio da lista de territorios
+                
                 for(Territory t : lstTerritorios) {
 
                     // Se o ponto clicado for contido pelo poligono do territorio	
-                    if(t.getPoligono().contains(e.getX(), e.getY())) {
-                        currentTerritory = t;
-                        repaint();
+                    if(t.getPoligono().contains(e.getX(), e.getY())) {   
+                        actionForClick(t);
                     }
                 }
             }
@@ -132,7 +142,7 @@ public class MapPanel extends JPanel {
     private void paintTerritories(Graphics g){
         //Draw the different territories
         Graphics2D g2 = (Graphics2D)g;
-        
+        int counter = 0;
         //Turn Antialiasing on
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
         
@@ -150,14 +160,23 @@ public class MapPanel extends JPanel {
             
             if(!(currentTerritory == null)){
                 //Are we filling the current country?
-                if(currentTerritory.equals(t)){
+                if(getCurrentTerritory().equals(t)){
                     g2.setColor(g2.getColor().brighter().brighter());
                 }
+                
+//                System.out.print(counter + "chamouuu\n" );
+                counter++;
                 //Are we filling a neighbour?
-                List<Territory> neighbours = neighbourMap.get(t);
-                for(Territory n : neighbours){
-                    if(currentTerritory.equals(n)){
-                        g2.setColor(g2.getColor().darker().darker());
+                neighbourList = neighbourMap.get(t);
+                for(Territory n : neighbourList){
+                    if (turnController.getTurnPhase() == turnPhase.attackPhase){
+                        if(getCurrentTerritory().equals(n) && (getCurrentTerritory().getOwnerPlayer() != t.getOwnerPlayer())){
+                            g2.setColor(g2.getColor().darker().darker());
+                        }
+                    }else{
+                        if(getCurrentTerritory().equals(n)){
+                            g2.setColor(g2.getColor().darker().darker());
+                        }
                     }
                 }
             }
@@ -176,7 +195,7 @@ public class MapPanel extends JPanel {
         
         int xCoord = 20;
         int diameter = 50;
-        Player currentPlayer = Turn.getInstance().getCurrentPlayer();
+        Player currentPlayer = turnController.getCurrentPlayer();
         
         for(Color c : playerColors){
            
@@ -923,4 +942,80 @@ public class MapPanel extends JPanel {
     public void setNeighbourMap(Map<Territory,List<Territory>> neighbourMap) {
         this.neighbourMap = neighbourMap;
     }
+
+    
+    public Territory getCurrentTerritory() {
+        return currentTerritory;
+    }
+    
+    private void showInput(){
+        JFrame frame = new JFrame();
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.pack();
+                
+    
+//                JTextField textField = new JTextField();
+//                textField.setPreferredSize(new Dimension(100,80));
+//                textField.addActionListener((ActionEvent e) -> {
+//            
+//            //How many people are playing?
+//            try {
+//                int input = Integer.parseInt(textField.getText());
+//                System.out.println(input);
+//                } 
+//            catch (NumberFormatException ne) {
+//                System.out.println("NaN");   
+//            }
+//        });
+//        frame.getContentPane().add(textField);
+        frame.setVisible(true);
+    }
+    
+    public void actionForClick(Territory t){
+    currentPlayer = turnController.getCurrentPlayer();
+    System.out.print(turnController.getTurnPhase() + "fase do turno\n");
+    System.out.print("O territorio " + t.getNome() + " do jogador "+ t.getOwnerPlayer().getPlayerId() + " tem " + t.getQtdExercitos() + " exercitos \n");
+
+        if (turnController.getTurnPhase() == turnPhase.newArmyPhase || turnController.getTurnPhase() == turnPhase.choseNewAttacker ){
+                            setCurrentTerritory(t);
+                            repaint();
+                            return;
+        }
+        if (turnController.getTurnPhase() == turnPhase.attackPhase){ 
+                            if (t.getOwnerPlayer() != currentPlayer){
+                                if (neighbourMap.get(currentTerritory).contains(t) ){
+                                    if (currentTerritory.getQtdExercitos() > 1){
+                                        defensePlayer = t.getOwnerPlayer();
+                                        DicePanel dices = new DicePanel(currentTerritory.getQtdExercitos() - 1, t.getQtdExercitos());
+                                        dices.showDices();
+                                        if (dices.attackWins()){
+                                            System.out.println("ATTACK wins");
+                                            t.setQtdExercitos(t.getQtdExercitos() - dices.getDefenseArmiesDead());
+                                            currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - dices.getAttackArmiesDead());
+                                            if (t.getQtdExercitos() == 0){
+                                                t.setOwnerPlayer(currentPlayer);
+                                                currentPlayer.setCurrentTerritories(currentPlayer.getCurrentTerritories()+1);
+                                                showInput();
+                                                //pergunta ao jogador quantos exercitos quer mover
+                                                
+                                            }
+                                        }else{
+                                            currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - dices.getAttackArmiesDead());
+                                            t.setQtdExercitos(t.getQtdExercitos() - dices.getDefenseArmiesDead());
+                                        }
+                                        setCurrentTerritory(null);
+                                        repaint();
+                                    }
+                                }
+                            }else{
+                               setCurrentTerritory(t);
+                               repaint();
+                            }
+                        }     
+    }
+
+    public void setCurrentTerritory(Territory currentTerritory) {
+        this.currentTerritory = currentTerritory;
+    }
+    
 }

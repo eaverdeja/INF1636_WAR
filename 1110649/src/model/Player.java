@@ -20,6 +20,7 @@ public class Player {
     private Color color;
     private int playerId;
     private static int playerQuantity = 0;
+    private int currentTerritories = 0;
     
     public Player(){
         this.playerId = playerQuantity;
@@ -66,5 +67,20 @@ public class Player {
     
     public static int getPlayerQuantity() {
         return playerQuantity;
+    }
+    
+    public int newArmyAmout(){
+        int ret = (int) Math.floor(this.getCurrentTerritories()/2);
+        if (ret > 3)
+            return ret;
+        return 3;
+    }
+
+    public int getCurrentTerritories() {
+        return currentTerritories;
+    }
+
+    public void setCurrentTerritories(int currentTerritories) {
+        this.currentTerritories = currentTerritories;
     }
 }
