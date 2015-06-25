@@ -52,7 +52,7 @@ public class MainFrame extends JFrame{
         //Define number of players and turn scheme
         this.players = players;
         turnController = Turn.getInstance();
-        turnController.createAndRadomizePlayers(players);
+        turnController.createAndRandomizePlayers(players);
         
 
         //Create map

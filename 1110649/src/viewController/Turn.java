@@ -11,16 +11,18 @@ import java.util.List;
 import model.Player;
 import java.util.Random;
 import model.Territory;
+
 /**
  *
  * @author lorenzosaraiva
  */
 public class Turn {
 
-    public enum turnPhase{
-        newArmyPhase,attackPhase,retreatPhase, choseNewAttacker,moveArmyPhase
-      
+    public enum turnPhase {
+
+        newArmyPhase, attackPhase, retreatPhase, chooseNewAttacker, moveArmyPhase
     }
+
     private Player[] playerArray;
     private static int playerQuantity;
     private Player currentPlayer;
@@ -29,78 +31,102 @@ public class Turn {
     private List<Territory> lstTerritorios = new ArrayList<>();
     private int armiesAdded = 0;
 
-    
     //Implementing Singleton pattern
-    protected Turn(){}
-    
-    public static Turn getInstance(){
-        if (turnInstance == null ){
+    protected Turn() {
+    }
+
+    public static Turn getInstance() {
+        if (turnInstance == null) {
             turnInstance = new Turn();
         }
         return turnInstance;
     }
     
-    public void createAndRadomizePlayers(int players){
-        this.playerArray = new Player[players];
-        this.playerQuantity = players;
-        this.currentPhase = turnPhase.newArmyPhase;
-        createPlayers(players);
-    
-        /* DEBUG
-        for (int i = 0; i < this.playerQuantity; i++){
-            System.out.print(playerArray[i].getPlayerId() + " ");
-        }
+    //START Creating players and distributing territories 
+    public void createAndRandomizePlayers(int players) {
+        playerArray = new Player[players];
+        playerQuantity = players;
+        currentPhase = turnPhase.newArmyPhase;
 
-        System.out.print("\n");
-
-        shuffleArray(this.playerArray, this.playerQuantity);
-
-        for (int i = 0; i < playerQuantity; i++){
-           System.out.print(playerArray[i].getPlayerId() + " ");
-        }
-        */
-
-        currentPlayer = this.playerArray[0];
-    
-    }
-    
-    private void createPlayers (int players){
-        for (int i = 0; i < players; i++){
+        for (int i = 0; i < players; i++) {
             Player newPlayer = new Player();
             playerArray[i] = newPlayer;
 
             System.out.println("A new player has been created!");
         }
+
+        currentPlayer = this.playerArray[0];
+
     }
-   
-    private void shuffleArray(Player[] array, int size){
+
+    private void shuffleArray(Player[] array, int size) {
         int index;
         Player temp;
         Random random = new Random();
-        for (int i = size - 1; i > 0; i--)
-        {
-         index = random.nextInt(i + 1);
-         temp = array[index];
-         array[index] = array[i];
-         array[i] = temp;
+        for (int i = size - 1; i > 0; i--) {
+            index = random.nextInt(i + 1);
+            temp = array[index];
+            array[index] = array[i];
+            array[i] = temp;
         }
     }
+
+    public void randomizeTerritories() {
+        int counter = 0;
+        for (Territory t : lstTerritorios) {
+            t.setOwnerPlayer(this.playerArray[counter]);
+            t.setQtdExercitos(1);
+            this.playerArray[counter].setCurrentTerritories(this.playerArray[counter].getCurrentTerritories() + 1);
+            counter++;
+            if (counter == playerQuantity) {
+                counter = 0;
+            }
+        }
+    }
+    //END Creating players and distributing territories 
     
-    public void nextTurn(){
+    //START turn and phase control
+    
+    public void goToNextPhase() {
+        if (currentPhase == turnPhase.newArmyPhase) {
+            currentPhase = turnPhase.attackPhase;
+            return;
+        }
+        if (currentPhase == turnPhase.attackPhase) {
+            currentPhase = turnPhase.chooseNewAttacker;
+            return;
+        }
+        if (currentPhase == turnPhase.retreatPhase) {
+            currentPhase = turnPhase.chooseNewAttacker;
+            return;
+        }
+    }
+
+    public void nextTurn() {
         int index = 0;
         currentPhase = turnPhase.newArmyPhase;
-        for(Player p : playerArray){ 
-            if (p.getPlayerId() == getCurrentPlayer().getPlayerId()) break;
-            else index++;
+        for (Player p : playerArray) {
+            if (p.getPlayerId() == getCurrentPlayer().getPlayerId()) {
+                break;
+            } else {
+                index++;
+            }
         }
-        if(index == playerQuantity-1) currentPlayer = playerArray[0];
-        else currentPlayer = playerArray[index+1];
+        if (index == playerQuantity - 1) {
+            currentPlayer = playerArray[0];
+        } else {
+            currentPlayer = playerArray[index + 1];
+        }
     }
     
-    public List<Player> getPlayers(){
+    //END turn and phase control
+    
+    //Getters and Setters
+
+    public List<Player> getPlayers() {
         return Arrays.asList(playerArray);
     }
-    
+
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
@@ -108,52 +134,21 @@ public class Turn {
     public turnPhase getTurnPhase() {
         return currentPhase;
     }
-    
-    public void goToNextPhase(){
-        if (currentPhase == turnPhase.newArmyPhase){
-            currentPhase = turnPhase.attackPhase;
-            return;
-        }
-        if (currentPhase == turnPhase.attackPhase){
-            currentPhase = turnPhase.choseNewAttacker;
-            return;
-        }
-        if (currentPhase == turnPhase.retreatPhase){
-            currentPhase = turnPhase.choseNewAttacker;
-            return;
-        }
-        
-    }
-       
-    /**
-     * @param lstTerritorios the lstTerritorios to set
-     */
+
     public void setLstTerritorios(List<Territory> lstTerritorios) {
         this.lstTerritorios = lstTerritorios;
     }
-    
-    public void randomizeTerritories(){
-        int counter = 0;
-        for (Territory t:lstTerritorios){
-            t.setOwnerPlayer(this.playerArray[counter]);
-            t.setQtdExercitos(1);
-            this.playerArray[counter].setCurrentTerritories(this.playerArray[counter].getCurrentTerritories()+1);
-            counter++;
-            if (counter == playerQuantity)
-                counter = 0;
-        }
-    }
-    
+
     public int getArmiesAdded() {
         return armiesAdded;
     }
-    
-     public void setArmiesAdded(int armiesAdded) {
+
+    public void setArmiesAdded(int armiesAdded) {
         this.armiesAdded = armiesAdded;
     }
-    
-     public void goToMovePhase(){
-         this.currentPhase = turnPhase.moveArmyPhase;
-     }
-    
+
+    public void goToMovePhase() {
+        this.currentPhase = turnPhase.moveArmyPhase;
+    }
+
 }
