@@ -61,6 +61,7 @@ public class MainFrame extends JFrame{
         mapPanel.setNeighbourMap(neighbourMap);
         turnController.setLstTerritorios(mapPanel.getLstTerritorios());
         turnController.randomizeTerritories();
+        turnController.setMapPanel(mapPanel);
         //Create dices and next turn buttons
         createNextTurn();
         createFinishAttacksButton();
@@ -73,21 +74,21 @@ public class MainFrame extends JFrame{
         
         //Load map
         mapPanel = new MapPanel(turnController.getPlayers());
-        mapPanel.setLayout(new BorderLayout());
+        getMapPanel().setLayout(new BorderLayout());
         
         //Define territories
-        mapPanel.defineTerritories();
+        getMapPanel().defineTerritories();
         
         //Add map to pane
-        getContentPane().add(mapPanel);
+        getContentPane().add(getMapPanel());
     }
     
     private void createNextTurn(){
         nextTurn = new JButton("Next turn!");
         nextTurn.setAlignmentY(TOP_ALIGNMENT);
 //        nextTurn.setPreferredSize(new Dimension(20,20));
-        mapPanel.setLayout(null);
-        mapPanel.add(nextTurn);
+        getMapPanel().setLayout(null);
+        getMapPanel().add(nextTurn);
         nextTurn.setBounds(DEF_WIDTH - 120, 30, 100, 30);
         
         nextTurn.addActionListener((ActionEvent e) -> {
@@ -105,17 +106,17 @@ public class MainFrame extends JFrame{
         addArmy = new JButton("Add Army");
         addArmy.setAlignmentY(TOP_ALIGNMENT);
         addArmy.setPreferredSize(new Dimension(20,20));
-        mapPanel.setLayout(null);
-        mapPanel.add(addArmy);
+        getMapPanel().setLayout(null);
+        getMapPanel().add(addArmy);
         addArmy.setBounds(DEF_WIDTH - 250, 30, 100, 30);
         
         addArmy.addActionListener((ActionEvent e) -> {
             
             try {
                 if (turnController.getTurnPhase() == turnPhase.newArmyPhase){
-                    if (mapPanel.getCurrentTerritory().getOwnerPlayer() == turnController.getCurrentPlayer()){
+                    if (getMapPanel().getCurrentTerritory().getOwnerPlayer() == turnController.getCurrentPlayer()){
                         if (turnController.getCurrentPlayer().newArmyAmout() > turnController.getArmiesAdded()){
-                            mapPanel.getCurrentTerritory().addArmy();
+                            getMapPanel().getCurrentTerritory().addArmy();
                             turnController.setArmiesAdded(turnController.getArmiesAdded()+1);
                             System.out.print("You have " + (turnController.getCurrentPlayer().newArmyAmout() - turnController.getArmiesAdded()) + " armies left \n" );
                         }else{
@@ -144,8 +145,8 @@ public class MainFrame extends JFrame{
         
         finishAttacks.setAlignmentY(TOP_ALIGNMENT);
         finishAttacks.setPreferredSize(new Dimension(20,20));
-        mapPanel.setLayout(null);
-        mapPanel.add(finishAttacks);
+        getMapPanel().setLayout(null);
+        getMapPanel().add(finishAttacks);
         finishAttacks.setBounds(DEF_WIDTH - 250, 30, 100, 30);
         finishAttacks.setVisible(false);
         finishAttacks.addActionListener((ActionEvent e) -> {
@@ -153,7 +154,7 @@ public class MainFrame extends JFrame{
                 turnController.goToMovePhase();
                 finishAttacks.setVisible(false);
                 finishMoves.setVisible(true);
-                mapPanel.setCurrentTerritory(null);
+                getMapPanel().setCurrentTerritory(null);
                 repaint();
             }
             catch (Exception ex){
@@ -167,8 +168,8 @@ public class MainFrame extends JFrame{
         
         finishMoves.setAlignmentY(TOP_ALIGNMENT);
         finishMoves.setPreferredSize(new Dimension(20,20));
-        mapPanel.setLayout(null);
-        mapPanel.add(finishMoves);
+        getMapPanel().setLayout(null);
+        getMapPanel().add(finishMoves);
         finishMoves.setBounds(DEF_WIDTH - 250, 30, 100, 30);
         finishMoves.setVisible(false);
         finishMoves.addActionListener((ActionEvent e) -> {
@@ -176,6 +177,7 @@ public class MainFrame extends JFrame{
                 turnController.nextTurn();
                 addArmy.setVisible(true);
                 finishMoves.setVisible(false);
+                repaint();
                 
             }
             catch (Exception ex){
@@ -185,7 +187,7 @@ public class MainFrame extends JFrame{
     }
     
     private void createNeighbourMap(){
-        List<Territory> territoryList = mapPanel.getLstTerritorios();
+        List<Territory> territoryList = getMapPanel().getLstTerritorios();
         List<Territory> neighbourList = new ArrayList<>();
         neighbourMap = new HashMap<>();
         
@@ -275,5 +277,9 @@ public class MainFrame extends JFrame{
 
     public Map<Territory,List<Territory>> getNeighbourMap() {
         return neighbourMap;
+    }
+
+    public MapPanel getMapPanel() {
+        return mapPanel;
     }
 }

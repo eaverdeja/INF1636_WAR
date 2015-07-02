@@ -5,9 +5,12 @@
  */
 package viewController;
 
+import model.Click;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import model.Player;
 import java.util.Random;
 import model.Territory;
@@ -16,7 +19,7 @@ import model.Territory;
  *
  * @author lorenzosaraiva
  */
-public class Turn {
+public class Turn implements Observer{
 
     public enum turnPhase {
 
@@ -30,6 +33,9 @@ public class Turn {
     private turnPhase currentPhase;
     private List<Territory> lstTerritorios = new ArrayList<>();
     private int armiesAdded = 0;
+    private Click click = null;
+    private MapPanel mapPanel;
+    private GameplayController attackController;
 
     //Implementing Singleton pattern
     protected Turn() {
@@ -41,7 +47,9 @@ public class Turn {
         }
         return turnInstance;
     }
-    
+    public void observeClick(Click click){
+        this.click = click;
+    }
     //START Creating players and distributing territories 
     public void createAndRandomizePlayers(int players) {
         playerArray = new Player[players];
@@ -96,8 +104,8 @@ public class Turn {
             currentPhase = turnPhase.chooseNewAttacker;
             return;
         }
-        if (currentPhase == turnPhase.retreatPhase) {
-            currentPhase = turnPhase.chooseNewAttacker;
+        if (currentPhase == turnPhase.chooseNewAttacker) {
+            currentPhase = turnPhase.attackPhase;
             return;
         }
     }
@@ -151,4 +159,19 @@ public class Turn {
         this.currentPhase = turnPhase.moveArmyPhase;
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        System.out.println("ROLO");
+        attackController = new GameplayController();
+        attackController.setCurrentTerritory(mapPanel.getCurrentTerritory());
+        attackController.actionForClick(click.getValue());
+    }
+
+    public MapPanel getMapPanel() {
+        return mapPanel;
+    }
+
+    public void setMapPanel(MapPanel mapPanel) {
+        this.mapPanel = mapPanel;
+    }
 }

@@ -1,5 +1,6 @@
 package viewController;
 
+import model.Click;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -80,7 +81,10 @@ public class MapPanel extends JPanel {
 
                     // Se o ponto clicado for contido pelo poligono do territorio	
                     if(t.getPoligono().contains(e.getX(), e.getY())) {   
-                        actionForClick(t);
+                        Click click = new Click();
+                        turnController.observeClick(click);
+                        click.addObserver(turnController);
+                        click.setValue(t);
                     }
                 }
             }
@@ -171,7 +175,7 @@ public class MapPanel extends JPanel {
                 }
                 
                 //Are we filling a neighbour?
-                neighbourList = neighbourMap.get(t);
+                neighbourList = getNeighbourMap().get(t);
                 for(Territory n : neighbourList){
                     if (turnController.getTurnPhase() == turnPhase.attackPhase){
                         if(getCurrentTerritory().equals(n) && (getCurrentTerritory().getOwnerPlayer() != t.getOwnerPlayer())){
@@ -363,7 +367,7 @@ public class MapPanel extends JPanel {
         targetTerritory.setQtdExercitos(targetTerritory.getQtdExercitos() + Integer.parseInt(nome));
         currentTerritory = null;
     }
-
+	
     public List<Territory> getLstTerritorios() {
         return lstTerritorios;
     }
@@ -1100,4 +1104,8 @@ public class MapPanel extends JPanel {
     public void setCurrentTerritory(Territory currentTerritory) {
         this.currentTerritory = currentTerritory;
     }   
+
+    public Map<Territory,List<Territory>> getNeighbourMap() {
+        return neighbourMap;
+    }
 }
