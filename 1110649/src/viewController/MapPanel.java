@@ -1,5 +1,6 @@
 package viewController;
 
+import model.Click;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -79,7 +80,10 @@ public class MapPanel extends JPanel {
 
                     // Se o ponto clicado for contido pelo poligono do territorio	
                     if(t.getPoligono().contains(e.getX(), e.getY())) {   
-                        actionForClick(t);
+                        Click click = new Click();
+                        turnController.observeClick(click);
+                        click.addObserver(turnController);
+                        click.setValue(t);
                     }
                 }
             }
@@ -164,7 +168,7 @@ public class MapPanel extends JPanel {
                 }
                 
                 //Are we filling a neighbour?
-                neighbourList = neighbourMap.get(t);
+                neighbourList = getNeighbourMap().get(t);
                 for(Territory n : neighbourList){
                     if (turnController.getTurnPhase() == turnPhase.attackPhase){
                         if(getCurrentTerritory().equals(n) && (getCurrentTerritory().getOwnerPlayer() != t.getOwnerPlayer())){
@@ -217,120 +221,6 @@ public class MapPanel extends JPanel {
     
     private void paintArmyInfo(Territory t){
         
-    }
-    
-    public void actionForClick(Territory t){
-        currentPlayer = turnController.getCurrentPlayer();
-        System.out.print(turnController.getTurnPhase() + "fase do turno\n");
-        System.out.print("O territorio " + t.getNome() + " do jogador "+ t.getOwnerPlayer().getPlayerId() + " tem " + t.getQtdExercitos() + " exercitos \n");
-
-        if (turnController.getTurnPhase() == turnPhase.newArmyPhase || turnController.getTurnPhase() == turnPhase.chooseNewAttacker ){
-            setCurrentTerritory(t);
-            repaint();
-        }
-        
-        if (turnController.getTurnPhase() == turnPhase.moveArmyPhase){
-            movePhase(t);
-        }
-        if (turnController.getTurnPhase() == turnPhase.attackPhase){ 
-            
-        }     
-    }
-    
-    private void movePhase(Territory t){
-    
-        if (currentTerritory == null){
-            if (t.getOwnerPlayer() == currentPlayer && t.getQtdExercitos() > 1){
-                setCurrentTerritory(t);
-                repaint();
-            }
-        }
-        else{
-            if (t.getOwnerPlayer() == currentPlayer && currentTerritory != t){
-                if (currentTerritory.getQtdExercitos() > 1){
-                    targetTerritory = t;
-                    showInputForMove();
-                    currentTerritory = null;
-                    repaint();
-                }
-            }
-            if (currentTerritory == t){
-                currentTerritory = null;
-                repaint();
-            }
-        }
-    }
-    
-    private void attackPhase(Territory t){
-        
-        if (t.getOwnerPlayer() != currentPlayer){
-           if (neighbourMap.get(currentTerritory).contains(t) ){
-                if (currentTerritory.getQtdExercitos() > 1){
-                    defensePlayer = t.getOwnerPlayer();
-                    if (currentTerritory.getQtdExercitos() - 1 > 3){
-                        attackingArmies = 3;
-                    }
-                    else{
-                        attackingArmies = currentTerritory.getQtdExercitos() - 1;
-                    }
-                    DicePanel dices = new DicePanel(currentTerritory.getQtdExercitos() - 1, t.getQtdExercitos());
-                    dices.showDices();
-                    if (dices.attackWins()){
-                        JOptionPane.showMessageDialog(null, "ATTACK wins");
-                        t.setQtdExercitos(t.getQtdExercitos() - dices.getDefenseArmiesDead());
-                        currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - dices.getAttackArmiesDead());
-                        if (t.getQtdExercitos() == 0){
-                            t.setOwnerPlayer(currentPlayer);
-                            currentPlayer.setCurrentTerritories(currentPlayer.getCurrentTerritories()+1);
-                            lostTerritory = t;
-                            //pergunta ao jogador quantos exercitos quer mover
-                            showInputForAttack();
-                        }
-                    }
-                    else{
-                        currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - dices.getAttackArmiesDead());
-                        t.setQtdExercitos(t.getQtdExercitos() - dices.getDefenseArmiesDead());
-                    }
-                    setCurrentTerritory(null);
-                    repaint();
-                }
-            }
-        }
-        else{
-           setCurrentTerritory(t);
-           repaint();
-        }
-    }
-    
-    private void showInputForAttack(){
-        
-        String nome = null;
-        do {
-            nome = JOptionPane.showInputDialog("Quantos exercitos deseja passar? (1-" + attackingArmies + ")" );
-            if (Integer.parseInt(nome) != 1 && Integer.parseInt(nome) != 2 && Integer.parseInt(nome) != 3) {
-                JOptionPane.showMessageDialog(null,"Escolha um dos numeros possíveis.");
-            }
-        } while (Integer.parseInt(nome) != 1 && Integer.parseInt(nome) != 2 && Integer.parseInt(nome) != 3);
-
-        JOptionPane.showMessageDialog(null, "Voce passou " + nome + " exércitos.");
-        lostTerritory.setQtdExercitos(Integer.parseInt(nome));
-        currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - Integer.parseInt(nome));
-    }
-    
-    private void showInputForMove(){
-        String nome = null;
-        
-        do {
-            nome = JOptionPane.showInputDialog("Quantos exercitos deseja passar? (1-" + (currentTerritory.getQtdExercitos() - 1) + ")" );
-            if (Integer.parseInt(nome) < currentTerritory.getQtdExercitos() - 1 && Integer.parseInt(nome) > 0) {
-                JOptionPane.showMessageDialog(null,"Escolha um dos numeros possíveis.");
-            }
-        } while (Integer.parseInt(nome) < currentTerritory.getQtdExercitos() - 1 && Integer.parseInt(nome) > 0);
-        
-        JOptionPane.showMessageDialog(null, "Voce passou " + nome + " exércitos.");
-        currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - Integer.parseInt(nome));
-        targetTerritory.setQtdExercitos(targetTerritory.getQtdExercitos() + Integer.parseInt(nome));
-        currentTerritory = null;
     }
 
     public List<Territory> getLstTerritorios() {
@@ -1069,4 +959,8 @@ public class MapPanel extends JPanel {
     public void setCurrentTerritory(Territory currentTerritory) {
         this.currentTerritory = currentTerritory;
     }   
+
+    public Map<Territory,List<Territory>> getNeighbourMap() {
+        return neighbourMap;
+    }
 }
