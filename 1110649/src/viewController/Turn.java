@@ -22,8 +22,7 @@ import model.Territory;
 public class Turn implements Observer{
 
     public enum turnPhase {
-
-        newArmyPhase, attackPhase, retreatPhase, chooseNewAttacker, moveArmyPhase
+        newArmyPhase, attackPhase, chooseNewAttacker, moveArmyPhase
     }
 
     private Player[] playerArray;
@@ -47,9 +46,7 @@ public class Turn implements Observer{
         }
         return turnInstance;
     }
-    public void observeClick(Click click){
-        this.click = click;
-    }
+    
     //START Creating players and distributing territories 
     public void createAndRandomizePlayers(int players) {
         playerArray = new Player[players];
@@ -64,7 +61,6 @@ public class Turn implements Observer{
         }
 
         currentPlayer = this.playerArray[0];
-
     }
 
     private void shuffleArray(Player[] array, int size) {
@@ -127,6 +123,15 @@ public class Turn implements Observer{
         }
     }
     
+    @Override
+    public void update(Observable o, Object arg) {
+        System.out.println("ROLO");
+        attackController = new GameplayController();
+        attackController.setCurrentTerritory(mapPanel.getCurrentTerritory());
+        click = (Click)o;
+        attackController.actionForClick(click.getValue());
+    }
+    
     //END turn and phase control
     
     //Getters and Setters
@@ -157,14 +162,6 @@ public class Turn implements Observer{
 
     public void goToMovePhase() {
         this.currentPhase = turnPhase.moveArmyPhase;
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        System.out.println("ROLO");
-        attackController = new GameplayController();
-        attackController.setCurrentTerritory(mapPanel.getCurrentTerritory());
-        attackController.actionForClick(click.getValue());
     }
 
     public MapPanel getMapPanel() {

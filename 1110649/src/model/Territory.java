@@ -12,8 +12,8 @@ public class Territory {
         private Player ownerPlayer;
         private int qtdExercitos;
 	private GeneralPath poligono;
-        private int firstVertexX;
-        private int firstVertexY;
+        private int centerX;
+        private int centerY;
 
 	public Territory(String continente, String nome, Ponto p[], float x, float y) {
 		super();
@@ -23,8 +23,8 @@ public class Territory {
                 
 		GeneralPath gp = new GeneralPath(GeneralPath.WIND_EVEN_ODD);				
 		boolean first = true;
-                this.firstVertexX = 0;
-                this.firstVertexY = 0;
+                this.centerX = 0;
+                this.centerY = 0;
                 
                 for (Ponto p1 : p) {
                     if (first) {
@@ -34,12 +34,12 @@ public class Territory {
                         gp.lineTo(p1.get("x") + (x), p1.get("y") + (y));
                     }
                     
-                    this.firstVertexX += p1.get("x");
-                    this.firstVertexY += p1.get("y");
+                    this.centerX += p1.get("x");
+                    this.centerY += p1.get("y");
                 }
                 
-                this.firstVertexX /= p.length;
-                this.firstVertexY /= p.length;
+                this.centerX /= p.length;
+                this.centerY /= p.length;
                 
 		gp.closePath();
 		
@@ -95,31 +95,31 @@ public class Territory {
     }
 
     /**
-     * @return the firstVertexX
+     * @return the centerX
      */
-    public int getFirstVertexX() {
-        return firstVertexX;
+    public int getCenterX() {
+        return centerX;
     }
 
     /**
-     * @return the firstVertexY
+     * @return the centerY
      */
-    public int getFirstVertexY() {
-        return firstVertexY;
+    public int getCenterY() {
+        return centerY;
     }
 
     /**
-     * @param firstVertexX the firstVertexX to set
+     * @param centerX the centerX to set
      */
-    public void setFirstVertexX(int firstVertexX) {
-        this.firstVertexX = firstVertexX;
+    public void setCenterX(int centerX) {
+        this.centerX = centerX;
     }
 
     /**
-     * @param firstVertexY the firstVertexY to set
+     * @param centerY the centerY to set
      */
-    public void setFirstVertexY(int firstVertexY) {
-        this.firstVertexY = firstVertexY;
+    public void setCenterY(int centerY) {
+        this.centerY = centerY;
     }
 
 }

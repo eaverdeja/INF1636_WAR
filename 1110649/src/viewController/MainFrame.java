@@ -1,7 +1,6 @@
 package viewController;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Polygon;
@@ -27,18 +26,13 @@ public class MainFrame extends JFrame{
     public final int DEF_HEIGHT = 760;
     
     private MapPanel mapPanel;
-    private BufferedImage image;
     private JButton finishAttacks;
     private JButton finishMoves;
     private JButton nextTurn;
     private JButton addArmy;
-    private JLabel diceOne;
-    private JLabel diceTwo;
-    private JLabel diceThree;
     
     private Turn turnController;
     private final int players;
-    private JPanel box;
     
     private Map<Territory,List<Territory>> neighbourMap;
     
@@ -62,12 +56,15 @@ public class MainFrame extends JFrame{
         turnController.setLstTerritorios(mapPanel.getLstTerritorios());
         turnController.randomizeTerritories();
         turnController.setMapPanel(mapPanel);
+        
         //Create dices and next turn buttons
         createNextTurn();
         createFinishAttacksButton();
         createFinishMovesButton();
         createAddArmy();
         
+        //Console with turn/player/territory infos
+        createConsole();
     }
     
     private void createMap(){
@@ -86,7 +83,6 @@ public class MainFrame extends JFrame{
     private void createNextTurn(){
         nextTurn = new JButton("Next turn!");
         nextTurn.setAlignmentY(TOP_ALIGNMENT);
-//        nextTurn.setPreferredSize(new Dimension(20,20));
         getMapPanel().setLayout(null);
         getMapPanel().add(nextTurn);
         nextTurn.setBounds(DEF_WIDTH - 120, 30, 100, 30);
@@ -186,11 +182,17 @@ public class MainFrame extends JFrame{
         });
     }
     
+    private void createConsole(){
+        Console.getInstance().setBounds(124, 614, 266, 82);
+        getMapPanel().setLayout(null);
+        getMapPanel().add(Console.getInstance());
+        repaint();
+    }
+    
     private void createNeighbourMap(){
         List<Territory> territoryList = getMapPanel().getLstTerritorios();
         List<Territory> neighbourList = new ArrayList<>();
         neighbourMap = new HashMap<>();
-        
         
         ArrayList<Line2D.Double> tLines = new ArrayList<>();
         ArrayList<Line2D.Double> nLines = new ArrayList<>();

@@ -25,6 +25,7 @@ public class Click extends Observable{
       this.t = t;
       setChanged();
       notifyObservers();
+      clearChanged();
    }
    public Territory getValue()
    {
