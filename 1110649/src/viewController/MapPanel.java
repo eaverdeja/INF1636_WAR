@@ -2,6 +2,7 @@ package viewController;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -74,7 +75,7 @@ public class MapPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 // Para cada territorio da lista de territorios
-                
+                System.out.println("mouseX = "+e.getX()+" mouseY = "+e.getY()+"\n");
                 for(Territory t : lstTerritorios) {
 
                     // Se o ponto clicado for contido pelo poligono do territorio	
@@ -128,6 +129,9 @@ public class MapPanel extends JPanel {
         
         //Paint players
         paintPlayers(g);
+        
+        //Paint armies
+        paintArmyInfo(g);
     }
     
     public void defineTerritories(){
@@ -135,6 +139,8 @@ public class MapPanel extends JPanel {
             //Transforming path and offsetting borders
             t.getPoligono().transform(AffineTransform.getScaleInstance(0.94,0.94));
             t.getPoligono().transform(AffineTransform.getTranslateInstance(3, 3));
+            t.setFirstVertexX((int)(t.getFirstVertexX()*0.94));
+            t.setFirstVertexY((int)(t.getFirstVertexY()*0.94));
         }
     }
     
@@ -158,6 +164,7 @@ public class MapPanel extends JPanel {
             }
             
             if(!(currentTerritory == null)){
+                
                 //Are we filling the current country?
                 if(getCurrentTerritory().equals(t)){
                     g2.setColor(g2.getColor().brighter().brighter());
@@ -215,16 +222,40 @@ public class MapPanel extends JPanel {
         }
     }
     
-    private void paintArmyInfo(Territory t){
+    private void paintArmyInfo(Graphics g){
+        Graphics2D g2 = (Graphics2D)g;           
+        //Draw army infos
+        int width = 30;
+        int height = 20;
         
+        g2.setFont(new Font("TimesRoman",Font.BOLD,15));
+        
+        for(Territory t : lstTerritorios){
+            g2.setPaint(t.getOwnerPlayer().getColor());
+            g2.fillRect(t.getFirstVertexX(),t.getFirstVertexY(),width,height);
+       
+            //Are we painting the current territory?
+            if(t.equals(currentTerritory)){
+                g2.setColor(t.getOwnerPlayer().getColor());
+                g2.setStroke(new BasicStroke(2.5f));
+                g2.drawRect(t.getFirstVertexX()-1,t.getFirstVertexY()-1,width+2,height+2);
+            }
+            
+            g2.setStroke(new BasicStroke(1.5f));
+            g2.setColor(Color.black);
+            g2.drawRect(t.getFirstVertexX(),t.getFirstVertexY(),width,height);
+            
+            g2.drawString(Integer.toString(t.getQtdExercitos()),t.getFirstVertexX()+height/2,t.getFirstVertexY()+width/2);
+        }
     }
     
     public void actionForClick(Territory t){
         currentPlayer = turnController.getCurrentPlayer();
-        System.out.print(turnController.getTurnPhase() + "fase do turno\n");
+        System.out.print(turnController.getTurnPhase() + " fase do turno\n");
         System.out.print("O territorio " + t.getNome() + " do jogador "+ t.getOwnerPlayer().getPlayerId() + " tem " + t.getQtdExercitos() + " exercitos \n");
-
-        if (turnController.getTurnPhase() == turnPhase.newArmyPhase || turnController.getTurnPhase() == turnPhase.chooseNewAttacker ){
+        System.out.print("First(X,Y) = ("+t.getFirstVertexX()+","+t.getFirstVertexY()+")\n");
+        if (turnController.getTurnPhase() == turnPhase.newArmyPhase 
+            || turnController.getTurnPhase() == turnPhase.chooseNewAttacker ){
             setCurrentTerritory(t);
             repaint();
         }
@@ -233,7 +264,7 @@ public class MapPanel extends JPanel {
             movePhase(t);
         }
         if (turnController.getTurnPhase() == turnPhase.attackPhase){ 
-            
+            attackPhase(t);
         }     
     }
     
