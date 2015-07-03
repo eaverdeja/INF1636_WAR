@@ -11,6 +11,7 @@ public class Player {
     private int playerId;
     private static int playerQuantity = 0;
     private int currentTerritories = 0;
+    private Card[] cardArray;
     
     public Player(){
         this.playerId = playerQuantity;

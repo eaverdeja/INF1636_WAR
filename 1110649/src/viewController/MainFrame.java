@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.*;
+import model.Card;
 import model.Territory;
 import viewController.Turn.turnPhase;
 
@@ -90,7 +91,9 @@ public class MainFrame extends JFrame{
         
         nextTurn.addActionListener((ActionEvent e) -> {
             try {
-                turnController.nextTurn();
+//                turnController.nextTurn();
+                Card card = new Card("Africa do Sul");
+                card.showCard();
                 repaint();
             }
             catch (Exception ex){
@@ -172,6 +175,7 @@ public class MainFrame extends JFrame{
         finishMoves.setVisible(false);
         finishMoves.addActionListener((ActionEvent e) -> {
             try {
+                
                 turnController.nextTurn();
                 addArmy.setVisible(true);
                 finishMoves.setVisible(false);

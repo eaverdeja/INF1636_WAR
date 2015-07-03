@@ -54,8 +54,8 @@ public class MapPanel extends JPanel {
             File line = new File("images/Mapas/war_tabuleiro_linhas.png");
             lineImage = ImageIO.read(line);
             
-            File infos = new File("images/mapas/war_tabuleiro.png");
-            infosImage = ImageIO.read(infos);
+//            File infos = new File("images/mapas/war_tabuleiro.png");
+//            infosImage = ImageIO.read(infos);
             
             playerColors = new ArrayList<>();
             playerList.forEach((Player) -> playerColors.add(Player.getColor()));
@@ -889,7 +889,7 @@ public class MapPanel extends JPanel {
                         new Ponto(784.1, 246.4),
                         new Ponto(764.7, 278.9)}, deslocaX,deslocaY));
 
-        lstTerritorios.add( new Territory("OC","Autr�lia", new Ponto[] {
+        lstTerritorios.add( new Territory("OC","Autralia", new Ponto[] {
                         new Ponto(875.1, 539.4),
                         new Ponto(885.9, 539.4),
                         new Ponto(919.7, 598.0),

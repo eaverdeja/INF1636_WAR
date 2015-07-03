@@ -161,10 +161,10 @@ public class GameplayController extends Observable implements Controller{
         
         do {
             nome = JOptionPane.showInputDialog("Quantos exercitos deseja passar? (1-" + (currentTerritory.getQtdExercitos() - 1) + ")" );
-            if (Integer.parseInt(nome) < currentTerritory.getQtdExercitos() - 1 && Integer.parseInt(nome) > 0) {
+            if (Integer.parseInt(nome) > currentTerritory.getQtdExercitos() - 1 || Integer.parseInt(nome)  < 1) {
                 JOptionPane.showMessageDialog(null,"Escolha um dos numeros possíveis.");
             }
-        } while (Integer.parseInt(nome) < currentTerritory.getQtdExercitos() - 1 && Integer.parseInt(nome) > 0);
+        } while (Integer.parseInt(nome) > currentTerritory.getQtdExercitos() - 1 || Integer.parseInt(nome) < 1);
         
         JOptionPane.showMessageDialog(null, "Voce passou " + nome + " exércitos.");
         currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - Integer.parseInt(nome));
