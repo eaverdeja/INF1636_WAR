@@ -32,6 +32,7 @@ public class MainFrame extends JFrame{
     private JButton addArmy;
     
     private Turn turnController;
+    private Console consoleController;
     private final int players;
     
     private Map<Territory,List<Territory>> neighbourMap;
@@ -48,7 +49,6 @@ public class MainFrame extends JFrame{
         turnController = Turn.getInstance();
         turnController.createAndRandomizePlayers(players);
         
-
         //Create map
         createMap();
         createNeighbourMap();
@@ -65,6 +65,7 @@ public class MainFrame extends JFrame{
         
         //Console with turn/player/territory infos
         createConsole();
+        consoleController = Console.getInstance();
     }
     
     private void createMap(){
@@ -125,7 +126,8 @@ public class MainFrame extends JFrame{
                     }else{
                         System.out.print("Not your territory");
                     }
-                repaint();
+                    consoleController.repaint();
+                    repaint();
                 }else{
                     System.out.print("Not the right turnPhase\n");
                 }
@@ -183,6 +185,9 @@ public class MainFrame extends JFrame{
     }
     
     private void createConsole(){
+        //Add the console to the turnController obsList
+        Turn.getInstance().addObserver(Console.getInstance());
+        
         Console.getInstance().setBounds(124, 614, 266, 82);
         getMapPanel().setLayout(null);
         getMapPanel().add(Console.getInstance());

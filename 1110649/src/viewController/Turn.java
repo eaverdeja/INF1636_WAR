@@ -19,7 +19,7 @@ import model.Territory;
  *
  * @author lorenzosaraiva
  */
-public class Turn implements Observer{
+public class Turn extends Observable implements Controller, Observer{
 
     public enum turnPhase {
         newArmyPhase, attackPhase, chooseNewAttacker, moveArmyPhase
@@ -104,6 +104,9 @@ public class Turn implements Observer{
             currentPhase = turnPhase.attackPhase;
             return;
         }
+        setChanged();
+        notifyObservers();
+        clearChanged();
     }
 
     public void nextTurn() {
@@ -125,11 +128,15 @@ public class Turn implements Observer{
     
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("ROLO");
         attackController = new GameplayController();
         attackController.setCurrentTerritory(mapPanel.getCurrentTerritory());
         click = (Click)o;
         attackController.actionForClick(click.getValue());
+    }
+    
+    public void consoleEvent(){
+        String info = Console.getInstance().getText().replaceAll("\\d+", Integer.toString(10-Turn.getInstance().getArmiesAdded()));
+        Console.getInstance().setText(info);
     }
     
     //END turn and phase control
@@ -158,6 +165,9 @@ public class Turn implements Observer{
 
     public void setArmiesAdded(int armiesAdded) {
         this.armiesAdded = armiesAdded;
+        
+        setChanged();
+        notifyObservers();
     }
 
     public void goToMovePhase() {

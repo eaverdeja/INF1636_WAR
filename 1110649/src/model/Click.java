@@ -12,7 +12,7 @@ import model.Territory;
  *
  * @author lorenzosaraiva
  */
-public class Click extends Observable{
+public class Click extends Observable {
     
     private Territory t;
     

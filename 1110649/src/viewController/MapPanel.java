@@ -81,7 +81,6 @@ public class MapPanel extends JPanel {
                         Click click = new Click();
                         
                         click.addObserver(turnController);
-                        click.addObserver(consoleController);
                         click.setValue(t);
                     }
                 }
@@ -249,10 +248,6 @@ public class MapPanel extends JPanel {
             
             g2.drawString(Integer.toString(t.getQtdExercitos()),t.getCenterX()+height/2,t.getCenterY()+width/2);
         }
-    }
-    
-    private void paintTurnInfo(Graphics g){
-        
     }
 	
     public List<Territory> getLstTerritorios() {

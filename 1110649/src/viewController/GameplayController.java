@@ -6,6 +6,8 @@
 package viewController;
 
 
+import java.awt.Font;
+import java.util.Observable;
 import javax.swing.JOptionPane;
 import model.Player;
 import model.Territory;
@@ -14,7 +16,7 @@ import model.Territory;
  *
  * @author lorenzosaraiva
  */
-public class GameplayController {
+public class GameplayController extends Observable implements Controller{
     
     private Player currentPlayer;
     private Player defensePlayer;
@@ -31,25 +33,30 @@ public class GameplayController {
     public void actionForClick(Territory t){
         currentPlayer = turnController.getCurrentPlayer();
         
-        System.out.print(turnController.getTurnPhase() + "fase do turno\n");
+        System.out.print(turnController.getTurnPhase() + " fase do turno\n");
         System.out.print("O territorio " + t.getNome() + " do jogador "+ t.getOwnerPlayer().getPlayerId() + " tem " + t.getQtdExercitos() + " exercitos \n");
 
+        //Add the console so it listens to bussiness
+        addObserver(Console.getInstance());
+        
         if (turnController.getTurnPhase() == Turn.turnPhase.newArmyPhase ){
             if (t.getOwnerPlayer() == currentPlayer){
-            turnController.getMapPanel().setCurrentTerritory(t);
-            setCurrentTerritory(t);
-            turnController.getMapPanel().repaint();
-                    System.out.print(currentTerritory.getNome() + "eh o current!\n");
+                turnController.getMapPanel().setCurrentTerritory(t);
+                setCurrentTerritory(t);
+                turnController.getMapPanel().repaint();
+                System.out.print(currentTerritory.getNome() + "eh o current!\n");
             }
+            else{
+                turnController.getMapPanel().setCurrentTerritory(null);
+            }
+                
         }
         
         if (turnController.getTurnPhase() == Turn.turnPhase.chooseNewAttacker ){
             if (t.getOwnerPlayer() == currentPlayer){
-            turnController.getMapPanel().setCurrentTerritory(t);
-            setCurrentTerritory(t);
-            turnController.getMapPanel().repaint();
-            turnController.goToNextPhase();
-            System.out.print(currentTerritory.getNome() + "eh o current!\n");
+                turnController.getMapPanel().repaint();
+                turnController.goToNextPhase();
+                System.out.print(currentTerritory.getNome() + "eh o current!\n");
             }
         }
         
@@ -58,7 +65,10 @@ public class GameplayController {
         }
         if (turnController.getTurnPhase() == Turn.turnPhase.attackPhase){
             attackPhase(t);
-        }     
+        }
+        
+        setCurrentTerritory(turnController.getMapPanel().getCurrentTerritory());
+        turnController.getMapPanel().repaint();
     }
     
     private void movePhase(Territory t){
@@ -164,5 +174,43 @@ public class GameplayController {
 
     public void setCurrentTerritory(Territory currentTerritory) {
         this.currentTerritory = currentTerritory;
+        
+        setChanged();
+        notifyObservers();
+        clearChanged();
+    }
+    
+    public void consoleEvent(){
+        
+        Console c = Console.getInstance();
+        
+        String phase = Turn.getInstance().getTurnPhase().name();
+        Player currentPlayer = Turn.getInstance().getCurrentPlayer();
+        
+        String info = null;
+        String phaseMsg = null;
+        
+        if(phase.equals("newArmyPhase")){
+            phaseMsg = "You have "+(currentPlayer.newArmyAmout()+" armies left");
+        }
+        else if(phase.equals("attackPhase")){   
+            phaseMsg = "AttackMsg";
+        }
+        else if(phase.equals("chooseNewAttacker")){
+            phaseMsg = "ChooseNewMsg";
+        }
+        else if(phase.equals("movePhase")){
+            phaseMsg = "MoveMsg";
+        }
+
+        if(currentTerritory != null){
+            info = "Country = "+currentTerritory.getNome()
+                        +"\nWe are in the "+Turn.getInstance().getTurnPhase().name()
+                        +"\n"+phaseMsg;
+            c.setText(info);
+            c.setFont(new Font("TimesRoman",Font.BOLD,14));
+        }
+        else c.setText("Thats not yours!");
+        c.repaint();
     }
 }

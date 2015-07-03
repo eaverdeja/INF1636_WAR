@@ -11,18 +11,20 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import model.Click;
-import model.Territory;
+import model.Player;
+
 
 /**
  *
  * @author Verdeja
  */
 public class Console extends JTextArea implements Observer {
-    
+
     private Click click = null;
     private static Console consoleInstance = null;
     private static Font font;
     private static String defaultMessage;
+    private static String info;
     
     //Implementing singleton pattern
     
@@ -33,7 +35,7 @@ public class Console extends JTextArea implements Observer {
         setBorder(new CompoundBorder(new EmptyBorder(10, 10, 10, 10), new LineBorder(Color.LIGHT_GRAY)));
         
         font = new Font("TimesRoman",Font.BOLD,14);
-        defaultMessage = "Which country do you desire?";
+        defaultMessage = "Hello world?";
         
         setFont(font);
         setText(defaultMessage);
@@ -66,29 +68,22 @@ public class Console extends JTextArea implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        click = (Click)o; //Territory
-        String phase = Turn.getInstance().getTurnPhase().name();
-        String phaseMsg = null;
-        if(phase.equals("newArmyPhase")){
-            phaseMsg = "You have "+(10-Turn.getInstance().getArmiesAdded()+" armies left");
-        }
-        else if(phase.equals("attackPhase")){
-            phaseMsg = "AttackMsg";
-        }
-        else if(phase.equals("chooseNewAttacker")){
-            phaseMsg = "ChooseNewMsg";
-        }
-        else if(phase.equals("movePhase")){
-            phaseMsg = "MoveMsg";
-        }
-        
-        if(click.getValue() != null){
-            String info = "Country = "+click.getValue().getNome()
-                        +"\nWe are in the "+Turn.getInstance().getTurnPhase().name()
-                        +"\n"+phaseMsg;
-            consoleInstance.setText(info);
-            consoleInstance.setFont(new Font("TimesRoman",Font.BOLD,14));
-        }
-        else consoleInstance.setText(defaultMessage);
+        Controller c = (Controller)o;
+        c.consoleEvent();
+    }
+    
+    
+    /**
+     * @return the defaultMessage
+     */
+    public static String getDefaultMessage() {
+        return defaultMessage;
+    }
+
+    /**
+     * @param aDefaultMessage the defaultMessage to set
+     */
+    public static void setDefaultMessage(String aDefaultMessage) {
+        defaultMessage = aDefaultMessage;
     }
 }
