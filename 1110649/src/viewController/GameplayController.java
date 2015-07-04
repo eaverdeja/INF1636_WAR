@@ -191,7 +191,7 @@ public class GameplayController extends Observable implements Controller{
         String phaseMsg = null;
         
         if(phase.equals("newArmyPhase")){
-            phaseMsg = "You have "+(currentPlayer.newArmyAmout()+" armies left");
+            phaseMsg = "You have "+(currentPlayer.newArmyAmount()+" armies left");
         }
         else if(phase.equals("attackPhase")){   
             phaseMsg = "AttackMsg";

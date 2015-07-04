@@ -60,7 +60,7 @@ public class Player {
         return playerQuantity;
     }
     
-    public int newArmyAmout(){
+    public int newArmyAmount(){
         int ret = (int) Math.floor(this.getCurrentTerritories()/2);
         if (ret > 3)
             return ret;

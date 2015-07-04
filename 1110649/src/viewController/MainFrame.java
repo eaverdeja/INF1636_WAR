@@ -115,10 +115,10 @@ public class MainFrame extends JFrame{
             try {
                 if (turnController.getTurnPhase() == turnPhase.newArmyPhase){
                     if (getMapPanel().getCurrentTerritory().getOwnerPlayer() == turnController.getCurrentPlayer()){
-                        if (turnController.getCurrentPlayer().newArmyAmout() > turnController.getArmiesAdded()){
+                        if (turnController.getCurrentPlayer().newArmyAmount() > turnController.getArmiesAdded()){
                             getMapPanel().getCurrentTerritory().addArmy();
                             turnController.setArmiesAdded(turnController.getArmiesAdded()+1);
-                            System.out.print("You have " + (turnController.getCurrentPlayer().newArmyAmout() - turnController.getArmiesAdded()) + " armies left \n" );
+                            System.out.print("You have " + (turnController.getCurrentPlayer().newArmyAmount() - turnController.getArmiesAdded()) + " armies left \n" );
                         }else{
                             turnController.setArmiesAdded(0);
                             turnController.goToNextPhase();
