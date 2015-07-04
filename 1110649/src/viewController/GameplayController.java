@@ -54,9 +54,9 @@ public class GameplayController extends Observable implements Controller{
         
         if (turnController.getTurnPhase() == Turn.turnPhase.chooseNewAttacker ){
             if (t.getOwnerPlayer() == currentPlayer){
+                turnController.getMapPanel().setCurrentTerritory(t);
                 turnController.getMapPanel().repaint();
                 turnController.goToNextPhase();
-                System.out.print(currentTerritory.getNome() + "eh o current!\n");
             }
         }
         
@@ -113,6 +113,7 @@ public class GameplayController extends Observable implements Controller{
                     dices.showDices();
                     if (dices.attackWins()){
                         JOptionPane.showMessageDialog(null, "ATTACK wins");
+                        turnController.setHasConquered(Boolean.TRUE);
                         t.setQtdExercitos(t.getQtdExercitos() - dices.getDefenseArmiesDead());
                         currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - dices.getAttackArmiesDead());
                         if (t.getQtdExercitos() == 0){

@@ -31,6 +31,8 @@ public class MainFrame extends JFrame{
     private JButton finishMoves;
     private JButton nextTurn;
     private JButton addArmy;
+    private JButton changeCards;
+
     
     private Turn turnController;
     private Console consoleController;
@@ -63,6 +65,8 @@ public class MainFrame extends JFrame{
         createFinishAttacksButton();
         createFinishMovesButton();
         createAddArmy();
+        createChangeCards();
+
         
         //Console with turn/player/territory infos
         createConsole();
@@ -91,9 +95,7 @@ public class MainFrame extends JFrame{
         
         nextTurn.addActionListener((ActionEvent e) -> {
             try {
-//                turnController.nextTurn();
-                Card card = new Card("Africa do Sul");
-                card.showCard();
+                turnController.nextTurn();
                 repaint();
             }
             catch (Exception ex){
@@ -159,7 +161,7 @@ public class MainFrame extends JFrame{
                 repaint();
             }
             catch (Exception ex){
-                System.out.println("Erro ao rolar os dados" + ex.getMessage());   
+                System.out.println("Erro ao terminar os ataques!" + ex.getMessage());   
             }
         });
     }
@@ -175,7 +177,12 @@ public class MainFrame extends JFrame{
         finishMoves.setVisible(false);
         finishMoves.addActionListener((ActionEvent e) -> {
             try {
-                
+                if (turnController.getHasConquered()){
+                    Card card = turnController.getCardsController().getRandomCard();
+                    turnController.getCurrentPlayer().giveCard(card);
+                    card.showCard();
+                    
+                }
                 turnController.nextTurn();
                 addArmy.setVisible(true);
                 finishMoves.setVisible(false);
@@ -183,14 +190,39 @@ public class MainFrame extends JFrame{
                 
             }
             catch (Exception ex){
-                System.out.println("Erro ao rolar os dados" + ex.getMessage());   
+                System.out.println("Erro ao terminar os movimentos: " + ex.getMessage());   
+            }
+        });
+    }
+    
+    private void createChangeCards(){
+    
+        changeCards = new JButton("Change Cards");
+        
+        changeCards.setAlignmentY(TOP_ALIGNMENT);
+        changeCards.setPreferredSize(new Dimension(20,20));
+        getMapPanel().setLayout(null);
+        getMapPanel().add(changeCards);
+        changeCards.setBounds(DEF_WIDTH - 370, 30, 100, 30);
+        changeCards.setVisible(true);
+        changeCards.addActionListener((ActionEvent e) -> {
+            try {
+                if (turnController.getCurrentPlayer().changeCards()){
+                    System.out.println("TROCA");   
+                }
+                else{
+                    System.out.println("NAO TROCA");   
+                }
+            }
+            catch (Exception ex){
+                System.out.println("Erro ao trocar as cartas: " + ex.getMessage());   
             }
         });
     }
     
     private void createConsole(){
         //Add the console to the turnController obsList
-        Turn.getInstance().addObserver(Console.getInstance());
+        turnController.addObserver(Console.getInstance());
         
         Console.getInstance().setBounds(124, 614, 266, 82);
         getMapPanel().setLayout(null);

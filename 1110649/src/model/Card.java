@@ -88,35 +88,35 @@ public class Card extends JPanel {
                 break;
             }
             case "Mexico":{
-                File image = new File("images/Cartas/war_carta_as_mexico.png");
+                File image = new File("images/Cartas/war_carta_an_mexico.png");
                 cardImage = ImageIO.read(image);
                 cardSymbol = 0;
                 name = "Mexico";
                 break;
             }
             case "Venezuela":{
-                File image = new File("images/Cartas/war_carta_as_venezuela.png");
+                File image = new File("images/Cartas/war_carta_asl_venezuela.png");
                 cardImage = ImageIO.read(image);
                 cardSymbol = 0;
                 name = "Venezuela";
                 break;
             }
             case "Peru":{
-                File image = new File("images/Cartas/war_carta_as_peru.png");
+                File image = new File("images/Cartas/war_carta_asl_peru.png");
                 cardImage = ImageIO.read(image);
                 cardSymbol = 0;
                 name = "Peru";
                 break;
             }
             case "Brasil":{
-                File image = new File("images/Cartas/war_carta_as_brasil.png");
+                File image = new File("images/Cartas/war_carta_asl_brasil.png");
                 cardImage = ImageIO.read(image);
                 cardSymbol = 0;
                 name = "Brasil";
                 break;
             }
             case "Argentina":{
-                File image = new File("images/Cartas/war_carta_as_argentina.png");
+                File image = new File("images/Cartas/war_carta_asl_argentina.png");
                 cardImage = ImageIO.read(image);
                 cardSymbol = 0;
                 name = "Argentina";
@@ -200,7 +200,7 @@ public class Card extends JPanel {
                 break;
             }
             case "Romania":{
-                File image = new File("images/Cartas/war_carta_eu_romania.png");
+                File image = new File("images/Cartas/war_carta_eu_romenia.png");
                 cardImage = ImageIO.read(image);
                 cardSymbol = 0;
                 name = "Romania";
@@ -350,7 +350,7 @@ public class Card extends JPanel {
                 File image = new File("images/Cartas/war_carta_as_turquia.png");
                 cardImage = ImageIO.read(image);
                 cardSymbol = 0;
-                name = "Romania";
+                name = "Turquia";
                 break;
             }
             case "Autralia":{
@@ -381,6 +381,13 @@ public class Card extends JPanel {
                 name = "Perth";
                 break;
             }
+            case "Coringa":{
+                File image = new File("images/Cartas/war_carta_coringa.png");
+                cardImage = ImageIO.read(image);
+                cardSymbol = 3;
+                name = "Coringa";
+                break;
+            }
          }
      }
      
@@ -409,5 +416,9 @@ public class Card extends JPanel {
     @Override
     public Dimension getPreferredSize(){
         return new Dimension(440,725);
+    }
+
+    public int getCardSymbol() {
+        return cardSymbol;
     }
 }

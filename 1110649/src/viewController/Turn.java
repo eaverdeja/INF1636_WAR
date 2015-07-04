@@ -21,6 +21,14 @@ import model.Territory;
  */
 public class Turn extends Observable implements Controller, Observer{
 
+    public CardsController getCardsController() {
+        return cardsController;
+    }
+
+    public void setCardsController(CardsController cardsController) {
+        this.cardsController = cardsController;
+    }
+
     public enum turnPhase {
         newArmyPhase, attackPhase, chooseNewAttacker, moveArmyPhase
     }
@@ -35,6 +43,8 @@ public class Turn extends Observable implements Controller, Observer{
     private Click click = null;
     private MapPanel mapPanel;
     private GameplayController attackController;
+    private CardsController cardsController;
+    private Boolean hasConquered = false;
 
     //Implementing Singleton pattern
     protected Turn() {
@@ -52,7 +62,8 @@ public class Turn extends Observable implements Controller, Observer{
         playerArray = new Player[players];
         playerQuantity = players;
         currentPhase = turnPhase.newArmyPhase;
-
+        attackController = new GameplayController();
+        cardsController = new CardsController();
         for (int i = 0; i < players; i++) {
             Player newPlayer = new Player();
             playerArray[i] = newPlayer;
@@ -117,6 +128,9 @@ public class Turn extends Observable implements Controller, Observer{
                 index++;
             }
         }
+        
+        hasConquered = false;
+        
         if (index == playerQuantity - 1) {
             currentPlayer = playerArray[0];
         } else {
@@ -126,7 +140,6 @@ public class Turn extends Observable implements Controller, Observer{
     
     @Override
     public void update(Observable o, Object arg) {
-        attackController = new GameplayController();
         attackController.setCurrentTerritory(mapPanel.getCurrentTerritory());
         click = (Click)o;
         attackController.actionForClick(click.getValue());
@@ -191,5 +204,13 @@ public class Turn extends Observable implements Controller, Observer{
 
     public void setMapPanel(MapPanel mapPanel) {
         this.mapPanel = mapPanel;
+    }
+    
+    public Boolean getHasConquered() {
+        return hasConquered;
+    }
+
+    public void setHasConquered(Boolean hasConquered) {
+        this.hasConquered = hasConquered;
     }
 }

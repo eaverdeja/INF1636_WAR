@@ -1,6 +1,10 @@
 package model;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 /**
  *
  * @author lorenzosaraiva
@@ -11,7 +15,7 @@ public class Player {
     private int playerId;
     private static int playerQuantity = 0;
     private int currentTerritories = 0;
-    private Card[] cardArray;
+    private List<Card> currentCards = new ArrayList<>();
     
     public Player(){
         this.playerId = playerQuantity;
@@ -45,6 +49,21 @@ public class Player {
     public void setColor(Color color) {
         this.color = color;
     }
+    
+    public boolean changeCards(){
+        
+        int matches = 0,check[] = {0,0,0,0};
+     
+        for ( Card i : currentCards){
+            
+            if (check[i.getCardSymbol()] == 0 && i.getCardSymbol() != 3){
+                check[i.getCardSymbol()] = 1;
+            }else{
+                matches++;
+            }
+        }
+        return matches >= 2;
+    }
 
   
     public int getPlayerId() {
@@ -73,5 +92,9 @@ public class Player {
 
     public void setCurrentTerritories(int currentTerritories) {
         this.currentTerritories = currentTerritories;
+    }
+    
+    public void giveCard(Card card){
+        currentCards.add(card);
     }
 }

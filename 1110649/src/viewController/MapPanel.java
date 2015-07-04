@@ -54,8 +54,8 @@ public class MapPanel extends JPanel {
             File line = new File("images/Mapas/war_tabuleiro_linhas.png");
             lineImage = ImageIO.read(line);
             
-//            File infos = new File("images/mapas/war_tabuleiro.png");
-//            infosImage = ImageIO.read(infos);
+            File infos = new File("images/mapas/war_tabuleiro.png");
+            infosImage = ImageIO.read(infos);
             
             playerColors = new ArrayList<>();
             playerList.forEach((Player) -> playerColors.add(Player.getColor()));
