@@ -13,6 +13,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Card;
+import model.Player;
 
 /**
  *
@@ -21,17 +22,20 @@ import model.Card;
 public class CardsController {
     
     private List<Card> cardDeck = new ArrayList<>();
-    private List<Card> usedCards = new ArrayList<>(); 
-    
+    private Turn turnController = Turn.getInstance();
     public Card getRandomCard(){
-
-        Random randomGenerator = new Random();
-        int randValue = randomGenerator.nextInt(cardDeck.size());
-        System.out.println(randValue);
-        Card card = cardDeck.get(randValue);
-        cardDeck.remove(randValue);
-        usedCards.add(card);
-        return card;
+            Random randomGenerator = new Random();
+            int randValue = randomGenerator.nextInt(cardDeck.size());
+            System.out.println(randValue);
+            Card card = cardDeck.get(randValue);
+            cardDeck.remove(randValue);
+            if (cardDeck.size()==0){
+                for (Player p : turnController.getPlayers()){
+                p.removeCards();
+                createAndRandomizeCards();
+                }
+            }
+        return card;      
     }
     
     public CardsController() {
@@ -199,7 +203,7 @@ public class CardsController {
             cardDeck.add(card);
             
             
-            
+            shuffleCardDeck();
             
         } catch (IOException ex) {
             Logger.getLogger(CardsController.class.getName()).log(Level.SEVERE, null, ex);

@@ -3,8 +3,10 @@ package model;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import viewController.Turn;
 /**
  *
  * @author lorenzosaraiva
@@ -16,6 +18,7 @@ public class Player {
     private static int playerQuantity = 0;
     private int currentTerritories = 0;
     private List<Card> currentCards = new ArrayList<>();
+    private boolean hasChanged = false;
     
     public Player(){
         this.playerId = playerQuantity;
@@ -50,19 +53,78 @@ public class Player {
         this.color = color;
     }
     
-    public boolean changeCards(){
+    public boolean canChangeCards(){
         
         int matches = 0,check[] = {0,0,0,0};
      
-        for ( Card i : currentCards){
+        for ( Card i : getCurrentCards()){
             
             if (check[i.getCardSymbol()] == 0 && i.getCardSymbol() != 3){
-                check[i.getCardSymbol()] = 1;
+                check[i.getCardSymbol()]++;
             }else{
                 matches++;
+                check[i.getCardSymbol()]++;
             }
         }
-        return matches >= 2;
+        if (matches >= 2){
+            int swapIndex = 0, comp = 0;
+            for (int i = 0; i < 4; i++){
+                if (comp < check[i]){
+                    comp = check[i];
+                    swapIndex = i;
+                }
+            }
+            for (Iterator<Card> iterator = currentCards.iterator(); iterator.hasNext();) {
+                Card card = iterator.next();
+                        if (card.getCardSymbol() == swapIndex || card.getCardSymbol() == 3) {
+                            iterator.remove();
+                        }
+                }
+            return true;
+        }else{
+            int diffs = 0;
+            for (int i = 0; i < 4;i++){
+                if (check[i]>0){
+                    diffs++;
+                }
+            }
+            if (diffs > 2){
+                boolean firstSymbol = false, secondSymbol = false, thirdSymbol = false;
+                for (Iterator<Card> iterator = currentCards.iterator(); iterator.hasNext();) {
+                    Card card = iterator.next();
+                    if (card.getCardSymbol() == 0){
+                        if (!firstSymbol){
+                            firstSymbol = true;
+                            iterator.remove();
+                        }
+                    }
+                    if (card.getCardSymbol() == 1){
+                        if (!secondSymbol){
+                            secondSymbol = true;
+                            iterator.remove();
+                        }
+                    }
+                    if (card.getCardSymbol() == 2){
+                        if (!thirdSymbol){
+                            thirdSymbol = true;
+                            iterator.remove();
+                        }
+                    }
+                    if (card.getCardSymbol() == 3){                       
+                            iterator.remove();
+                    }
+                }
+                return true;
+            }else{
+            return false;
+            }
+        }
+    }
+    
+    public void removeCards(){
+        for (Card i : getCurrentCards()){
+            getCurrentCards().remove(i);
+        }
     }
 
   
@@ -81,6 +143,9 @@ public class Player {
     
     public int newArmyAmount(){
         int ret = (int) Math.floor(this.getCurrentTerritories()/2);
+        if (hasChanged()){
+            ret += Turn.getInstance().getCardsChangeAmount();
+        }
         if (ret > 3)
             return ret;
         return 3;
@@ -95,6 +160,25 @@ public class Player {
     }
     
     public void giveCard(Card card){
-        currentCards.add(card);
+        getCurrentCards().add(card);
+    }
+
+    public List<Card> getCurrentCards() {
+        return currentCards;
+    }
+    
+    public boolean hasFullHand(){
+        if (getCurrentCards().size() == 5){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean hasChanged() {
+        return hasChanged;
+    }
+
+    public void setHasChanged(boolean hasChanged) {
+        this.hasChanged = hasChanged;
     }
 }

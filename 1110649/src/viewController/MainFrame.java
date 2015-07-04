@@ -32,6 +32,7 @@ public class MainFrame extends JFrame{
     private JButton nextTurn;
     private JButton addArmy;
     private JButton changeCards;
+    private JButton showCards;
 
     
     private Turn turnController;
@@ -66,6 +67,7 @@ public class MainFrame extends JFrame{
         createFinishMovesButton();
         createAddArmy();
         createChangeCards();
+        createShowCards();
 
         
         //Console with turn/player/territory infos
@@ -121,12 +123,13 @@ public class MainFrame extends JFrame{
                             getMapPanel().getCurrentTerritory().addArmy();
                             turnController.setArmiesAdded(turnController.getArmiesAdded()+1);
                             System.out.print("You have " + (turnController.getCurrentPlayer().newArmyAmount() - turnController.getArmiesAdded()) + " armies left \n" );
-                        }else{
-                            turnController.setArmiesAdded(0);
-                            turnController.goToNextPhase();
-                            finishAttacks.setVisible(true);
-                            addArmy.setVisible(false);
-                            System.out.print("Already added all armies! \n" );
+                            if(turnController.getCurrentPlayer().newArmyAmount() == turnController.getArmiesAdded()){
+                                turnController.setArmiesAdded(0);
+                                turnController.goToNextPhase();
+                                finishAttacks.setVisible(true);
+                                addArmy.setVisible(false);
+                                System.out.print("Already added all armies! \n" );
+                            }
                         }
                     }else{
                         System.out.print("Not your territory");
@@ -179,7 +182,7 @@ public class MainFrame extends JFrame{
             try {
                 if (turnController.getHasConquered()){
                     Card card = turnController.getCardsController().getRandomCard();
-                    turnController.getCurrentPlayer().giveCard(card);
+                    turnController.getCurrentPlayer().giveCard(card);                   
                     card.showCard();
                     
                 }
@@ -197,7 +200,7 @@ public class MainFrame extends JFrame{
     
     private void createChangeCards(){
     
-        changeCards = new JButton("Change Cards");
+        changeCards = new JButton("Chnage Cards");
         
         changeCards.setAlignmentY(TOP_ALIGNMENT);
         changeCards.setPreferredSize(new Dimension(20,20));
@@ -207,12 +210,33 @@ public class MainFrame extends JFrame{
         changeCards.setVisible(true);
         changeCards.addActionListener((ActionEvent e) -> {
             try {
-                if (turnController.getCurrentPlayer().changeCards()){
-                    System.out.println("TROCA");   
+                if (turnController.getCurrentPlayer().canChangeCards()){
+                    System.out.println("TROCOU");
+                    turnController.getCurrentPlayer().setHasChanged(true);
+                }else{
+                    System.out.println("NAO TROCOU");
                 }
-                else{
-                    System.out.println("NAO TROCA");   
-                }
+            }
+            catch (Exception ex){
+                System.out.println("Erro ao trocar as cartas: " + ex.getMessage());   
+            }
+        });
+    }
+    
+    private void createShowCards(){
+    
+        showCards = new JButton("Show Cards");
+        
+        showCards.setAlignmentY(TOP_ALIGNMENT);
+        showCards.setPreferredSize(new Dimension(20,20));
+        getMapPanel().setLayout(null);
+        getMapPanel().add(showCards);
+        showCards.setBounds(DEF_WIDTH - 490, 30, 100, 30);
+        showCards.setVisible(true);
+        showCards.addActionListener((ActionEvent e) -> {
+            try {
+                CardPanel panel = new CardPanel(turnController.getCurrentPlayer().getCurrentCards());
+                panel.showsPanel();
             }
             catch (Exception ex){
                 System.out.println("Erro ao trocar as cartas: " + ex.getMessage());   

@@ -8,7 +8,10 @@ package viewController;
 
 import java.awt.Font;
 import java.util.Observable;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import model.Player;
 import model.Territory;
 
@@ -112,7 +115,7 @@ public class GameplayController extends Observable implements Controller{
                     DicePanel dices = new DicePanel(currentTerritory.getQtdExercitos() - 1, t.getQtdExercitos());
                     dices.showDices();
                     if (dices.attackWins()){
-                        JOptionPane.showMessageDialog(null, "ATTACK wins");
+                        JOptionPane.showMessageDialog(null, "Attack wins!");
                         turnController.setHasConquered(Boolean.TRUE);
                         t.setQtdExercitos(t.getQtdExercitos() - dices.getDefenseArmiesDead());
                         currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - dices.getAttackArmiesDead());
@@ -125,6 +128,7 @@ public class GameplayController extends Observable implements Controller{
                         }
                     }
                     else{
+                        JOptionPane.showMessageDialog(null, "Defense wins!");
                         currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - dices.getAttackArmiesDead());
                         t.setQtdExercitos(t.getQtdExercitos() - dices.getDefenseArmiesDead());
                     }
@@ -144,17 +148,34 @@ public class GameplayController extends Observable implements Controller{
     
     private void showInputForAttack(){
         
-        String nome = null;
-        do {
-            nome = JOptionPane.showInputDialog("Quantos exercitos deseja passar? (1-" + attackingArmies + ")" );
-            if (Integer.parseInt(nome) != 1 && Integer.parseInt(nome) != 2 && Integer.parseInt(nome) != 3) {
-                JOptionPane.showMessageDialog(null,"Escolha um dos numeros possíveis.");
+        int val = 0;
+        String[] options = {"OK"};
+        JPanel panel = new JPanel();
+        JLabel lbl = new JLabel("Quantos exercitos deseja passar? (1-" + attackingArmies + ")" );
+        JTextField txt = new JTextField(10);
+        panel.add(lbl);
+        panel.add(txt);
+        do{
+        int nome = JOptionPane.showOptionDialog(null, panel, "Atenção", JOptionPane.NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options , options[0]);
+         
+        
+        if (nome == 0){
+            String num = txt.getText();
+            try {
+                val = Integer.parseInt(num);
+            } catch (NumberFormatException e) {
+                val = -1;
             }
-        } while (Integer.parseInt(nome) != 1 && Integer.parseInt(nome) != 2 && Integer.parseInt(nome) != 3);
+            if (val > 0 && val <=attackingArmies)
+                break;
+            else
+                JOptionPane.showMessageDialog(null, "Escolha um numero valido!");
+            }
+        }while(true);
 
-        JOptionPane.showMessageDialog(null, "Voce passou " + nome + " exércitos.");
-        lostTerritory.setQtdExercitos(Integer.parseInt(nome));
-        currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - Integer.parseInt(nome));
+        JOptionPane.showMessageDialog(null, "Voce passou " + val + " exércitos.");
+        lostTerritory.setQtdExercitos(val);
+        currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - val);
     }
     
     private void showInputForMove(){

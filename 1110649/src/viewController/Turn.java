@@ -8,6 +8,7 @@ package viewController;
 import model.Click;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -20,14 +21,6 @@ import model.Territory;
  * @author lorenzosaraiva
  */
 public class Turn extends Observable implements Controller, Observer{
-
-    public CardsController getCardsController() {
-        return cardsController;
-    }
-
-    public void setCardsController(CardsController cardsController) {
-        this.cardsController = cardsController;
-    }
 
     public enum turnPhase {
         newArmyPhase, attackPhase, chooseNewAttacker, moveArmyPhase
@@ -45,6 +38,7 @@ public class Turn extends Observable implements Controller, Observer{
     private GameplayController attackController;
     private CardsController cardsController;
     private Boolean hasConquered = false;
+    private int cardsChangeAmount = 4;
 
     //Implementing Singleton pattern
     protected Turn() {
@@ -86,6 +80,8 @@ public class Turn extends Observable implements Controller, Observer{
 
     public void randomizeTerritories() {
         int counter = 0;
+        long seed = System.nanoTime();
+        Collections.shuffle(lstTerritorios, new Random(seed));
         for (Territory t : lstTerritorios) {
             t.setOwnerPlayer(this.playerArray[counter]);
             t.setQtdExercitos(1);
@@ -128,13 +124,20 @@ public class Turn extends Observable implements Controller, Observer{
                 index++;
             }
         }
-        
+        if (currentPlayer.hasChanged()){
+            cardsChangeAmount += 2;
+        }
         hasConquered = false;
         
         if (index == playerQuantity - 1) {
             currentPlayer = playerArray[0];
         } else {
             currentPlayer = playerArray[index + 1];
+        }
+        currentPlayer.setHasChanged(false);
+        if (currentPlayer.hasFullHand()){
+            currentPlayer.canChangeCards();
+            currentPlayer.setHasChanged(true);
         }
     }
     
@@ -212,5 +215,21 @@ public class Turn extends Observable implements Controller, Observer{
 
     public void setHasConquered(Boolean hasConquered) {
         this.hasConquered = hasConquered;
+    }
+    
+    public CardsController getCardsController() {
+        return cardsController;
+    }
+
+    public void setCardsController(CardsController cardsController) {
+        this.cardsController = cardsController;
+    }
+
+    public int getCardsChangeAmount() {
+        return cardsChangeAmount;
+    }
+
+    public void setCardsChangeAmount(int cardsChangeAmount) {
+        this.cardsChangeAmount = cardsChangeAmount;
     }
 }
