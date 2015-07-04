@@ -56,8 +56,6 @@ public class Turn extends Observable implements Controller, Observer{
         for (int i = 0; i < players; i++) {
             Player newPlayer = new Player();
             playerArray[i] = newPlayer;
-
-            System.out.println("A new player has been created!");
         }
 
         currentPlayer = this.playerArray[0];
@@ -134,9 +132,18 @@ public class Turn extends Observable implements Controller, Observer{
         attackController.actionForClick(click.getValue());
     }
     
+    @Override
     public void consoleEvent(){
-        String info = Console.getInstance().getText().replaceAll("\\d+", Integer.toString(10-Turn.getInstance().getArmiesAdded()));
+        String info = null;
+        if(currentPlayer.newArmyAmount() == armiesAdded){
+            info = Console.getInstance().getText().replaceAll("You have \\d+", "You have no more");
+        }
+        else{
+            info = Console.getInstance().getText().replaceAll("\\d+", Integer.toString(currentPlayer.newArmyAmount()-armiesAdded));
+        }
+        
         Console.getInstance().setText(info);
+        Console.getInstance().repaint();
     }
     
     //END turn and phase control
@@ -149,6 +156,10 @@ public class Turn extends Observable implements Controller, Observer{
 
     public Player getCurrentPlayer() {
         return currentPlayer;
+    }
+    
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 
     public turnPhase getTurnPhase() {

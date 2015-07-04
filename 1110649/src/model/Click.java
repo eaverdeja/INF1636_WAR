@@ -6,7 +6,6 @@
 package model;
 
 import java.util.Observable;
-import model.Territory;
 
 /**
  *

@@ -1,13 +1,13 @@
 package viewController;
 
 import javax.swing.*;
-import viewController.Welcome;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import static java.awt.Component.BOTTOM_ALIGNMENT;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+
 
 public class WelcomeFrame extends JFrame{
     public final int DEF_WIDTH = 455;
