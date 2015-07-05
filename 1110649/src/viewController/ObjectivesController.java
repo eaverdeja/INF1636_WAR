@@ -5,6 +5,7 @@
  */
 package viewController;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -31,7 +32,6 @@ public class ObjectivesController {
             Objective o = objFactory(i);
             objectiveList.add(o);
             
-            System.out.println(o.getDescription());
         }
         
     }
@@ -90,20 +90,40 @@ public class ObjectivesController {
         Random random = new Random();
         for (Player p :turnController.getPlayers()){
             int randValue = random.nextInt(objectiveList.size());
-            p.setObjective(objectiveList.get(randValue));
+            Objective o = objectiveList.get(randValue);
+            while (o.getType() == 8 && p.getColor() == Color.BLUE){
+                randValue = random.nextInt(objectiveList.size());
+                o = objectiveList.get(randValue);
+            }
+            while (o.getType() == 9 && p.getColor() == Color.WHITE){
+                randValue = random.nextInt(objectiveList.size());
+                o = objectiveList.get(randValue);
+            }
+            while (o.getType() == 10 && p.getColor() == Color.RED){
+                randValue = random.nextInt(objectiveList.size());
+                o = objectiveList.get(randValue);
+            }
+            while (o.getType() == 11 && p.getColor() == Color.MAGENTA){
+                randValue = random.nextInt(objectiveList.size());
+                o = objectiveList.get(randValue);
+            }
+            while (o.getType() == 12 && p.getColor() == Color.YELLOW){
+                randValue = random.nextInt(objectiveList.size());
+                o = objectiveList.get(randValue);
+            }
+            while (o.getType() == 13 && p.getColor() == Color.GREEN){
+                randValue = random.nextInt(objectiveList.size());
+                o = objectiveList.get(randValue);
+            }
+            System.out.println(o.getDescription());
+            
+            p.setObjective(o);
             objectiveList.remove(randValue);
         }
+                    System.out.println("--------------------------------");
+
     }
-    public boolean checkPlayerHasContinent(String s,Player p){
-        
-        for (Continent c:continentList){
-            System.out.println(c.getName());
-            if (c.getName() == s){
-                return c.playerHasContinent(p);
-            }
-        }
-        return false;
-    }
+
 
     public List<Continent> getContinentList() {
         return continentList;
