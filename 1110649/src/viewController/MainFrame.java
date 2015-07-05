@@ -165,7 +165,6 @@ public class MainFrame extends JFrame{
                     turnController.getCurrentPlayer().giveCard(card);                   
                     card.showCard();
                     turnController.nextTurn();
-                    
                 }
                 addArmy.setVisible(true);
                 finishMoves.setVisible(false);

@@ -31,7 +31,7 @@ public class Turn extends Observable implements Controller, Observer{
     }
 
     public enum turnPhase {
-        newArmyPhase, attackPhase, chooseNewAttacker, moveArmyPhase
+        newArmyPhase, attackPhase, newAttackerPhase, moveArmyPhase
     }
 
     private Player[] playerArray;
@@ -122,9 +122,9 @@ public class Turn extends Observable implements Controller, Observer{
             currentPhase = turnPhase.moveArmyPhase;
         }
         else if (currentPhase == turnPhase.attackPhase) {
-            currentPhase = turnPhase.chooseNewAttacker;
+            currentPhase = turnPhase.newAttackerPhase;
         }
-        else if (currentPhase == turnPhase.chooseNewAttacker) {
+        else if (currentPhase == turnPhase.newAttackerPhase) {
             currentPhase = turnPhase.attackPhase;
         }
         setChanged();
@@ -167,9 +167,9 @@ public class Turn extends Observable implements Controller, Observer{
     
     @Override
     public void update(Observable o, Object arg) {
-        attackController.setCurrentTerritory(mapPanel.getCurrentTerritory());
         click = (Click)o;
         attackController.actionForClick(click.getValue());
+        attackController.setCurrentTerritory(mapPanel.getCurrentTerritory());
     }
     
     @Override

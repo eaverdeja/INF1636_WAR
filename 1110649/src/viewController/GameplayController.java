@@ -7,11 +7,13 @@ package viewController;
 
 
 import java.awt.Font;
+import java.awt.Window;
 import java.util.Observable;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import model.Player;
 import model.Territory;
 
@@ -37,9 +39,6 @@ public class GameplayController extends Observable implements Controller{
     public void actionForClick(Territory t){
         currentPlayer = turnController.getCurrentPlayer();
         
-        System.out.print(turnController.getTurnPhase() + " fase do turno\n");
-        System.out.print("O territorio " + t.getNome() + " do jogador "+ t.getOwnerPlayer().getPlayerId() + " tem " + t.getQtdExercitos() + " exercitos \n");
-
         //Add the console so it listens to bussiness
         addObserver(Console.getInstance());
         
@@ -48,7 +47,6 @@ public class GameplayController extends Observable implements Controller{
                 turnController.getMapPanel().setCurrentTerritory(t);
                 setCurrentTerritory(t);
                 turnController.getMapPanel().repaint();
-                System.out.print(currentTerritory.getNome() + "eh o current!\n");
             }
             else{
                 turnController.getMapPanel().setCurrentTerritory(null);
@@ -56,7 +54,7 @@ public class GameplayController extends Observable implements Controller{
                 
         }
         
-        if (turnController.getTurnPhase() == Turn.turnPhase.chooseNewAttacker ){
+        if (turnController.getTurnPhase() == Turn.turnPhase.newAttackerPhase ){
             if (t.getOwnerPlayer() == currentPlayer){
                 turnController.getMapPanel().setCurrentTerritory(t);
                 turnController.getMapPanel().repaint();
@@ -69,7 +67,6 @@ public class GameplayController extends Observable implements Controller{
         }
         if (turnController.getTurnPhase() == Turn.turnPhase.attackPhase){
             attackPhase(t);
-
         }
         
         setCurrentTerritory(turnController.getMapPanel().getCurrentTerritory());
@@ -117,6 +114,7 @@ public class GameplayController extends Observable implements Controller{
                     DicePanel dices = new DicePanel(currentTerritory.getQtdExercitos() - 1, t.getQtdExercitos());
                     dices.showDices();
                     if (dices.attackWins()){
+                        attackMsg = "Choose a new victim!!!";
                         JOptionPane.showMessageDialog(null, "Attack wins!");
                         turnController.setHasConquered(Boolean.TRUE);
                         t.setQtdExercitos(t.getQtdExercitos() - dices.getDefenseArmiesDead());
@@ -130,6 +128,7 @@ public class GameplayController extends Observable implements Controller{
                         }
                     }
                     else{
+                        attackMsg = "Be careful...";
                         JOptionPane.showMessageDialog(null, "Defense wins!");
                         currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - dices.getAttackArmiesDead());
                         t.setQtdExercitos(t.getQtdExercitos() - dices.getDefenseArmiesDead());
@@ -138,6 +137,10 @@ public class GameplayController extends Observable implements Controller{
                     setCurrentTerritory(null);
                     turnController.goToNextPhase(); 
                     turnController.getMapPanel().repaint();
+                    
+                    //Close the dices JDialog
+                    Window w = SwingUtilities.getWindowAncestor(dices);
+                    w.setVisible(false);
                 }
             }
             else{
@@ -181,6 +184,7 @@ public class GameplayController extends Observable implements Controller{
         JOptionPane.showMessageDialog(null, "Voce passou " + val + " exércitos.");
         lostTerritory.setQtdExercitos(val);
         currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - val);
+        
     }
     
     private void showInputForMove(){
@@ -236,25 +240,36 @@ public class GameplayController extends Observable implements Controller{
         
         if(phase.equals("newArmyPhase")){
             phaseMsg = "You have "+(currentPlayer.newArmyAmount()+" armies left");
+            if(currentTerritory == null){
+                phaseMsg = "Thats not yours!";
+            }
         }
         else if(phase.equals("attackPhase")){   
             phaseMsg = attackMsg;
+            if(currentTerritory == null){
+                phaseMsg = "Choose a territory to command";
+            }
         }
-        else if(phase.equals("chooseNewAttacker")){
-            phaseMsg = "ChooseNewMsg";
+        else if(phase.equals("newAttackerPhase")){
+            phaseMsg = "Seek and destroy";
         }
         else if(phase.equals("movePhase")){
-            phaseMsg = "MoveMsg";
+            phaseMsg = "Divide and conquer";
         }
-
+        
         if(currentTerritory != null){
             info = "Country = "+currentTerritory.getNome()
-                        +"\nWe are in the "+Turn.getInstance().getTurnPhase().name()
-                        +"\n"+phaseMsg;
-            c.setText(info);
-            c.setFont(new Font("TimesRoman",Font.BOLD,14));
+                    +"\nWe are in the "+Turn.getInstance().getTurnPhase().name()
+                    +"\n"+phaseMsg;
         }
-        else c.setText("Thats not yours!");
+        else{
+            info = "Country = none"
+                    +"\nWe are in the "+Turn.getInstance().getTurnPhase().name()
+                    +"\n"+phaseMsg;
+        }
+        
+        c.setText(info);
+        c.setFont(new Font("TimesRoman",Font.BOLD,14));
         c.repaint();
     }
 }
