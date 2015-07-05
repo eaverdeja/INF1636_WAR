@@ -19,7 +19,7 @@ import model.Player;
  *
  * @author lorenzosaraiva
  */
-public class CardsController {
+public class CardsController implements Controller {
     
     private List<Card> cardDeck = new ArrayList<>();
     private Turn turnController = Turn.getInstance();
@@ -40,6 +40,10 @@ public class CardsController {
     
     public CardsController() {
         createAndRandomizeCards();
+    }
+    
+    public void consoleEvent(){
+        
     }
     
     private void createAndRandomizeCards(){

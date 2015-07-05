@@ -25,15 +25,15 @@ import viewController.Turn.turnPhase;
 public class MainFrame extends JFrame{
     public final int DEF_WIDTH = 960;
     public final int DEF_HEIGHT = 760;
+    public final int nextPhaseOffset = 130;
+    public final int cardsOffset = 360;
     
     private MapPanel mapPanel;
     private JButton finishAttacks;
     private JButton finishMoves;
-    private JButton nextTurn;
     private JButton addArmy;
     private JButton changeCards;
     private JButton showCards;
-
     
     private Turn turnController;
     private Console consoleController;
@@ -62,14 +62,12 @@ public class MainFrame extends JFrame{
         turnController.setMapPanel(mapPanel);
         
         //Create dices and next turn buttons
-        createNextTurn();
         createFinishAttacksButton();
         createFinishMovesButton();
         createAddArmy();
         createChangeCards();
         createShowCards();
 
-        
         //Console with turn/player/territory infos
         createConsole();
         consoleController = Console.getInstance();
@@ -88,31 +86,13 @@ public class MainFrame extends JFrame{
         getContentPane().add(getMapPanel());
     }
     
-    private void createNextTurn(){
-        nextTurn = new JButton("Next turn!");
-        nextTurn.setAlignmentY(TOP_ALIGNMENT);
-        getMapPanel().setLayout(null);
-        getMapPanel().add(nextTurn);
-        nextTurn.setBounds(DEF_WIDTH - 120, 30, 100, 30);
-        
-        nextTurn.addActionListener((ActionEvent e) -> {
-            try {
-                turnController.nextTurn();
-                repaint();
-            }
-            catch (Exception ex){
-                System.out.println("Erro ao passar de turno" + ex.getMessage());   
-            }
-        });
-    }
-    
     private void createAddArmy(){
         addArmy = new JButton("Add Army");
         addArmy.setAlignmentY(TOP_ALIGNMENT);
         addArmy.setPreferredSize(new Dimension(20,20));
         getMapPanel().setLayout(null);
         getMapPanel().add(addArmy);
-        addArmy.setBounds(DEF_WIDTH - 250, 30, 100, 30);
+        addArmy.setBounds(DEF_WIDTH - nextPhaseOffset, 30, 100, 30);
         
         addArmy.addActionListener((ActionEvent e) -> {
             
@@ -124,17 +104,15 @@ public class MainFrame extends JFrame{
                             turnController.setArmiesAdded(turnController.getArmiesAdded()+1);
                             System.out.print("You have " + (turnController.getCurrentPlayer().newArmyAmount() - turnController.getArmiesAdded()) + " armies left \n" );
                             if(turnController.getCurrentPlayer().newArmyAmount() == turnController.getArmiesAdded()){
-                                turnController.setArmiesAdded(0);
                                 turnController.goToNextPhase();
+                                turnController.setArmiesAdded(0);
                                 finishAttacks.setVisible(true);
                                 addArmy.setVisible(false);
-                                System.out.print("Already added all armies! \n" );
                             }
                         }
                     }else{
                         System.out.print("Not your territory");
                     }
-                    consoleController.repaint();
                     repaint();
                 }else{
                     System.out.print("Not the right turnPhase\n");
@@ -153,11 +131,12 @@ public class MainFrame extends JFrame{
         finishAttacks.setPreferredSize(new Dimension(20,20));
         getMapPanel().setLayout(null);
         getMapPanel().add(finishAttacks);
-        finishAttacks.setBounds(DEF_WIDTH - 250, 30, 100, 30);
+        finishAttacks.setBounds(DEF_WIDTH - nextPhaseOffset, 30, 100, 30);
         finishAttacks.setVisible(false);
         finishAttacks.addActionListener((ActionEvent e) -> {
             try {
-                turnController.goToMovePhase();
+                turnController.setFinishedAttacking(true);
+                turnController.goToNextPhase();
                 finishAttacks.setVisible(false);
                 finishMoves.setVisible(true);
                 getMapPanel().setCurrentTerritory(null);
@@ -176,7 +155,7 @@ public class MainFrame extends JFrame{
         finishMoves.setPreferredSize(new Dimension(20,20));
         getMapPanel().setLayout(null);
         getMapPanel().add(finishMoves);
-        finishMoves.setBounds(DEF_WIDTH - 250, 30, 100, 30);
+        finishMoves.setBounds(DEF_WIDTH - nextPhaseOffset, 30, 100, 30);
         finishMoves.setVisible(false);
         finishMoves.addActionListener((ActionEvent e) -> {
             try {
@@ -186,7 +165,6 @@ public class MainFrame extends JFrame{
                     card.showCard();
                     
                 }
-                turnController.nextTurn();
                 addArmy.setVisible(true);
                 finishMoves.setVisible(false);
                 repaint();
@@ -206,7 +184,7 @@ public class MainFrame extends JFrame{
         changeCards.setPreferredSize(new Dimension(20,20));
         getMapPanel().setLayout(null);
         getMapPanel().add(changeCards);
-        changeCards.setBounds(DEF_WIDTH - 370, 30, 100, 30);
+        changeCards.setBounds(DEF_WIDTH - cardsOffset, 30, 100, 30);
         changeCards.setVisible(true);
         changeCards.addActionListener((ActionEvent e) -> {
             try {
@@ -231,7 +209,7 @@ public class MainFrame extends JFrame{
         showCards.setPreferredSize(new Dimension(20,20));
         getMapPanel().setLayout(null);
         getMapPanel().add(showCards);
-        showCards.setBounds(DEF_WIDTH - 490, 30, 100, 30);
+        showCards.setBounds(DEF_WIDTH - cardsOffset + 110, 30, 100, 30);
         showCards.setVisible(true);
         showCards.addActionListener((ActionEvent e) -> {
             try {

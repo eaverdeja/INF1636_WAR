@@ -38,6 +38,7 @@ public class Turn extends Observable implements Controller, Observer{
     private GameplayController attackController;
     private CardsController cardsController;
     private Boolean hasConquered = false;
+    private Boolean finishedAttacking = false;
     private int cardsChangeAmount = 4;
 
     //Implementing Singleton pattern
@@ -99,49 +100,19 @@ public class Turn extends Observable implements Controller, Observer{
     public void goToNextPhase() {
         if (currentPhase == turnPhase.newArmyPhase) {
             currentPhase = turnPhase.attackPhase;
-            return;
         }
-        if (currentPhase == turnPhase.attackPhase) {
+        else if (currentPhase == turnPhase.attackPhase && finishedAttacking){
+            currentPhase = turnPhase.moveArmyPhase;
+        }
+        else if (currentPhase == turnPhase.attackPhase) {
             currentPhase = turnPhase.chooseNewAttacker;
-            return;
         }
-        if (currentPhase == turnPhase.chooseNewAttacker) {
+        else if (currentPhase == turnPhase.chooseNewAttacker) {
             currentPhase = turnPhase.attackPhase;
-            return;
         }
         setChanged();
         notifyObservers();
         clearChanged();
-    }
-
-    public void nextTurn() {
-        int index = 0;
-        currentPhase = turnPhase.newArmyPhase;
-        for (Player p : playerArray) {
-            if (p.getPlayerId() == getCurrentPlayer().getPlayerId()) {
-                break;
-            } else {
-                index++;
-            }
-        }
-        if (currentPlayer.hasChanged()){
-            cardsChangeAmount += 2;
-        }
-        hasConquered = false;
-        
-        for (Territory t: lstTerritorios){
-            t.resetMoves();
-        }
-        if (index == playerQuantity - 1) {
-            currentPlayer = playerArray[0];
-        } else {
-            currentPlayer = playerArray[index + 1];
-        }
-        currentPlayer.setHasChanged(false);
-        if (currentPlayer.hasFullHand()){
-            currentPlayer.canChangeCards();
-            currentPlayer.setHasChanged(true);
-        }
     }
     
     @Override
@@ -154,11 +125,18 @@ public class Turn extends Observable implements Controller, Observer{
     @Override
     public void consoleEvent(){
         String info = null;
-        if(currentPlayer.newArmyAmount() == armiesAdded){
-            info = Console.getInstance().getText().replaceAll("You have \\d+", "You have no more");
+        if(currentPhase == turnPhase.newArmyPhase){
+            info = Console.getInstance().getText().replaceAll("\\d+", Integer.toString(currentPlayer.newArmyAmount()-armiesAdded));    
+            info = info.replaceAll("We are in the .*","We are in the newArmyPhase");
         }
-        else{
-            info = Console.getInstance().getText().replaceAll("\\d+", Integer.toString(currentPlayer.newArmyAmount()-armiesAdded));
+        else if(currentPhase == turnPhase.attackPhase){
+            info = Console.getInstance().getText().replaceAll("You have \\d+ armies left", "Who do you wish to attack?");
+            info = info.replaceAll("We are in the .*","We are in the attackPhase");
+        }
+        else if(currentPhase == turnPhase.moveArmyPhase){
+            info = Console.getInstance().getText();
+            info = Console.getInstance().getText().replaceAll("Who do you wish to attack\\?", "Make your move");
+            info = info.replaceAll("We are in the .*","We are in the moveArmyPhase");
         }
         
         Console.getInstance().setText(info);
@@ -199,11 +177,7 @@ public class Turn extends Observable implements Controller, Observer{
         setChanged();
         notifyObservers();
     }
-
-    public void goToMovePhase() {
-        this.currentPhase = turnPhase.moveArmyPhase;
-    }
-
+    
     public MapPanel getMapPanel() {
         return mapPanel;
     }
@@ -235,4 +209,19 @@ public class Turn extends Observable implements Controller, Observer{
     public void setCardsChangeAmount(int cardsChangeAmount) {
         this.cardsChangeAmount = cardsChangeAmount;
     }
+    /**
+     * @return the finishedAttacking
+     */
+    public Boolean getFinishedAttacking() {
+        return finishedAttacking;
+    }
+
+    /**
+     * @param finishedAttacking the finishedAttacking to set
+     */
+    public void setFinishedAttacking(Boolean finishedAttacking) {
+        this.finishedAttacking = finishedAttacking;
+    }
+
+    
 }
