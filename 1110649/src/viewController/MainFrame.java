@@ -14,6 +14,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -287,6 +288,198 @@ public class MainFrame extends JFrame{
            // New neighbours are coming
             neighbourList.clear();
         }
+        
+        addSeaNeighbours();
+    }
+    
+    private void addSeaNeighbours(){
+        
+        List<Territory> seaNeighbours = new ArrayList<>();
+        List<Territory> territoryList = getMapPanel().getLstTerritorios();
+        Territory t = null;
+        Territory n = null;
+        
+        for (Iterator<Territory> it = territoryList.iterator(); it.hasNext();) {
+            t = it.next();
+            
+            //BRASIL
+            if(t.getNome().equals("Brasil")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Nigeria")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //ALASCA
+            if(t.getNome().equals("Alasca")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Siberia")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //GROELANDIA
+            if(t.getNome().equals("Groelandia")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Quebec")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Reino Unido")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //FRANÇA
+            if(t.getNome().equals("Franca")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Suecia")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Reino Unido")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //ITALIA
+            if(t.getNome().equals("Italia")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Suecia")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Argelia")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //ARGELIA
+            if(t.getNome().equals("Argelia")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Espanha")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //EGITO
+            if(t.getNome().equals("Egito")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Romania")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Jordania")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //SOMALIA
+            if(t.getNome().equals("Somalia")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Arabia Saudita")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //INDONESIA
+            if(t.getNome().equals("Indonesia")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("India")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Bangladesh")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Australia")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Nova Zelandia")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //NOVA ZELANDIA
+            if(t.getNome().equals("Nova Zelandia")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Australia")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //JAPAO
+            if(t.getNome().equals("Japao")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Cazaquistao")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Mongolia")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Coreia do Norte")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+        }
+    }
+    
+    private void seaNeighbour(Territory t, List<Territory> nList){
+        
+        List<Territory> neighbourList = null;
+        
+        //Append the seaNeighbours
+        neighbourList = neighbourMap.get(t);
+        neighbourList.addAll(nList);
+        
+        //Reflect it!
+        for(Territory n : nList){
+            neighbourList = neighbourMap.get(n);
+            neighbourList.add(t);
+            neighbourMap.put(n, neighbourList);
+        }
+        
+        //Clear list for next country
+        nList.clear();
     }
     
     //getLineSegments's body was written by Peter http://stackoverflow.com/users/559415/peter

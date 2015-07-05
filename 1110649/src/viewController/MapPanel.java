@@ -56,8 +56,8 @@ public class MapPanel extends JPanel {
             File line = new File("images/Mapas/war_tabuleiro_linhas.png");
             lineImage = ImageIO.read(line);
             
-//            File infos = new File("images/mapas/war_tabuleiro.png");
-//            infosImage = ImageIO.read(infos);
+            File infos = new File("images/mapas/war_tabuleiro.png");
+            infosImage = ImageIO.read(infos);
             
             playerColors = new ArrayList<>();
             playerList.forEach((Player) -> playerColors.add(Player.getColor()));
@@ -173,19 +173,21 @@ public class MapPanel extends JPanel {
                     g2.setColor(g2.getColor().brighter().brighter());
                 }
                 
-                //Are we filling a neighbour?
-                neighbourList = getNeighbourMap().get(t);
+                //Get neighbours of chosen territory
+                neighbourList = getNeighbourMap().get(currentTerritory);
                 for(Territory n : neighbourList){
+                    
+                    //Are we filling(t) a neighbour(n)?
                     if (turnController.getTurnPhase() == turnPhase.attackPhase){
-                        if(getCurrentTerritory().equals(n) && (getCurrentTerritory().getOwnerPlayer() != t.getOwnerPlayer())){
+                        if(t.equals(n) && (t.getOwnerPlayer() != currentTerritory.getOwnerPlayer())){
                             g2.setColor(g2.getColor().darker().darker());
                         }
                     }else if(turnController.getTurnPhase() == turnPhase.moveArmyPhase){
-                        if(getCurrentTerritory().equals(n) && (getCurrentTerritory().getOwnerPlayer() == t.getOwnerPlayer())){
+                        if(t.equals(n) && (t.getOwnerPlayer() == currentTerritory.getOwnerPlayer())){
                             g2.setColor(g2.getColor().darker().darker());
                         }
                     }else{
-                        if(getCurrentTerritory().equals(n)){
+                        if(t.equals(n)){
                             g2.setColor(g2.getColor().darker().darker());
                         }
                     }
