@@ -28,6 +28,7 @@ public class GameplayController extends Observable implements Controller{
     private Territory targetTerritory;
     private Territory lostTerritory;
     private int attackingArmies;
+    private String attackMsg;
     
     public GameplayController(){
         this.turnController = Turn.getInstance();
@@ -139,10 +140,13 @@ public class GameplayController extends Observable implements Controller{
                     turnController.getMapPanel().repaint();
                 }
             }
+            else{
+                attackMsg = "Attack thy neighbour!";
+            }
         }
         else{
            turnController.getMapPanel().setCurrentTerritory(t);
-            setCurrentTerritory(t);
+           setCurrentTerritory(t);
            turnController.getMapPanel().repaint();
         }
     }
@@ -234,7 +238,7 @@ public class GameplayController extends Observable implements Controller{
             phaseMsg = "You have "+(currentPlayer.newArmyAmount()+" armies left");
         }
         else if(phase.equals("attackPhase")){   
-            phaseMsg = "AttackMsg";
+            phaseMsg = attackMsg;
         }
         else if(phase.equals("chooseNewAttacker")){
             phaseMsg = "ChooseNewMsg";
