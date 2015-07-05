@@ -22,6 +22,14 @@ import model.Territory;
  */
 public class Turn extends Observable implements Controller, Observer{
 
+    public ObjectivesController getObjController() {
+        return objController;
+    }
+
+    public void setObjController(ObjectivesController objController) {
+        this.objController = objController;
+    }
+
     public enum turnPhase {
         newArmyPhase, attackPhase, chooseNewAttacker, moveArmyPhase
     }
@@ -37,6 +45,7 @@ public class Turn extends Observable implements Controller, Observer{
     private MapPanel mapPanel;
     private GameplayController attackController;
     private CardsController cardsController;
+    private ObjectivesController objController;
     private Boolean hasConquered = false;
     private int cardsChangeAmount = 4;
 
@@ -58,6 +67,7 @@ public class Turn extends Observable implements Controller, Observer{
         currentPhase = turnPhase.newArmyPhase;
         attackController = new GameplayController();
         cardsController = new CardsController();
+        objController = new ObjectivesController();
         for (int i = 0; i < players; i++) {
             Player newPlayer = new Player();
             playerArray[i] = newPlayer;
@@ -93,7 +103,14 @@ public class Turn extends Observable implements Controller, Observer{
         }
     }
     //END Creating players and distributing territories 
-    
+    private boolean checkVictory(){
+        if (objController.checkPlayerHasContinent("AN", currentPlayer)){
+            System.out.println("YES!!!");
+        }else{
+            System.out.println("no");
+        }
+        return false;
+    }
     //START turn and phase control
     
     public void goToNextPhase() {
@@ -128,6 +145,8 @@ public class Turn extends Observable implements Controller, Observer{
             cardsChangeAmount += 2;
         }
         hasConquered = false;
+        
+        checkVictory();
         
         for (Territory t: lstTerritorios){
             t.resetMoves();

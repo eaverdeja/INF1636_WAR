@@ -60,6 +60,7 @@ public class MainFrame extends JFrame{
         turnController.setLstTerritorios(mapPanel.getLstTerritorios());
         turnController.randomizeTerritories();
         turnController.setMapPanel(mapPanel);
+        turnController.getObjController().setContinentList(mapPanel.getContinentList());
         
         //Create dices and next turn buttons
         createNextTurn();

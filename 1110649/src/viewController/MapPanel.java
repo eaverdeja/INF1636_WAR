@@ -19,6 +19,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import javax.swing.*;
+import model.Continent;
 
 import model.Player;
 import model.Ponto;
@@ -30,6 +31,7 @@ public class MapPanel extends JPanel {
 
     // Lista de territorios
     private List<Territory> lstTerritorios = new ArrayList<>();
+    private List<Continent> continentList = new ArrayList<>();
     private List<Territory> neighbourList = new ArrayList<>();
     private Map<Territory,List<Territory>> neighbourMap;
     
@@ -54,8 +56,8 @@ public class MapPanel extends JPanel {
             File line = new File("images/Mapas/war_tabuleiro_linhas.png");
             lineImage = ImageIO.read(line);
             
-            File infos = new File("images/mapas/war_tabuleiro.png");
-            infosImage = ImageIO.read(infos);
+//            File infos = new File("images/mapas/war_tabuleiro.png");
+//            infosImage = ImageIO.read(infos);
             
             playerColors = new ArrayList<>();
             playerList.forEach((Player) -> playerColors.add(Player.getColor()));
@@ -257,17 +259,23 @@ public class MapPanel extends JPanel {
     // Bloco de inicialização dos territ�rios
     // Estou assumindo que a classe territorio tem um nome e um poligono definindo sua área de clique.
     {
+        List<Territory> tempList = new ArrayList();
+        Territory t;
         // Adicionando os territorios na lista de territorios.
-        lstTerritorios.add(new Territory("AN","Alasca", new Ponto[] {
+        
+        t = new Territory("AN","Alasca", new Ponto[] {
                         new Ponto(86.1, 124.1),
                         new Ponto(134.6, 124.1),
                         new Ponto(111.4, 167.3),
                         new Ponto(58.7, 167.3),
                         new Ponto(72.3, 141.8),
                         new Ponto(77.3, 141.8) 
-        }, deslocaX, deslocaY));
-
-        lstTerritorios.add(new Territory("AN","Calgary", new Ponto[] {
+        }, deslocaX, deslocaY);
+        
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("AN","Calgary", new Ponto[] {
                         new Ponto(148.7, 124.1),
                         new Ponto(134.6, 124.1),
                         new Ponto(126.4, 139.5),
@@ -283,9 +291,12 @@ public class MapPanel extends JPanel {
                         new Ponto(212.9, 137.8),
                         new Ponto(208.7, 130.1),
                         new Ponto(152.4, 130.1)
-        }, deslocaX, deslocaY));
+        }, deslocaX, deslocaY);
 
-        lstTerritorios.add(new Territory("AN","Groelandia", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("AN","Groelandia", new Ponto[] {
                         new Ponto(285.4, 94.6),
                         new Ponto(271.6, 116.9),
                         new Ponto(284.1, 139.5),
@@ -296,9 +307,12 @@ public class MapPanel extends JPanel {
                         new Ponto(371.4, 122.1),
                         new Ponto(380.4, 108.5),
                         new Ponto(371.0, 94.6)
-        }, deslocaX,deslocaY));
+        }, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("AN","Vancouver", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+
+        t = new Territory("AN","Vancouver", new Ponto[] {
                         new Ponto(111.4, 167.3),
                         new Ponto(119.3, 182.3),
                         new Ponto(102.1, 211.9),
@@ -308,9 +322,12 @@ public class MapPanel extends JPanel {
                         new Ponto(223.0, 177.0),
                         new Ponto(146.90, 177.0),
                         new Ponto(126.4, 139.5)
-        }, deslocaX,deslocaY));
-
-        lstTerritorios.add(new Territory("AN","Quebec", new Ponto[] {
+        }, deslocaX,deslocaY);
+        
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("AN","Quebec", new Ponto[] {
                         new Ponto(262.2, 190.8),
                         new Ponto(231.7, 190.8),
                         new Ponto(214.0, 220.0),
@@ -330,9 +347,12 @@ public class MapPanel extends JPanel {
                         new Ponto(288.7, 160.4),
                         new Ponto(281.9, 171.9),
                         new Ponto(272.9, 171.9)
-        }, deslocaX,deslocaY));
+        }, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("AN","California", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("AN","California", new Ponto[] {
                         new Ponto(107.5, 220.0),
                         new Ponto(84.7, 258.0),
                         new Ponto(89.9, 268.9),
@@ -340,18 +360,24 @@ public class MapPanel extends JPanel {
                         new Ponto(90.4, 310.2),
                         new Ponto(126.4, 310.2),
                         new Ponto(178.5, 220.0)
-        }, deslocaX,deslocaY));
+        }, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("AN","Texas", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("AN","Texas", new Ponto[] {
                         new Ponto(202.2, 248.2),
                         new Ponto(231.7, 248.2),
                         new Ponto(246.1, 220.0),
                         new Ponto(178.5, 220.0),
                         new Ponto(126.4, 310.2),
                         new Ponto(145.9, 343.8)
-        }, deslocaX,deslocaY));
+        }, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("AN","NovaYork", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("AN","NovaYork", new Ponto[] {
                         new Ponto(181.8, 310.2),
                         new Ponto(165.7, 310.2),
                         new Ponto(202.2, 248.2),
@@ -369,9 +395,12 @@ public class MapPanel extends JPanel {
                         new Ponto(200.6, 318.9),
                         new Ponto(211.5, 337.8),
                         new Ponto(204.3, 349.4)
-        }, deslocaX,deslocaY));
+        }, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("AN","Mexico", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("AN","Mexico", new Ponto[] {
                         new Ponto(90.4, 310.2),
                         new Ponto(83.1, 323.0),
                         new Ponto(103.6, 359.2),
@@ -395,9 +424,16 @@ public class MapPanel extends JPanel {
                         new Ponto(161.4, 355.3),
                         new Ponto(152.3, 355.3),
                         new Ponto(126.4, 310.2)
-        }, deslocaX,deslocaY));
+        }, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("AS","Venezuela", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        getContinentList().add(new Continent("AN",tempList));
+        
+        tempList = new ArrayList();
+        
+        t = new Territory("AS","Venezuela", new Ponto[] {
                         new Ponto(193.5, 398.2),
                         new Ponto(254.3, 398.2),
                         new Ponto(196.8, 498.1),
@@ -406,9 +442,12 @@ public class MapPanel extends JPanel {
                         new Ponto(161.2, 455.8),
                         new Ponto(179.8, 421.9),
                         new Ponto(188.8, 406.2)
-        }, deslocaX,deslocaY));
-
-        lstTerritorios.add(new Territory("AS","Peru", new Ponto[] {
+        }, deslocaX,deslocaY);
+        
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("AS","Peru", new Ponto[] {
                         new Ponto(196.8, 498.1),
                         new Ponto(202.3, 507.9),
                         new Ponto(216.1, 507.9),
@@ -417,9 +456,12 @@ public class MapPanel extends JPanel {
                         new Ponto(239.7, 564.8),
                         new Ponto(274.9, 505.0),
                         new Ponto(233.8, 433.8)
-        }, deslocaX,deslocaY));
+        }, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("AS","Brasil", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("AS","Brasil", new Ponto[] {
                         new Ponto(259.6, 407.2),
                         new Ponto(285.3, 407.2),
                         new Ponto(293.4, 423.9),
@@ -433,9 +475,12 @@ public class MapPanel extends JPanel {
                         new Ponto(274.9, 505.0),
                         new Ponto(233.8, 433.8),
                         new Ponto(254.3, 398.2)
-        }, deslocaX,deslocaY));
+        }, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("AS","Argentina", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("AS","Argentina", new Ponto[] {
                         new Ponto(333.8, 505.0),
                         new Ponto(302.4, 558.8),
                         new Ponto(311.2, 573.0),
@@ -445,26 +490,39 @@ public class MapPanel extends JPanel {
                         new Ponto(235.0, 572.4),
                         new Ponto(239.7, 564.8),
                         new Ponto(274.9, 505.0)
-        }, deslocaX,deslocaY));
+        }, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("AF","Africa do Sul", new Ponto[] { new Ponto(528.4, 545.4),
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        getContinentList().add(new Continent("AS",tempList));
+        
+        tempList.clear();
+        
+        t = new Territory("AF","Africa do Sul", new Ponto[] { new Ponto(528.4, 545.4),
                         new Ponto(558.1, 600.2),
                         new Ponto(597.1, 600.2),
                         new Ponto(606.1, 584.7),
                         new Ponto(613.1, 584.7),
                         new Ponto(626.6, 559.1),
-                        new Ponto(617.6, 545.4)}, deslocaX,deslocaY));
+                        new Ponto(617.6, 545.4)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("AF","Angola", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("AF","Angola", new Ponto[] {
                         new Ponto(514.7, 493.2),
                         new Ponto(519.9, 482.5),
                         new Ponto(588.6, 482.5),
                         new Ponto(599.4, 502.3),
                         new Ponto(573.4, 545.4),
                         new Ponto(528.4, 545.4),
-                        new Ponto(535.6, 531.4)}, deslocaX,deslocaY));
+                        new Ponto(535.6, 531.4)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("AF","Argelia", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("AF","Argelia", new Ponto[] {
                         new Ponto(436.7, 337.5),
                         new Ponto(473.2, 337.5),
                         new Ponto(479.6, 350.3),
@@ -473,9 +531,12 @@ public class MapPanel extends JPanel {
                         new Ponto(539.8, 364.1),
                         new Ponto(513.0, 410.1),
                         new Ponto(425.3, 410.1),
-                        new Ponto(409.3, 384.5)}, deslocaX,deslocaY));
+                        new Ponto(409.3, 384.5)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("AF","Egito", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("AF","Egito", new Ponto[] {
                         new Ponto(588.6, 360.3),
                         new Ponto(542.0, 360.3),
                         new Ponto(539.8, 364.1),
@@ -484,18 +545,24 @@ public class MapPanel extends JPanel {
                         new Ponto(562.4, 436.6),
                         new Ponto(623.6, 436.6),
                         new Ponto(594.0, 385.3),
-                        new Ponto(597.8, 378.5)}, deslocaX,deslocaY));
+                        new Ponto(597.8, 378.5)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("AF","Nigeria", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("AF","Nigeria", new Ponto[] {
                         new Ponto(425.3, 410.1),
                         new Ponto(448.1, 452.2),
                         new Ponto(503.3, 452.2),
                         new Ponto(519.9, 482.5),
                         new Ponto(588.6, 482.5),
                         new Ponto(562.4, 436.6),
-                        new Ponto(547.6, 410.1)}, deslocaX,deslocaY));
+                        new Ponto(547.6, 410.1)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("AF","Somalia", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("AF","Somalia", new Ponto[] {
                         new Ponto(643.1, 502.0),
                         new Ponto(653.0, 502.0),
                         new Ponto(672.7, 464.6),
@@ -504,9 +571,16 @@ public class MapPanel extends JPanel {
                         new Ponto(562.4, 436.6),
                         new Ponto(599.4, 502.3),
                         new Ponto(573.4, 545.4),
-                        new Ponto(617.6, 545.4)}, deslocaX,deslocaY));
+                        new Ponto(617.6, 545.4)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("EU","Espanha", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        getContinentList().add(new Continent("AF",tempList));
+        
+        tempList = new ArrayList();
+        
+        t = new Territory("EU","Espanha", new Ponto[] {
                         new Ponto(442.3, 266.0),
                         new Ponto(461.0, 266.0),
                         new Ponto(476.9, 292.5),
@@ -517,9 +591,12 @@ public class MapPanel extends JPanel {
                         new Ponto(456.4, 304.0),
                         new Ponto(443.2, 304.0),
                         new Ponto(440.2, 309.2),
-                        new Ponto(415.9, 309.2)}, deslocaX,deslocaY));
+                        new Ponto(415.9, 309.2)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("EU","Franca", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("EU","Franca", new Ponto[] {
                         new Ponto(526.8, 186.6),
                         new Ponto(538.7, 210.4),
                         new Ponto(508.1, 263.1),
@@ -536,9 +613,12 @@ public class MapPanel extends JPanel {
                         new Ponto(499.3, 219.1),
                         new Ponto(516.2, 219.1),
                         new Ponto(521.8, 207.7),
-                        new Ponto(517.8, 200.4)}, deslocaX,deslocaY));
+                        new Ponto(517.8, 200.4)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("EU","Italia", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("EU","Italia", new Ponto[] {
                         new Ponto(552.4, 210.4),
                         new Ponto(538.7, 210.4),
                         new Ponto(508.1, 263.1),
@@ -560,9 +640,12 @@ public class MapPanel extends JPanel {
                         new Ponto(543.5, 253.4),
                         new Ponto(552.8, 253.4),
                         new Ponto(555.8, 259.4),
-                        new Ponto(567.5, 237.9)}, deslocaX,deslocaY));
+                        new Ponto(567.5, 237.9)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("EU","Polonia", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("EU","Polonia", new Ponto[] {
                         new Ponto(575.6, 176.1),
                         new Ponto(583.6, 176.0),
                         new Ponto(600.8, 205.9),
@@ -570,9 +653,12 @@ public class MapPanel extends JPanel {
                         new Ponto(567.5, 237.9),
                         new Ponto(552.4, 210.4),
                         new Ponto(564.1, 189.0),
-                        new Ponto(569.8, 189.0)}, deslocaX,deslocaY));
+                        new Ponto(569.8, 189.0)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("EU","Reino Unido", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("EU","Reino Unido", new Ponto[] {
                         new Ponto(462.0, 146.2),
                         new Ponto(481.6, 146.2),
                         new Ponto(473.7, 156.6),
@@ -588,9 +674,12 @@ public class MapPanel extends JPanel {
                         new Ponto(454.0, 174.2),
                         new Ponto(459.4, 165.3),
                         new Ponto(459.4, 163.2),
-                        new Ponto(450.8, 163.2)}, deslocaX,deslocaY));
+                        new Ponto(450.8, 163.2)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("EU","Romania", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("EU","Romania", new Ponto[] {
                         new Ponto(567.5, 237.9),
                         new Ponto(555.8, 259.4),
                         new Ponto(555.8, 262.4),
@@ -604,9 +693,12 @@ public class MapPanel extends JPanel {
                         new Ponto(595.1, 289.5),
                         new Ponto(598.3, 283.7),
                         new Ponto(607.9, 283.7),
-                        new Ponto(581.8, 237.9)}, deslocaX,deslocaY));
+                        new Ponto(581.8, 237.9)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("EU","Suecia", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("EU","Suecia", new Ponto[] {
                         new Ponto(551.0, 96.6),
                         new Ponto(582.5, 96.6),
                         new Ponto(610.2, 144.5),
@@ -630,17 +722,27 @@ public class MapPanel extends JPanel {
                         new Ponto(507.0, 140.6),
                         new Ponto(522.0, 140.6),
                         new Ponto(537.1, 111.5),
-                        new Ponto(543.0, 111.5)}, deslocaX,deslocaY));
+                        new Ponto(543.0, 111.5)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("EU","Ucrania", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("EU","Ucrania", new Ponto[] {
                         new Ponto(611.6, 254.4),
                         new Ponto(620.1, 239.5),
                         new Ponto(600.8, 205.9),
                         new Ponto(581.8, 237.9),
                         new Ponto(607.9, 283.7),
-                        new Ponto(619.0, 264.9)}, deslocaX,deslocaY));
+                        new Ponto(619.0, 264.9)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("ASI","Arabia Saudita", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        getContinentList().add(new Continent("EU",tempList));
+        
+        tempList = new ArrayList();
+        
+        t = new Territory("ASI","Arabia Saudita", new Ponto[] {
                         new Ponto(646.2, 423.6),
                         new Ponto(639.1, 434.7),
                         new Ponto(649.1, 450.3),
@@ -649,9 +751,12 @@ public class MapPanel extends JPanel {
                         new Ponto(716.8, 387.3),
                         new Ponto(680.5, 387.3),
                         new Ponto(654.0, 342.4),
-                        new Ponto(627.4, 388.2)}, deslocaX,deslocaY));
+                        new Ponto(627.4, 388.2)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("ASI","Bangladesh", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","Bangladesh", new Ponto[] {
                         new Ponto(885.3, 350.0),
                         new Ponto(847.8, 350.0),
                         new Ponto(828.7, 383.5),
@@ -664,18 +769,24 @@ public class MapPanel extends JPanel {
                         new Ponto(879.3, 456.0),
                         new Ponto(872.2, 444.6),
                         new Ponto(879.9, 432.5),
-                        new Ponto(859.2, 396.3)}, deslocaX,deslocaY));
+                        new Ponto(859.2, 396.3)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("ASI","Cazaquistao", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","Cazaquistao", new Ponto[] {
                         new Ponto(907.9, 201.9),
                         new Ponto(920.4, 222.6),
                         new Ponto(906.1, 246.4),
                         new Ponto(784.1, 246.5),
                         new Ponto(772.1, 224.1),
                         new Ponto(724.7, 224.1),
-                        new Ponto(739.0, 201.9)}, deslocaX,deslocaY));
-
-        lstTerritorios.add(new Territory("ASI","Mongolia", new Ponto[] {
+                        new Ponto(739.0, 201.9)}, deslocaX,deslocaY);
+        
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","Mongolia", new Ponto[] {
                         new Ponto(906.1, 246.4),
                         new Ponto(804.9, 246.4),
                         new Ponto(822.0, 278.5),
@@ -684,9 +795,12 @@ public class MapPanel extends JPanel {
                         new Ponto(906.1, 300.4),
                         new Ponto(916.3, 287.4),
                         new Ponto(902.8, 264.5),
-                        new Ponto(910.3, 254.7)}, deslocaX,deslocaY));
+                        new Ponto(910.3, 254.7)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("ASI","China", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","China", new Ponto[] {
                         new Ponto(873.9, 278.5),
                         new Ponto(822.0, 278.5),
                         new Ponto(804.9, 246.5),
@@ -698,24 +812,33 @@ public class MapPanel extends JPanel {
                         new Ponto(785.5, 350.5),
                         new Ponto(811.9, 350.5),
                         new Ponto(838.9, 302.5),
-                        new Ponto(887.9, 302.5)}, deslocaX,deslocaY));
+                        new Ponto(887.9, 302.5)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("ASI","Coreia do Norte", new Ponto[] { 
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","Coreia do Norte", new Ponto[] { 
                         new Ponto(839.0, 302.2),
                         new Ponto(825.3, 326.1),
                         new Ponto(914.9, 326.1),
                         new Ponto(908.2, 314.2),
                         new Ponto(894.1, 314.2),
-                        new Ponto(888.0, 302.2)}, deslocaX,deslocaY));
+                        new Ponto(888.0, 302.2)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("ASI","Coreia do Sul", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+
+        t =  new Territory("ASI","Coreia do Sul", new Ponto[] {
                         new Ponto(914.9, 326.1),
                         new Ponto(922.1, 337.2),
                         new Ponto(915.5, 350.0),
                         new Ponto(811.9, 350.0),
-                        new Ponto(825.3, 326.1)}, deslocaX,deslocaY));
-
-        lstTerritorios.add(new Territory("ASI","Estonia", new Ponto[] {
+                        new Ponto(825.3, 326.1)}, deslocaX,deslocaY);
+        
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","Estonia", new Ponto[] {
                         new Ponto(735.3, 123.8),
                         new Ponto(659.5, 123.8),
                         new Ponto(650.1, 144.1),
@@ -729,18 +852,24 @@ public class MapPanel extends JPanel {
                         new Ponto(604.9, 96.6),
                         new Ponto(582.5, 96.6),
                         new Ponto(626.8, 173.1),
-                        new Ponto(706.8, 173.1)}, deslocaX,deslocaY));
-
-        lstTerritorios.add(new Territory("ASI","India", new Ponto[] {
+                        new Ponto(706.8, 173.1)}, deslocaX,deslocaY);
+        
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","India", new Ponto[] {
                         new Ponto(798.0, 450.3),
                         new Ponto(763.8, 387.8),
                         new Ponto(785.5, 351.2),
                         new Ponto(785.5, 350.0),
                         new Ponto(847.8, 350.0),
                         new Ponto(808.0, 420.0),
-                        new Ponto(812.3, 427.5)}, deslocaX,deslocaY));
+                        new Ponto(812.3, 427.5)}, deslocaX,deslocaY);
 
-        lstTerritorios.add( new Territory("ASI","Ira", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","Ira", new Ponto[] {
                         new Ponto(716.8, 310.2),
                         new Ponto(701.1, 310.2),
                         new Ponto(691.0, 329.0),
@@ -748,9 +877,12 @@ public class MapPanel extends JPanel {
                         new Ponto(716.5, 375.9),
                         new Ponto(733.6, 375.9),
                         new Ponto(739.9, 387.8),
-                        new Ponto(751.3, 370.1)}, deslocaX,deslocaY));
+                        new Ponto(751.3, 370.1)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("ASI","Iraque", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","Iraque", new Ponto[] {
                         new Ponto(703.0, 351.2),
                         new Ponto(694.0, 362.7),
                         new Ponto(694.0, 364.8),
@@ -759,9 +891,12 @@ public class MapPanel extends JPanel {
                         new Ponto(654.0, 342.4),
                         new Ponto(671.9, 310.2),
                         new Ponto(701.1, 310.2),
-                        new Ponto(691.0, 329.0)}, deslocaX,deslocaY));
+                        new Ponto(691.0, 329.0)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("ASI","Japao", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","Japao", new Ponto[] {
                         new Ponto(937.3, 222.4),
                         new Ponto(956.3, 254.3),
                         new Ponto(953.7, 257.5),
@@ -775,9 +910,12 @@ public class MapPanel extends JPanel {
                         new Ponto(933.8, 279.7),
                         new Ponto(939.4, 279.7),
                         new Ponto(943.7, 269.9),
-                        new Ponto(927.1, 239.4)}, deslocaX,deslocaY));
+                        new Ponto(927.1, 239.4)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("ASI","Jordania", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","Jordania", new Ponto[] {
                         new Ponto(621.9, 378.5),
                         new Ponto(612.8, 378.5),
                         new Ponto(602.1, 357.1),
@@ -786,9 +924,12 @@ public class MapPanel extends JPanel {
                         new Ponto(649.1, 310.2),
                         new Ponto(671.9, 310.2),
                         new Ponto(654.0, 342.4),
-                        new Ponto(627.4, 388.2)}, deslocaX,deslocaY));
+                        new Ponto(627.4, 388.2)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("ASI","Letonia", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","Letonia", new Ponto[] {
                         new Ponto(610.2, 144.5),
                         new Ponto(591.0, 176.0),
                         new Ponto(583.6, 176.0),
@@ -796,11 +937,12 @@ public class MapPanel extends JPanel {
                         new Ponto(724.7, 224.1),
                         new Ponto(739.0, 201.9),
                         new Ponto(724.7, 173.1),
-                        new Ponto(626.8, 173.1)}, deslocaX,deslocaY));
+                        new Ponto(626.8, 173.1)}, deslocaX,deslocaY);
 
-
-
-        lstTerritorios.add(new Territory("ASI","Paquistao", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","Paquistao", new Ponto[] {
                         new Ponto(763.8, 387.8),
                         new Ponto(739.9, 387.8),
                         new Ponto(751.3, 370.1),
@@ -809,9 +951,12 @@ public class MapPanel extends JPanel {
                         new Ponto(764.7, 278.9),
                         new Ponto(754.8, 297.2),
                         new Ponto(785.5, 348.8),
-                        new Ponto(785.5, 351.2)}, deslocaX,deslocaY));
+                        new Ponto(785.5, 351.2)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("ASI","Russia", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","Russia", new Ponto[] {
                         new Ponto(744.4, 125.0),
                         new Ponto(742.5, 129.9),
                         new Ponto(748.2, 129.9),
@@ -821,9 +966,12 @@ public class MapPanel extends JPanel {
                         new Ponto(724.7, 173.1),
                         new Ponto(739.0, 201.9),
                         new Ponto(825.0, 201.9),
-                        new Ponto(869.9, 125.0)}, deslocaX,deslocaY));
+                        new Ponto(869.9, 125.0)}, deslocaX,deslocaY);
 
-        lstTerritorios.add(new Territory("ASI","Siberia", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","Siberia", new Ponto[] {
                         new Ponto(949.4, 204.5),
                         new Ponto(956.8, 191.1),
                         new Ponto(940.9, 162.5),
@@ -840,9 +988,12 @@ public class MapPanel extends JPanel {
                         new Ponto(907.5, 176.1),
                         new Ponto(916.3, 159.9),
                         new Ponto(930.5, 183.1),
-                        new Ponto(938.0, 183.1)}, deslocaX,deslocaY));
+                        new Ponto(938.0, 183.1)}, deslocaX,deslocaY);
 
-        lstTerritorios.add( new Territory("ASI","Siria", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","Siria", new Ponto[] {
                         new Ponto(660.8, 272.8),
                         new Ponto(664.6, 278.9),
                         new Ponto(718.3, 278.9),
@@ -854,9 +1005,12 @@ public class MapPanel extends JPanel {
                         new Ponto(619.6, 291.5),
                         new Ponto(628.7, 275.8),
                         new Ponto(646.1, 275.8),
-                        new Ponto(647.3, 272.8)}, deslocaX,deslocaY));
-
-        lstTerritorios.add( new Territory("ASI","Tailandia", new Ponto[] {
+                        new Ponto(647.3, 272.8)}, deslocaX,deslocaY);
+        
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","Tailandia", new Ponto[] {
                         new Ponto(915.5, 350.0),
                         new Ponto(885.3, 350.0),
                         new Ponto(859.2, 396.3),
@@ -872,9 +1026,12 @@ public class MapPanel extends JPanel {
                         new Ponto(908.7, 395.1),
                         new Ponto(911.4, 387.6),
                         new Ponto(919.1, 387.6),
-                        new Ponto(927.4, 370.3)}, deslocaX,deslocaY));
+                        new Ponto(927.4, 370.3)}, deslocaX,deslocaY);
 
-        lstTerritorios.add( new Territory("ASI","Turquia", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("ASI","Turquia", new Ponto[] {
                         new Ponto(683.6, 278.9),
                         new Ponto(691.0, 268.9),
                         new Ponto(678.5, 247.4),
@@ -887,9 +1044,16 @@ public class MapPanel extends JPanel {
                         new Ponto(611.2, 224.1),
                         new Ponto(772.1, 224.1),
                         new Ponto(784.1, 246.4),
-                        new Ponto(764.7, 278.9)}, deslocaX,deslocaY));
+                        new Ponto(764.7, 278.9)}, deslocaX,deslocaY);
 
-        lstTerritorios.add( new Territory("OC","Autralia", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        getContinentList().add(new Continent("ASI",tempList));
+        
+        tempList = new ArrayList();
+        
+        t = new Territory("OC","Australia", new Ponto[] {
                         new Ponto(875.1, 539.4),
                         new Ponto(885.9, 539.4),
                         new Ponto(919.7, 598.0),
@@ -901,9 +1065,12 @@ public class MapPanel extends JPanel {
                         new Ponto(846.1, 673.5),
                         new Ponto(837.9, 655.8),
                         new Ponto(823.4, 655.8),
-                        new Ponto(816.7, 641.9)}, deslocaX,deslocaY));
+                        new Ponto(816.7, 641.9)}, deslocaX,deslocaY);
 
-        lstTerritorios.add( new Territory("OC","Indonesia", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("OC","Indonesia", new Ponto[] {
                         new Ponto(850.9, 480.7),
                         new Ponto(861.3, 500.4),
                         new Ponto(880.7, 500.4),
@@ -922,9 +1089,12 @@ public class MapPanel extends JPanel {
                         new Ponto(885.3, 517.5),
                         new Ponto(849.0, 517.5),
                         new Ponto(835.2, 490.0),
-                        new Ponto(841.0, 480.7)}, deslocaX,deslocaY));
+                        new Ponto(841.0, 480.7)}, deslocaX,deslocaY);
 
-        lstTerritorios.add( new Territory("OC","Nova Zelandia", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t =  new Territory("OC","Nova Zelandia", new Ponto[] {
                         new Ponto(928.8, 601.5),
                         new Ponto(936.9, 601.5),
                         new Ponto(943.0, 613.7),
@@ -939,9 +1109,12 @@ public class MapPanel extends JPanel {
                         new Ponto(922.9, 644.5),
                         new Ponto(932.3, 627.8),
                         new Ponto(928.0, 619.1),
-                        new Ponto(934.1, 610.0)}, deslocaX,deslocaY));
+                        new Ponto(934.1, 610.0)}, deslocaX,deslocaY);
 
-        lstTerritorios.add( new Territory("OC","Perth", new Ponto[] {
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        t = new Territory("OC","Perth", new Ponto[] {
                         new Ponto(856.7, 535.5),
                         new Ponto(839.2, 535.5),
                         new Ponto(822.3, 565.8),
@@ -961,8 +1134,13 @@ public class MapPanel extends JPanel {
                         new Ponto(816.7, 641.9),
                         new Ponto(861.6, 562.1),
                         new Ponto(855.6, 550.2),
-                        new Ponto(862.4, 542.3)}, deslocaX,deslocaY));
+                        new Ponto(862.4, 542.3)}, deslocaX,deslocaY);
 
+        lstTerritorios.add(t);
+        tempList.add(t);
+        
+        getContinentList().add(new Continent("OC",tempList));
+        
     }
 
     /**
@@ -993,5 +1171,9 @@ public class MapPanel extends JPanel {
     
     public BufferedImage getMapImage(){
         return mapImage;
+    }
+
+    public List<Continent> getContinentList() {
+        return continentList;
     }
 }
