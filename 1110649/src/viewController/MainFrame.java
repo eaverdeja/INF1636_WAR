@@ -34,7 +34,7 @@ public class MainFrame extends JFrame{
     private JButton addArmy;
     private JButton changeCards;
     private JButton showCards;
-    
+    public  JButton showObjective;
     private Turn turnController;
     private Console consoleController;
     private final int players;
@@ -68,7 +68,7 @@ public class MainFrame extends JFrame{
         createAddArmy();
         createChangeCards();
         createShowCards();
-
+        createShowObjective();
         //Console with turn/player/territory infos
         createConsole();
         consoleController = Console.getInstance();
@@ -222,6 +222,28 @@ public class MainFrame extends JFrame{
             }
         });
     }
+    
+    private void createShowObjective(){
+    
+        showObjective = new JButton("Show Objective");
+        
+        showObjective.setAlignmentY(TOP_ALIGNMENT);
+        showObjective.setPreferredSize(new Dimension(20,20));
+        getMapPanel().setLayout(null);
+        getMapPanel().add(showObjective);
+        showObjective.setBounds(DEF_WIDTH - cardsOffset - 50, 30, 100, 30);
+        showObjective.setVisible(true);
+        showObjective.addActionListener((ActionEvent e) -> {
+            try {
+                ObjectivePanel panel = new ObjectivePanel();
+                panel.showsPanel();
+            }
+            catch (Exception ex){
+                System.out.println("Erro ao trocar as cartas: " + ex.getMessage());   
+            }
+        });
+    }
+    
     
     private void createConsole(){
         //Add the console to the turnController obsList

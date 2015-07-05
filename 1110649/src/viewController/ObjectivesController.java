@@ -8,6 +8,7 @@ package viewController;
 import java.util.ArrayList;
 import java.util.List;
 import model.Continent;
+import model.Objective;
 import model.Player;
 
 /**
@@ -17,8 +18,10 @@ import model.Player;
 public class ObjectivesController {
     
     private List<Continent> continentList = new ArrayList();
+    private Objective[] objCheckList;
     
     public ObjectivesController(){
+        this.objCheckList> = new Objective[40];
     
     }
     
