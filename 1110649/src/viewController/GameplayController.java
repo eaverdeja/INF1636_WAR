@@ -124,7 +124,11 @@ public class GameplayController extends Observable implements Controller{
                             currentPlayer.setCurrentTerritories(currentPlayer.getCurrentTerritories()+1);
                             lostTerritory = t;
                             //pergunta ao jogador quantos exercitos quer mover
-                            showInputForAttack();
+                            if(attackingArmies > 1) showInputForAttack();
+                            else{
+                                lostTerritory.setQtdExercitos(1);
+                                currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - 1);
+                            }
                         }
                     }
                     else{
@@ -164,20 +168,20 @@ public class GameplayController extends Observable implements Controller{
         panel.add(lbl);
         panel.add(txt);
         do{
-        int nome = JOptionPane.showOptionDialog(null, panel, "Atenção", JOptionPane.NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options , options[0]);
-         
-        
-        if (nome == 0){
-            String num = txt.getText();
-            try {
-                val = Integer.parseInt(num);
-            } catch (NumberFormatException e) {
-                val = -1;
-            }
-            if (val > 0 && val <=attackingArmies)
-                break;
-            else
-                JOptionPane.showMessageDialog(null, "Escolha um numero valido!");
+            int nome = JOptionPane.showOptionDialog(null, panel, "Atenção", JOptionPane.NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options , options[0]);
+
+
+            if (nome == 0){
+                String num = txt.getText();
+                try {
+                    val = Integer.parseInt(num);
+                } catch (NumberFormatException e) {
+                    val = -1;
+                }
+                if (val > 0 && val <=attackingArmies)
+                    break;
+                else
+                    JOptionPane.showMessageDialog(null, "Escolha um numero valido!");
             }
         }while(true);
 
