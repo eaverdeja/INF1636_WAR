@@ -165,11 +165,11 @@ public class MainFrame extends JFrame{
                     Card card = turnController.getCardsController().getRandomCard();
                     turnController.getCurrentPlayer().giveCard(card);                   
                     card.showCard();
-                    turnController.nextTurn();
                 }
                 addArmy.setVisible(true);
                 finishMoves.setVisible(false);
                 repaint();
+                turnController.nextTurn();
                 
             }
             catch (Exception ex){
@@ -236,8 +236,7 @@ public class MainFrame extends JFrame{
         showObjective.setVisible(true);
         showObjective.addActionListener((ActionEvent e) -> {
             try {
-                ObjectivePanel panel = new ObjectivePanel();
-                panel.showsPanel();
+                JOptionPane.showMessageDialog(null, turnController.getCurrentPlayer().getObjective().getDescription());
             }
             catch (Exception ex){
                 System.out.println("Erro ao trocar as cartas: " + ex.getMessage());   

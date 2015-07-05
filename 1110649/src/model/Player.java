@@ -19,6 +19,7 @@ public class Player {
     private int currentTerritories = 0;
     private List<Card> currentCards = new ArrayList<>();
     private boolean hasChanged = false;
+    private Objective objective;
     
     public Player(){
         this.playerId = playerQuantity;
@@ -180,5 +181,13 @@ public class Player {
 
     public void setHasChanged(boolean hasChanged) {
         this.hasChanged = hasChanged;
+    }
+
+    public Objective getObjective() {
+        return objective;
+    }
+
+    public void setObjective(Objective objective) {
+        this.objective = objective;
     }
 }

@@ -73,7 +73,7 @@ public class Turn extends Observable implements Controller, Observer{
             Player newPlayer = new Player();
             playerArray[i] = newPlayer;
         }
-
+        objController.randomizeObjectives();
         currentPlayer = this.playerArray[0];
     }
 
