@@ -200,7 +200,7 @@ public class MainFrame extends JFrame{
     
     private void createChangeCards(){
     
-        changeCards = new JButton("Chnage Cards");
+        changeCards = new JButton("Change Cards");
         
         changeCards.setAlignmentY(TOP_ALIGNMENT);
         changeCards.setPreferredSize(new Dimension(20,20));

@@ -68,6 +68,7 @@ public class GameplayController extends Observable implements Controller{
         }
         if (turnController.getTurnPhase() == Turn.turnPhase.attackPhase){
             attackPhase(t);
+
         }
         
         setCurrentTerritory(turnController.getMapPanel().getCurrentTerritory());
@@ -77,7 +78,7 @@ public class GameplayController extends Observable implements Controller{
     private void movePhase(Territory t){
     
         if (currentTerritory == null){
-            if (t.getOwnerPlayer() == currentPlayer && t.getQtdExercitos() > 1){
+            if (t.getOwnerPlayer() == currentPlayer && t.getAmountOfMovableArmies() > 0){
                 turnController.getMapPanel().setCurrentTerritory(t);
                 setCurrentTerritory(t);
                 turnController.getMapPanel().repaint();
@@ -85,7 +86,7 @@ public class GameplayController extends Observable implements Controller{
         }
         else{
             if (t.getOwnerPlayer() == currentPlayer && currentTerritory != t && turnController.getMapPanel().getNeighbourMap().get(currentTerritory).contains(t)){
-                if (currentTerritory.getQtdExercitos() > 1){
+                if (currentTerritory.getAmountOfMovableArmies() > 0){
                     targetTerritory = t;
                     showInputForMove();
                     turnController.getMapPanel().setCurrentTerritory(null);
@@ -179,18 +180,35 @@ public class GameplayController extends Observable implements Controller{
     }
     
     private void showInputForMove(){
-        String nome = null;
         
-        do {
-            nome = JOptionPane.showInputDialog("Quantos exercitos deseja passar? (1-" + (currentTerritory.getQtdExercitos() - 1) + ")" );
-            if (Integer.parseInt(nome) > currentTerritory.getQtdExercitos() - 1 || Integer.parseInt(nome)  < 1) {
-                JOptionPane.showMessageDialog(null,"Escolha um dos numeros possíveis.");
+        int val = 0;
+        String[] options = {"OK"};
+        JPanel panel = new JPanel();
+        JLabel lbl = new JLabel("Quantos exercitos deseja passar? (0-" + currentTerritory.getAmountOfMovableArmies() + ")" );
+        JTextField txt = new JTextField(10);
+        panel.add(lbl);
+        panel.add(txt);
+        do{
+        int nome = JOptionPane.showOptionDialog(null, panel, "Atenção", JOptionPane.NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options , options[0]);
+         
+        
+        if (nome == 0){
+            String num = txt.getText();
+            try {
+                val = Integer.parseInt(num);
+            } catch (NumberFormatException e) {
+                val = -1;
             }
-        } while (Integer.parseInt(nome) > currentTerritory.getQtdExercitos() - 1 || Integer.parseInt(nome) < 1);
-        
-        JOptionPane.showMessageDialog(null, "Voce passou " + nome + " exércitos.");
-        currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - Integer.parseInt(nome));
-        targetTerritory.setQtdExercitos(targetTerritory.getQtdExercitos() + Integer.parseInt(nome));
+            if (val >= 0 && val <=currentTerritory.getAmountOfMovableArmies())
+                break;
+            else
+                JOptionPane.showMessageDialog(null, "Escolha um numero valido!");
+            }
+        }while(true);
+
+        JOptionPane.showMessageDialog(null, "Voce passou " + val + " exércitos.");
+        currentTerritory.removeArmies(val);
+        targetTerritory.addMovedArmies(val);
         setCurrentTerritory(null);
     }
 

@@ -129,6 +129,9 @@ public class Turn extends Observable implements Controller, Observer{
         }
         hasConquered = false;
         
+        for (Territory t: lstTerritorios){
+            t.resetMoves();
+        }
         if (index == playerQuantity - 1) {
             currentPlayer = playerArray[0];
         } else {
