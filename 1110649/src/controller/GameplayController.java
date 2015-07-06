@@ -32,6 +32,7 @@ public class GameplayController extends Observable implements Controller{
     private Territory lostTerritory;
     private int attackingArmies;
     private String attackMsg;
+    private String moveMsg;
     
     public GameplayController(){
         this.gameManager = GameManager.getInstance();
@@ -51,6 +52,7 @@ public class GameplayController extends Observable implements Controller{
             }
             else{
                 gameManager.setCurrentTerritory(null);
+                setCurrentTerritory(null);
             }
                 
         }
@@ -84,18 +86,18 @@ public class GameplayController extends Observable implements Controller{
             }
         }
         else{
-            if (t.getOwnerPlayer() == currentPlayer && currentTerritory != t && gameManager.getNeighbourMap().get(currentTerritory).contains(t)){
+            if (t.getOwnerPlayer() == currentPlayer && gameManager.getNeighbourMap().get(currentTerritory).contains(t)){
                 if (currentTerritory.getAmountOfMovableArmies() > 0){
-                    targetTerritory = t;
+                	moveMsg = "Make your move";
+                	targetTerritory = t;
                     showInputForMove();
-                    gameManager.setCurrentTerritory(null);
-                    gameManager.repaint();
                 }
             }
-            if (currentTerritory == t){
-                gameManager.setCurrentTerritory(null);
-                gameManager.repaint();
+            else{
+            	moveMsg = "Make your move";
             }
+	        gameManager.setCurrentTerritory(null);
+	        gameManager.repaint();
         }
     }
     
@@ -186,7 +188,7 @@ public class GameplayController extends Observable implements Controller{
             }
         }while(true);
 
-        JOptionPane.showMessageDialog(null, "Voce passou " + val + " exércitos.");
+        JOptionPane.showMessageDialog(null, "Voce passou " + val + " exercitos.");
         lostTerritory.setQtdExercitos(val);
         currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - val);
         
@@ -258,8 +260,8 @@ public class GameplayController extends Observable implements Controller{
         else if(phase.equals("newAttackerPhase")){
             phaseMsg = "Seek and destroy";
         }
-        else if(phase.equals("movePhase")){
-            phaseMsg = "Divide and conquer";
+        else if(phase.equals("moveArmyPhase")){
+            phaseMsg = "Make your move";
         }
         
         if(currentTerritory != null){

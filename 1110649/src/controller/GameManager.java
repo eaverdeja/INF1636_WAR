@@ -100,13 +100,12 @@ public class GameManager extends Observable implements Controller, Observer{
         notifyObservers();
         clearChanged();
     }
-    
-    public void goToMovePhase(){
-        turnController.setCurrentPhase(turnPhase.moveArmyPhase);
-    }
-
+   
     public void nextTurn() {
-        turnController.nextTurn();
+    	turnController.nextTurn();
+        setChanged();
+        notifyObservers();
+        clearChanged();
     }
       
     @Override
@@ -118,19 +117,27 @@ public class GameManager extends Observable implements Controller, Observer{
     
     @Override
     public void consoleEvent(){
+        String[] infoArray = null;
         String info = null;
+        
         if(turnController.getCurrentPhase() == turnPhase.newArmyPhase){
-            info = Console.getInstance().getText().replaceAll("\\d+", Integer.toString(playerController.getCurrentPlayer().newArmyAmount()-armiesAdded));    
-            info = info.replaceAll("We are in the .*","We are in the newArmyPhase");
+            //info = Console.getInstance().getText().replaceAll("\\d+", Integer.toString(playerController.getCurrentPlayer().newArmyAmount()-armiesAdded));    
+            //info = info.replaceAll("We are in the .*","We are in the newArmyPhase");
+            
+            infoArray = Console.getInstance().getText().split("\\r?\\n");
+	        info = infoArray[0].concat("\n");
+	        info += infoArray[1].replaceFirst(".*","We are in the newArmyPhase\n");
+	        info += infoArray[2].replaceFirst(".*","You have "+(playerController.getCurrentPlayer().newArmyAmount() - armiesAdded)+" armies left\n");
         }
         else if(turnController.getCurrentPhase() == turnPhase.attackPhase){
             info = Console.getInstance().getText().replaceAll("You have \\d+ armies left", "Who do you wish to attack?");
             info = info.replaceAll("We are in the .*","We are in the attackPhase");
         }
-        else if(turnController.getCurrentPhase() == turnPhase.moveArmyPhase){
-            info = Console.getInstance().getText();
-            info = Console.getInstance().getText().replaceAll("Who do you wish to attack\\?", "Make your move");
-            info = info.replaceAll("We are in the .*","We are in the moveArmyPhase");
+        else if(turnController.getCurrentPhase() == turnPhase.moveArmyPhase){            
+        	infoArray = Console.getInstance().getText().split("\\r?\\n");
+	        info = infoArray[0].concat("\n");
+	        info += infoArray[1].replaceAll("We are in the .*","We are in the moveArmyPhase\n");
+	        info += infoArray[2].replaceFirst(".*","Divide and Conquer\n");
         }
         
         Console.getInstance().setText(info);
@@ -212,7 +219,7 @@ public class GameManager extends Observable implements Controller, Observer{
      * @param finishedAttacking the finishedAttacking to set
      */
     public void setFinishedAttacking(Boolean finishedAttacking) {
-        this.finishedAttacking = finishedAttacking;
+    	this.finishedAttacking = finishedAttacking;
     }
     
     public ObjectivesController getObjController() {

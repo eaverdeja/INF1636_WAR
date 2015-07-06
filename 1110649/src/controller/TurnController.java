@@ -38,8 +38,11 @@ public class TurnController {
         if (getCurrentPhase() == GameManager.turnPhase.newArmyPhase) {
             setCurrentPhase(GameManager.turnPhase.attackPhase);
         }
-        else if (getCurrentPhase() == GameManager.turnPhase.attackPhase && finishedAttacking){
+        else if ((getCurrentPhase() == GameManager.turnPhase.attackPhase 
+        		|| getCurrentPhase() == GameManager.turnPhase.newAttackerPhase) 
+        		&& GameManager.getInstance().getFinishedAttacking()){
             setCurrentPhase(GameManager.turnPhase.moveArmyPhase);
+            GameManager.getInstance().setFinishedAttacking(false);
         }
         else if (getCurrentPhase() == GameManager.turnPhase.attackPhase) {
             setCurrentPhase(GameManager.turnPhase.newAttackerPhase);

@@ -92,7 +92,8 @@ public class ButtonsController {
         finishAttacks.setVisible(false);
         finishAttacks.addActionListener((ActionEvent e) -> {
             try {
-                gameManager.goToMovePhase();
+            	gameManager.setFinishedAttacking(true);
+                gameManager.goToNextPhase();
                 finishAttacks.setVisible(false);
                 finishMoves.setVisible(true);
                 gameManager.setCurrentTerritory(null);
@@ -120,6 +121,7 @@ public class ButtonsController {
                     gameManager.getCurrentPlayer().giveCard(card);                   
                     card.showCard();
                 }
+                GameManager.getInstance().nextTurn();
                 addArmy.setVisible(true);
                 finishMoves.setVisible(false);
                 gameManager.nextTurn();
