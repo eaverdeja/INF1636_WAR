@@ -1,11 +1,6 @@
 package model;
 
-import com.sun.javafx.geom.Point2D;
-import java.awt.Rectangle;
 import java.awt.geom.GeneralPath;
-import java.util.ArrayList;
-import java.util.List;
-import controller.GameManager;
 
 public class Territory {
 
