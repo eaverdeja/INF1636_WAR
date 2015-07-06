@@ -28,7 +28,7 @@ public class MainFrame extends JFrame{
     public final int DEF_HEIGHT = 760;
     public final int nextPhaseOffset = 130;
     public final int cardsOffset = 360;
-    
+    public final int objectiveOffset = 460;    
     private MapPanel mapPanel;
     private JButton finishAttacks;
     private JButton finishMoves;
@@ -141,7 +141,6 @@ public class MainFrame extends JFrame{
                 turnController.goToNextPhase();
                 finishAttacks.setVisible(false);
                 finishMoves.setVisible(true);
-                getMapPanel().setCurrentTerritory(null);
                 repaint();
             }
             catch (Exception ex){
@@ -232,7 +231,7 @@ public class MainFrame extends JFrame{
         showObjective.setPreferredSize(new Dimension(20,20));
         getMapPanel().setLayout(null);
         getMapPanel().add(showObjective);
-        showObjective.setBounds(DEF_WIDTH - cardsOffset - 50, 30, 100, 30);
+        showObjective.setBounds(DEF_WIDTH - objectiveOffset, 30, 100, 30);
         showObjective.setVisible(true);
         showObjective.addActionListener((ActionEvent e) -> {
             try {

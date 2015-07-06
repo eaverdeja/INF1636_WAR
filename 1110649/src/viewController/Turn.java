@@ -118,7 +118,7 @@ public class Turn extends Observable implements Controller, Observer{
         if (currentPhase == turnPhase.newArmyPhase) {
             currentPhase = turnPhase.attackPhase;
         }
-        else if (currentPhase == turnPhase.attackPhase && finishedAttacking){
+        else if ((currentPhase == turnPhase.attackPhase || currentPhase == turnPhase.newAttackerPhase) && finishedAttacking){
             currentPhase = turnPhase.moveArmyPhase;
         }
         else if (currentPhase == turnPhase.attackPhase) {
@@ -174,7 +174,8 @@ public class Turn extends Observable implements Controller, Observer{
     
     @Override
     public void consoleEvent(){
-        String info = null;
+        String[] infoArray = null;
+        String info = new String();
         if(currentPhase == turnPhase.newArmyPhase){
             info = Console.getInstance().getText().replaceAll("\\d+", Integer.toString(currentPlayer.newArmyAmount()-armiesAdded));    
             info = info.replaceAll("We are in the .*","We are in the newArmyPhase");
@@ -184,9 +185,10 @@ public class Turn extends Observable implements Controller, Observer{
             info = info.replaceAll("We are in the .*","We are in the attackPhase");
         }
         else if(currentPhase == turnPhase.moveArmyPhase){
-            info = Console.getInstance().getText();
-            info = Console.getInstance().getText().replaceAll("Who do you wish to attack\\?", "Make your move");
-            info = info.replaceAll("We are in the .*","We are in the moveArmyPhase");
+            infoArray = Console.getInstance().getText().split("\\r?\\n");
+            info += infoArray[0].concat("\n");
+            info += infoArray[1].replaceAll("We are in the .*","We are in the moveArmyPhase\n");
+            info += infoArray[2].replaceFirst(".*","Divide and Conquer\n");
         }
         
         Console.getInstance().setText(info);

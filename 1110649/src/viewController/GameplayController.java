@@ -31,6 +31,7 @@ public class GameplayController extends Observable implements Controller{
     private Territory lostTerritory;
     private int attackingArmies;
     private String attackMsg;
+    private String moveMsg;
     
     public GameplayController(){
         this.turnController = Turn.getInstance();
@@ -50,6 +51,7 @@ public class GameplayController extends Observable implements Controller{
             }
             else{
                 turnController.getMapPanel().setCurrentTerritory(null);
+                setCurrentTerritory(null);
             }
                 
         }
@@ -77,24 +79,26 @@ public class GameplayController extends Observable implements Controller{
     
         if (currentTerritory == null){
             if (t.getOwnerPlayer() == currentPlayer && t.getAmountOfMovableArmies() > 0){
+                moveMsg = "Command your troops!";
                 turnController.getMapPanel().setCurrentTerritory(t);
                 setCurrentTerritory(t);
                 turnController.getMapPanel().repaint();
             }
         }
         else{
-            if (t.getOwnerPlayer() == currentPlayer && currentTerritory != t && turnController.getMapPanel().getNeighbourMap().get(currentTerritory).contains(t)){
+            if (t.getOwnerPlayer() == currentPlayer && turnController.getMapPanel().getNeighbourMap().get(currentTerritory).contains(t)){
                 if (currentTerritory.getAmountOfMovableArmies() > 0){
+                    moveMsg = "Make your move";
                     targetTerritory = t;
                     showInputForMove();
-                    turnController.getMapPanel().setCurrentTerritory(null);
-                    turnController.getMapPanel().repaint();
                 }
             }
-            if (currentTerritory == t){
-                turnController.getMapPanel().setCurrentTerritory(null);
-                turnController.getMapPanel().repaint();
+            else {
+                moveMsg = "You can't do that";
             }
+            
+            turnController.getMapPanel().setCurrentTerritory(null);
+            turnController.getMapPanel().repaint();
         }
     }
     
@@ -257,8 +261,8 @@ public class GameplayController extends Observable implements Controller{
         else if(phase.equals("newAttackerPhase")){
             phaseMsg = "Seek and destroy";
         }
-        else if(phase.equals("movePhase")){
-            phaseMsg = "Divide and conquer";
+        else if(phase.equals("moveArmyPhase")){
+            phaseMsg = "Make your move";
         }
         
         if(currentTerritory != null){
