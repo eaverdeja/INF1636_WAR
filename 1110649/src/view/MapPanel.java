@@ -50,14 +50,11 @@ public class MapPanel extends JPanel {
 
     public MapPanel(List<Player> playerList, List<Territory> territoryList, Map<Territory,List<Territory>> neighbourMap) {
         try{
-            File map = new File("images/Mapas/war_tabuleiro_fundo.png");
-            mapImage = ImageIO.read(map);
+            mapImage = ImageIO.read(getClass().getResource("/images/Mapas/war_tabuleiro_fundo.png"));
             
-            File line = new File("images/Mapas/war_tabuleiro_linhas.png");
-            lineImage = ImageIO.read(line);
+            lineImage = ImageIO.read(getClass().getResource("/images/Mapas/war_tabuleiro_linhas.png"));
             
-            File infos = new File("images/mapas/war_tabuleiro.png");
-            infosImage = ImageIO.read(infos);
+            infosImage = ImageIO.read(getClass().getResource("/images/Mapas/war_tabuleiro.png"));
             
             playerColors = new ArrayList<>();
             playerList.forEach((Player) -> playerColors.add(Player.getColor()));

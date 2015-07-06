@@ -121,8 +121,6 @@ public class GameManager extends Observable implements Controller, Observer{
         String info = null;
         
         if(turnController.getCurrentPhase() == turnPhase.newArmyPhase){
-            //info = Console.getInstance().getText().replaceAll("\\d+", Integer.toString(playerController.getCurrentPlayer().newArmyAmount()-armiesAdded));    
-            //info = info.replaceAll("We are in the .*","We are in the newArmyPhase");
             
             infoArray = Console.getInstance().getText().split("\\r?\\n");
 	        info = infoArray[0].concat("\n");

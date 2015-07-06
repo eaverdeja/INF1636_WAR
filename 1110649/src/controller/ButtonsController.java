@@ -59,21 +59,15 @@ public class ButtonsController {
                         if (gameManager.getCurrentPlayer().newArmyAmount() > gameManager.getArmiesAdded()){
                             gameManager.getMapPanel().getCurrentTerritory().addArmy();
                             gameManager.setArmiesAdded(gameManager.getArmiesAdded()+1);
-                            System.out.print("You have " + (gameManager.getCurrentPlayer().newArmyAmount() - gameManager.getArmiesAdded()) + " armies left \n" );
                             if(gameManager.getCurrentPlayer().newArmyAmount() == gameManager.getArmiesAdded()){
                                 gameManager.goToNextPhase();
                                 gameManager.setArmiesAdded(0);
                                 finishAttacks.setVisible(true);
                                 addArmy.setVisible(false);
-                                changeCards.setVisible(false);
                             }
                         }
-                    }else{
-                        System.out.print("Not your territory");
                     }
                     gameManager.repaint();
-                }else{
-                    System.out.print("Not the right turnPhase\n");
                 }
             }
             catch (Exception ex){
@@ -124,7 +118,6 @@ public class ButtonsController {
                 }
                 GameManager.getInstance().nextTurn();
                 addArmy.setVisible(true);
-                changeCards.setVisible(true);
                 finishMoves.setVisible(false);
                 gameManager.nextTurn();
                 gameManager.repaint();
@@ -144,7 +137,7 @@ public class ButtonsController {
         changeCards.setPreferredSize(new Dimension(20,20));
         gameManager.getMapPanel().setLayout(null);
         gameManager.getMapPanel().add(changeCards);
-        changeCards.setBounds(DEF_WIDTH - cardsOffset - 110, 30, 100, 30);
+        changeCards.setBounds(DEF_WIDTH - cardsOffset, 30, 100, 30);
         changeCards.setVisible(true);
         changeCards.addActionListener((ActionEvent e) -> {
             try {
@@ -170,7 +163,7 @@ public class ButtonsController {
         showCards.setPreferredSize(new Dimension(20,20));
         gameManager.getMapPanel().setLayout(null);
         gameManager.getMapPanel().add(showCards);
-        showCards.setBounds(DEF_WIDTH - cardsOffset + 110, 30, 100, 30);
+        showCards.setBounds(DEF_WIDTH - cardsOffset + 110, 30, 110, 30);
         showCards.setVisible(true);
         showCards.addActionListener((ActionEvent e) -> {
             try {
@@ -191,7 +184,7 @@ public class ButtonsController {
         showObjective.setPreferredSize(new Dimension(20,20));
         gameManager.getMapPanel().setLayout(null);
         gameManager.getMapPanel().add(showObjective);
-        showObjective.setBounds(DEF_WIDTH - cardsOffset, 30, 100, 30);
+        showObjective.setBounds(DEF_WIDTH - cardsOffset - 110, 30, 100, 30);
         showObjective.setVisible(true);
         showObjective.addActionListener((ActionEvent e) -> {
             try {

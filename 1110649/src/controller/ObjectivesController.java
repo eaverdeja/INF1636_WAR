@@ -115,12 +115,10 @@ public class ObjectivesController {
                 randValue = random.nextInt(objectiveList.size());
                 o = objectiveList.get(randValue);
             }
-            System.out.println(o.getDescription());
             
             p.setObjective(o);
             objectiveList.remove(randValue);
         }
-                    System.out.println("--------------------------------");
 
     }
 

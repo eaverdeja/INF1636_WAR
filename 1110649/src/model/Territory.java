@@ -2,6 +2,9 @@ package model;
 
 import java.awt.Rectangle;
 import java.awt.geom.GeneralPath;
+import java.util.ArrayList;
+import java.util.List;
+import controller.GameManager;
 
 public class Territory {
 

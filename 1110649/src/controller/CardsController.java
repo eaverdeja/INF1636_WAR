@@ -27,7 +27,6 @@ public class CardsController implements Controller {
     public Card getRandomCard(){
             Random randomGenerator = new Random();
             int randValue = randomGenerator.nextInt(cardDeck.size());
-            System.out.println(randValue);
             Card card = cardDeck.get(randValue);
             cardDeck.remove(randValue);
             if (cardDeck.size()==0){

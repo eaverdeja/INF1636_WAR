@@ -18,6 +18,7 @@ public class DicePanel extends JPanel{
     private BufferedImage bgImage;
     private List<BufferedImage> attackDice;
     private List<BufferedImage> defenseDice;
+    private	BufferedImage diceImg;
     private int firstAttackDice = 0;
     private int secondAttackDice = 0;
     private int thirdAttackDice = 0;
@@ -33,10 +34,7 @@ public class DicePanel extends JPanel{
     public DicePanel(int attack, int defense){
       
         try{
-            File bg = new File("images/war_tabuleiro_fundo.png");
-            bgImage = ImageIO.read(bg);
-            
-
+            bgImage = ImageIO.read(getClass().getResource("/images/Mapas/war_tabuleiro_fundo.png"));
         }
         catch(IOException e){
             System.out.println("Erro ao carregar imagem de fundo dos dados" + e.getMessage());
@@ -54,12 +52,13 @@ public class DicePanel extends JPanel{
         defenseDice = new ArrayList<>();
         for(int i = 1;i <= 6;i++){
             //Attack
-            File dice = new File("images/Dados/dado_ataque_"+i+".png");
-            attackDice.add(ImageIO.read(dice));
+            diceImg = ImageIO.read(getClass().getResource("/images/Dados/dado_ataque_"+i+".png"));
+            attackDice.add(diceImg);
             
             //Defense
-            dice = new File("images/Dados/dado_defesa_"+i+".png");
-            defenseDice.add(ImageIO.read(dice));
+            //diceImg.flush();
+            diceImg = ImageIO.read(getClass().getResource("/images/Dados/dado_defesa_"+i+".png"));
+            defenseDice.add(diceImg);
         }
         
         

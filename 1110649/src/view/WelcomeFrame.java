@@ -67,7 +67,6 @@ public class WelcomeFrame extends JFrame{
             try {
                 int input = Integer.parseInt(textField.getText());
                 if (input >= 3 && input <= 6) {
-                    System.out.println("Ok");
                     textField.setVisible(false);
                     label.setVisible(false);
 

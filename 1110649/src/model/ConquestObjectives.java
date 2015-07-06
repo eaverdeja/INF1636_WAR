@@ -87,7 +87,6 @@ public class ConquestObjectives extends Objective {
     private boolean checkPlayerHasContinent(String s,Player p){
         
         for (Continent c:turnController.getObjController().getContinentList()){
-            System.out.println(c.getName());
             if (c.getName() == s){
                 return c.playerHasContinent(p);
             }

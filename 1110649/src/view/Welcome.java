@@ -5,6 +5,8 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -14,8 +16,7 @@ public class Welcome extends JPanel{
     
     public Welcome(){
         try{
-            File welcome = new File("images/cartas/war_carta_verso.png");
-            image = ImageIO.read(welcome);
+        	image = ImageIO.read(getClass().getResource("/images/Cartas/war_carta_verso.png"));
         }
         catch(IOException e){
             System.out.print("Erro ao carregar a imagem" + e.getMessage());
