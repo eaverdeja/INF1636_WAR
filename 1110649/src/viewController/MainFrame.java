@@ -137,7 +137,8 @@ public class MainFrame extends JFrame{
         finishAttacks.setVisible(false);
         finishAttacks.addActionListener((ActionEvent e) -> {
             try {
-                turnController.goToMovePhase();
+                turnController.setFinishedAttacking(true);
+                turnController.goToNextPhase();
                 finishAttacks.setVisible(false);
                 finishMoves.setVisible(true);
                 getMapPanel().setCurrentTerritory(null);
@@ -189,12 +190,11 @@ public class MainFrame extends JFrame{
         changeCards.setVisible(true);
         changeCards.addActionListener((ActionEvent e) -> {
             try {
-                repaint();
                 if (turnController.getCurrentPlayer().canChangeCards()){
-                    JOptionPane.showMessageDialog(null, "Troca efetuada!");
+                    System.out.println("TROCOU");
                     turnController.getCurrentPlayer().setHasChanged(true);
                 }else{
-                    JOptionPane.showMessageDialog(null, "Você não pode trocar!");
+                    System.out.println("NAO TROCOU");
                 }
             }
             catch (Exception ex){

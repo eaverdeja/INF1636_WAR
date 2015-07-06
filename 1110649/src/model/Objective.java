@@ -68,12 +68,6 @@ public class Objective {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public int getType() {
-        return type;
-    }
     
-    public boolean checkWin(){
-        return false;
-    }
+    
 }

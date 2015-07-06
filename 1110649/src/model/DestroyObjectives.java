@@ -6,7 +6,6 @@
 package model;
 
 import java.awt.Color;
-import viewController.Turn;
 
 /**
  *
@@ -14,7 +13,6 @@ import viewController.Turn;
  */
 public class DestroyObjectives extends Objective {
     private Color targetColor;
-    private Turn turnController = Turn.getInstance();
     public DestroyObjectives(int type) {
         super(type);
         switch(type){
@@ -38,17 +36,4 @@ public class DestroyObjectives extends Objective {
                     break;    
         }
     }   
-
-    public Color getTargetColor() {
-        return targetColor;
-    }
-    
-    @Override
-    public boolean checkWin(){
-        for (Territory t: turnController.getMapPanel().getLstTerritorios()){
-            if (t.getOwnerPlayer().getColor() == this.targetColor)
-                return false;
-        }
-        return true;
-    }
 }

@@ -14,8 +14,6 @@ import java.util.Observable;
 import java.util.Observer;
 import model.Player;
 import java.util.Random;
-import javax.swing.JOptionPane;
-import model.Continent;
 import model.Territory;
 
 /**
@@ -24,7 +22,13 @@ import model.Territory;
  */
 public class Turn extends Observable implements Controller, Observer{
 
-    
+    public ObjectivesController getObjController() {
+        return objController;
+    }
+
+    public void setObjController(ObjectivesController objController) {
+        this.objController = objController;
+    }
 
     public enum turnPhase {
         newArmyPhase, attackPhase, newAttackerPhase, moveArmyPhase
@@ -101,7 +105,12 @@ public class Turn extends Observable implements Controller, Observer{
     }
     //END Creating players and distributing territories 
     private boolean checkVictory(){
-        return currentPlayer.getObjective().checkWin();
+        if (objController.checkPlayerHasContinent("AN", currentPlayer)){
+            System.out.println("YES!!!");
+        }else{
+            System.out.println("no");
+        }
+        return false;
     }
     //START turn and phase control
     
@@ -122,10 +131,6 @@ public class Turn extends Observable implements Controller, Observer{
         notifyObservers();
         clearChanged();
     }
-    
-    public void goToMovePhase(){
-        currentPhase = turnPhase.moveArmyPhase;
-    }
 
     public void nextTurn() {
         int index = 0;
@@ -137,14 +142,12 @@ public class Turn extends Observable implements Controller, Observer{
                 index++;
             }
         }
-        
-        updateCardsChangedAmount();
-        hasConquered = false;
-        finishedAttacking = false;
-        
-        if (checkVictory()){
-            JOptionPane.showMessageDialog(null,"O Player " + currentPlayer.getColor() + " ganhou!");
+        if (currentPlayer.hasChanged()){
+            cardsChangeAmount += 2;
         }
+        hasConquered = false;
+        
+        checkVictory();
         
         for (Territory t: lstTerritorios){
             t.resetMoves();
@@ -155,42 +158,10 @@ public class Turn extends Observable implements Controller, Observer{
             currentPlayer = playerArray[index + 1];
         }
         currentPlayer.setHasChanged(false);
-        updatePlayerContinentBonus();
         if (currentPlayer.hasFullHand()){
             currentPlayer.canChangeCards();
             currentPlayer.setHasChanged(true);
         }
-    }
-    
-    private void updateCardsChangedAmount(){
-        if (currentPlayer.hasChanged()){
-            if (cardsChangeAmount < 12){
-            cardsChangeAmount += 2;
-            }
-            else{
-                if (cardsChangeAmount == 12)
-                    cardsChangeAmount = 15;
-                else
-                    cardsChangeAmount+=5;
-            }     
-        }
-    
-    }
-    
-    private void updatePlayerContinentBonus(){
-        currentPlayer.setContinentBonus(0);
-        if (checkPlayerHasContinent("AN",currentPlayer))
-            currentPlayer.setContinentBonus(currentPlayer.getContinentBonus()+5);
-        if (checkPlayerHasContinent("AF",currentPlayer))
-            currentPlayer.setContinentBonus(currentPlayer.getContinentBonus()+3);
-        if (checkPlayerHasContinent("AS",currentPlayer))
-            currentPlayer.setContinentBonus(currentPlayer.getContinentBonus()+2);
-        if (checkPlayerHasContinent("ASI",currentPlayer))
-            currentPlayer.setContinentBonus(currentPlayer.getContinentBonus()+7);
-        if (checkPlayerHasContinent("OC",currentPlayer))
-            currentPlayer.setContinentBonus(currentPlayer.getContinentBonus()+2);
-        if (checkPlayerHasContinent("EU",currentPlayer))
-            currentPlayer.setContinentBonus(currentPlayer.getContinentBonus()+5);
     }
 
     
@@ -222,15 +193,6 @@ public class Turn extends Observable implements Controller, Observer{
         Console.getInstance().repaint();
     }
     
-    private boolean checkPlayerHasContinent(String s,Player p){
-        
-        for (Continent c:getObjController().getContinentList()){
-            if (c.getName() == s){
-                return c.playerHasContinent(p);
-            }
-        }
-        return false;
-    }
     //END turn and phase control
     
     //Getters and Setters
@@ -309,14 +271,6 @@ public class Turn extends Observable implements Controller, Observer{
      */
     public void setFinishedAttacking(Boolean finishedAttacking) {
         this.finishedAttacking = finishedAttacking;
-    }
-    
-    public ObjectivesController getObjController() {
-        return objController;
-    }
-
-    public void setObjController(ObjectivesController objController) {
-        this.objController = objController;
     }
 
     
