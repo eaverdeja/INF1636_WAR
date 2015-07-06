@@ -1,5 +1,6 @@
-package viewController;
+package view;
 
+import controller.Controller;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;

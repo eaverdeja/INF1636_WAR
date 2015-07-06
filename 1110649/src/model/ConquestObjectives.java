@@ -5,7 +5,7 @@
  */
 package model;
 
-import viewController.Turn;
+import controller.GameManager;
 
 /**
  *
@@ -13,7 +13,7 @@ import viewController.Turn;
  */
 public class ConquestObjectives extends Objective {
     
-    private Turn turnController = Turn.getInstance();
+    private GameManager turnController = GameManager.getInstance();
 
     public ConquestObjectives(int type){
      super(type);
@@ -47,7 +47,7 @@ public class ConquestObjectives extends Objective {
                     }
                 case 3:
                     int counter = 0;
-                    for (Territory t: turnController.getMapPanel().getLstTerritorios()){
+                    for (Territory t: turnController.getTerritoryList()){
                         if (t.getOwnerPlayer() == turnController.getCurrentPlayer() && t.getQtdExercitos() >= 2)
                             counter++;
                     }
@@ -67,7 +67,7 @@ public class ConquestObjectives extends Objective {
                         return true;
                 case 6:
                     int c = 0;
-                    for (Territory t: turnController.getMapPanel().getLstTerritorios()){
+                    for (Territory t: turnController.getTerritoryList()){
                         if (t.getOwnerPlayer() == turnController.getCurrentPlayer())
                             c++;
                     }

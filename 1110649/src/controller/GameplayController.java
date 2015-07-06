@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package viewController;
+package controller;
 
 
+import view.Console;
+import view.DicePanel;
 import java.awt.Font;
 import java.awt.Window;
 import java.util.Observable;
@@ -23,9 +25,8 @@ import model.Territory;
  */
 public class GameplayController extends Observable implements Controller{
     
-    private Player currentPlayer;
+    private GameManager gameManager;
     private Player defensePlayer;
-    private Turn turnController;
     private Territory currentTerritory;
     private Territory targetTerritory;
     private Territory lostTerritory;
@@ -33,76 +34,76 @@ public class GameplayController extends Observable implements Controller{
     private String attackMsg;
     
     public GameplayController(){
-        this.turnController = Turn.getInstance();
+        this.gameManager = GameManager.getInstance();
     }
  
     public void actionForClick(Territory t){
-        currentPlayer = turnController.getCurrentPlayer();
+        Player currentPlayer = gameManager.getCurrentPlayer();
         
         //Add the console so it listens to bussiness
         addObserver(Console.getInstance());
         
-        if (turnController.getTurnPhase() == Turn.turnPhase.newArmyPhase ){
+        if (gameManager.getTurnPhase() == GameManager.turnPhase.newArmyPhase ){
             if (t.getOwnerPlayer() == currentPlayer){
-                turnController.getMapPanel().setCurrentTerritory(t);
+                gameManager.setCurrentTerritory(t);
                 setCurrentTerritory(t);
-                turnController.getMapPanel().repaint();
+                gameManager.repaint();
             }
             else{
-                turnController.getMapPanel().setCurrentTerritory(null);
+                gameManager.setCurrentTerritory(null);
             }
                 
         }
         
-        if (turnController.getTurnPhase() == Turn.turnPhase.newAttackerPhase ){
+        if (gameManager.getTurnPhase() == GameManager.turnPhase.newAttackerPhase ){
             if (t.getOwnerPlayer() == currentPlayer){
-                turnController.getMapPanel().setCurrentTerritory(t);
-                turnController.getMapPanel().repaint();
-                turnController.goToNextPhase();
+                gameManager.setCurrentTerritory(t);
+                gameManager.repaint();
+                gameManager.goToNextPhase();
             }
         }
         
-        if (turnController.getTurnPhase() == Turn.turnPhase.moveArmyPhase){
+        if (gameManager.getTurnPhase() == GameManager.turnPhase.moveArmyPhase){
             movePhase(t);
         }
-        if (turnController.getTurnPhase() == Turn.turnPhase.attackPhase){
+        if (gameManager.getTurnPhase() == GameManager.turnPhase.attackPhase){
             attackPhase(t);
         }
         
-        setCurrentTerritory(turnController.getMapPanel().getCurrentTerritory());
-        turnController.getMapPanel().repaint();
+        setCurrentTerritory(gameManager.getCurrentTerritory());
+        gameManager.repaint();
     }
     
     private void movePhase(Territory t){
-    
+        Player currentPlayer = gameManager.getCurrentPlayer();
         if (currentTerritory == null){
             if (t.getOwnerPlayer() == currentPlayer && t.getAmountOfMovableArmies() > 0){
-                turnController.getMapPanel().setCurrentTerritory(t);
+                gameManager.setCurrentTerritory(t);
                 setCurrentTerritory(t);
-                turnController.getMapPanel().repaint();
+                gameManager.repaint();
             }
         }
         else{
-            if (t.getOwnerPlayer() == currentPlayer && currentTerritory != t && turnController.getMapPanel().getNeighbourMap().get(currentTerritory).contains(t)){
+            if (t.getOwnerPlayer() == currentPlayer && currentTerritory != t && gameManager.getNeighbourMap().get(currentTerritory).contains(t)){
                 if (currentTerritory.getAmountOfMovableArmies() > 0){
                     targetTerritory = t;
                     showInputForMove();
-                    turnController.getMapPanel().setCurrentTerritory(null);
-                    turnController.getMapPanel().repaint();
+                    gameManager.setCurrentTerritory(null);
+                    gameManager.repaint();
                 }
             }
             if (currentTerritory == t){
-                turnController.getMapPanel().setCurrentTerritory(null);
-                turnController.getMapPanel().repaint();
+                gameManager.setCurrentTerritory(null);
+                gameManager.repaint();
             }
         }
     }
     
     private void attackPhase(Territory t){
-        
+        Player currentPlayer = gameManager.getCurrentPlayer();
         if (t.getOwnerPlayer() != currentPlayer){
 
-            if (turnController.getMapPanel().getNeighbourMap().get(currentTerritory).contains(t) ){
+            if (gameManager.getNeighbourMap().get(currentTerritory).contains(t) ){
                 if (currentTerritory.getQtdExercitos() > 1){
                     defensePlayer = t.getOwnerPlayer();
                     if (currentTerritory.getQtdExercitos() - 1 > 3){
@@ -116,7 +117,7 @@ public class GameplayController extends Observable implements Controller{
                     if (dices.attackWins()){
                         attackMsg = "Choose a new victim!!!";
                         JOptionPane.showMessageDialog(null, "Attack wins!");
-                        turnController.setHasConquered(Boolean.TRUE);
+                        gameManager.setHasConquered(Boolean.TRUE);
                         t.setQtdExercitos(t.getQtdExercitos() - dices.getDefenseArmiesDead());
                         currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - dices.getAttackArmiesDead());
                         if (t.getQtdExercitos() == 0){
@@ -137,10 +138,10 @@ public class GameplayController extends Observable implements Controller{
                         currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - dices.getAttackArmiesDead());
                         t.setQtdExercitos(t.getQtdExercitos() - dices.getDefenseArmiesDead());
                     }
-                    turnController.getMapPanel().setCurrentTerritory(null);
+                    gameManager.setCurrentTerritory(null);
                     setCurrentTerritory(null);
-                    turnController.goToNextPhase(); 
-                    turnController.getMapPanel().repaint();
+                    gameManager.goToNextPhase(); 
+                    gameManager.repaint();
                     
                     //Close the dices JDialog
                     Window w = SwingUtilities.getWindowAncestor(dices);
@@ -152,9 +153,9 @@ public class GameplayController extends Observable implements Controller{
             }
         }
         else{
-           turnController.getMapPanel().setCurrentTerritory(t);
+           gameManager.setCurrentTerritory(t);
            setCurrentTerritory(t);
-           turnController.getMapPanel().repaint();
+           gameManager.repaint();
         }
     }
     
@@ -236,8 +237,8 @@ public class GameplayController extends Observable implements Controller{
         
         Console c = Console.getInstance();
         
-        String phase = Turn.getInstance().getTurnPhase().name();
-        Player currentPlayer = Turn.getInstance().getCurrentPlayer();
+        String phase = GameManager.getInstance().getTurnPhase().name();
+        Player currentPlayer = GameManager.getInstance().getCurrentPlayer();
         
         String info = null;
         String phaseMsg = null;
@@ -263,12 +264,12 @@ public class GameplayController extends Observable implements Controller{
         
         if(currentTerritory != null){
             info = "Country = "+currentTerritory.getNome()
-                    +"\nWe are in the "+Turn.getInstance().getTurnPhase().name()
+                    +"\nWe are in the "+GameManager.getInstance().getTurnPhase().name()
                     +"\n"+phaseMsg;
         }
         else{
             info = "Country = none"
-                    +"\nWe are in the "+Turn.getInstance().getTurnPhase().name()
+                    +"\nWe are in the "+GameManager.getInstance().getTurnPhase().name()
                     +"\n"+phaseMsg;
         }
         

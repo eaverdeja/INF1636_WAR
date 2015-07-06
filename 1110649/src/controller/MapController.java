@@ -1,267 +1,73 @@
-package viewController;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package controller;
 
-import model.Click;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.event.*;
+import java.awt.BorderLayout;
 import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Line2D;
+import java.awt.geom.PathIterator;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import javax.imageio.ImageIO;
-
-import javax.swing.*;
+import java.util.Set;
 import model.Continent;
-
-import model.Player;
 import model.Ponto;
 import model.Territory;
-import viewController.Turn.turnPhase;
+import view.MapPanel;
 
-@SuppressWarnings("serial")
-public class MapPanel extends JPanel {
-
-    // Lista de territorios
-    private List<Territory> lstTerritorios = new ArrayList<>();
-    private List<Continent> continentList = new ArrayList<>();
-    private List<Territory> neighbourList = new ArrayList<>();
-    private Map<Territory,List<Territory>> neighbourMap;
-    
-    private Territory currentTerritory = null;
+/**
+ *
+ * @author lorenzosaraiva
+ */
+public class MapController {
     
     // deslocaX e deslocaY � utilizado para alinhar os poligonos criados em cima da imagem dos territorios.
     private final float deslocaX = -5;
     private final float deslocaY = -9.6f;
-    private BufferedImage mapImage;
-    private BufferedImage lineImage;
-    private BufferedImage infosImage;
-    private List<Color> playerColors;
-    private Turn turnController;
-    private Console consoleController;
+    private List<Territory> territoryList = new ArrayList<>();
+    private List<Continent> continentList = new ArrayList<>();
+    private List<Territory> neighbourList = new ArrayList<>();
+    private MapPanel mapPanel;
+    private Map<Territory,List<Territory>> neighbourMap;
+    private GameManager gameManager = GameManager.getInstance();
 
-
-    public MapPanel(List<Player> playerList) {
-        try{
-            File map = new File("images/Mapas/war_tabuleiro_fundo.png");
-            mapImage = ImageIO.read(map);
-            
-            File line = new File("images/Mapas/war_tabuleiro_linhas.png");
-            lineImage = ImageIO.read(line);
-            
-            File infos = new File("images/mapas/war_tabuleiro.png");
-            infosImage = ImageIO.read(infos);
-            
-            playerColors = new ArrayList<>();
-            playerList.forEach((Player) -> playerColors.add(Player.getColor()));
-            
-            turnController = Turn.getInstance();
-            consoleController = Console.getInstance();
-        } 
-        catch(IOException e){
-            System.out.print("Erro ao carregar a imagem" + e.getMessage());
-        }   
-
-        this.addMouseListener(new MouseListener() {
-
-            // Evento de click para detectar se o ponto clicado esta dentro da area do teritorio.
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // Para cada territorio da lista de territorios
-                System.out.println("mouseX = "+e.getX()+" mouseY = "+e.getY()+"\n");
-                for(Territory t : lstTerritorios) {
-
-                    // Se o ponto clicado for contido pelo poligono do territorio	
-                    if(t.getPoligono().contains(e.getX(), e.getY())) {   
-                        Click click = new Click();
-                        
-                        click.addObserver(turnController);
-                        click.setValue(t);
-                    }
-                }
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                    // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                    // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                    // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                    // TODO Auto-generated method stub
-
-            }
-        });
-    }
-
-    @Override
-    protected void paintComponent(Graphics g){
-        super.paintComponent(g);
-         
-        //Paint the sea
-        g.drawImage(mapImage,0,0,null);
-       
-        //Paint infos
-        g.drawImage(infosImage,0,0,null);
-        
-        //Paint Territories/names
-        paintTerritories(g);
-        
-        //Paint territory lines
-        g.drawImage(lineImage,0,0,null);
-        
-        //Paint players
-        paintPlayers(g);
-        
-        //Paint armies
-        paintArmyInfo(g);
+    public MapController(){
+        initializeTerritories();
+        createNeighbourMap();
+        createMap();
+        mapPanel.repaint();
     }
     
-    public void defineTerritories(){
-        for(Territory t : lstTerritorios){
-            //Transforming path and offsetting borders
-            t.getPoligono().transform(AffineTransform.getScaleInstance(0.94,0.94));
-            t.getPoligono().transform(AffineTransform.getTranslateInstance(3, 3));
-            t.setCenterX((int)(t.getCenterX()*0.94));
-            t.setCenterY((int)(t.getCenterY()*0.94));
-        }
+    private void createMap(){
+        
+        //Load map
+        setMapPanel(new MapPanel(gameManager.getPlayers(),territoryList, getNeighbourMap()));
+        getMapPanel().setLayout(new BorderLayout());
+        
+        //Define territories
+        defineTerritories();
+        
+        //Add map to pane
+        gameManager.getMainFrame().getContentPane().add(getMapPanel());
     }
     
-    private void paintTerritories(Graphics g){
-        //Draw the different territories
-        Graphics2D g2 = (Graphics2D)g;
-        
-        //Turn Antialiasing on
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-        
-        for(Territory t : lstTerritorios){
-           
-            //Filling
-            switch(t.getContinente()){
-                case("AN"): g2.setColor(new Color(238,64,54)); break;
-                case("AS"): g2.setColor(new Color(0,104,56)); break;
-                case("AF"): g2.setColor(new Color(101,45,144)); break;
-                case("EU"): g2.setColor(new Color(43,56,143)); break;
-                case("ASI"): g2.setColor(new Color(246,146,30)); break;
-                case("OC"): g2.setColor(new Color(38,169,224)); break;
-            }
-            
-            if(!(currentTerritory == null)){
-                
-                //Are we filling the current country?
-                if(getCurrentTerritory().equals(t)){
-                    g2.setColor(g2.getColor().brighter().brighter());
-                }
-                
-                //Get neighbours of chosen territory
-                neighbourList = getNeighbourMap().get(currentTerritory);
-                for(Territory n : neighbourList){
-                    
-                    //Are we filling(t) a neighbour(n)?
-                    if (turnController.getTurnPhase() == turnPhase.attackPhase){
-                        if(t.equals(n) && (t.getOwnerPlayer() != currentTerritory.getOwnerPlayer())){
-                            g2.setColor(g2.getColor().darker().darker());
-                        }
-                    }else if(turnController.getTurnPhase() == turnPhase.moveArmyPhase){
-                        if(t.equals(n) && (t.getOwnerPlayer() == currentTerritory.getOwnerPlayer())){
-                            g2.setColor(g2.getColor().darker().darker());
-                        }
-                    }else{
-                        if(t.equals(n)){
-                            g2.setColor(g2.getColor().darker().darker());
-                        }
-                    }
-                }
-            }
-            
-            g2.fill((Shape)t.getPoligono());
-           
-            //Drawing borders
-            g2.setStroke(new BasicStroke(1.5f));
-            g2.setColor(Color.BLACK);
-            g2.draw(t.getPoligono());
-        }
+    public List<Territory> getTerritoryList() {
+        return territoryList;
     }
-    
-    private void paintPlayers(Graphics g){
-        Graphics2D g2 = (Graphics2D)g;
-        
-        int xCoord = 20;
-        int diameter = 50;
-        Player currentPlayer = turnController.getCurrentPlayer();
-        
-        for(Color c : playerColors){
-           
-           g2.setPaint(c);
-           g2.fillOval(xCoord,20,diameter,diameter);
-           
-           g2.setColor(Color.BLACK);
-           g2.drawOval(xCoord,20,diameter,diameter);
-           
-           if(currentPlayer.getColor().equals(c)){
-               g2.setPaint(Color.BLACK);
-               g2.fillOval(xCoord+diameter/4,20+diameter/4,diameter/2,diameter/2);
-           }
-           
-           xCoord += 70;
-        }
+
+    public void setTerritoryList(List<Territory> territoryList) {
+        this.territoryList = territoryList;
     }
-    
-    private void paintArmyInfo(Graphics g){
-        Graphics2D g2 = (Graphics2D)g;           
-        //Draw army infos
-        int width = 30;
-        int height = 20;
-        
-        g2.setFont(new Font("TimesRoman",Font.BOLD,15));
-        
-        for(Territory t : lstTerritorios){
-            g2.setPaint(t.getOwnerPlayer().getColor());
-            g2.fillRect(t.getCenterX(),t.getCenterY(),width,height);
-       
-            //Are we painting the current territory?
-            if(t.equals(currentTerritory)){
-                g2.setColor(t.getOwnerPlayer().getColor());
-                g2.setStroke(new BasicStroke(2.5f));
-                g2.drawRect(t.getCenterX()-1,t.getCenterY()-1,width+2,height+2);
-            }
-            
-            g2.setStroke(new BasicStroke(1.5f));
-            g2.setColor(Color.black);
-            g2.drawRect(t.getCenterX(),t.getCenterY(),width,height);
-            
-            g2.drawString(Integer.toString(t.getQtdExercitos()),t.getCenterX()+height/2,t.getCenterY()+width/2);
-        }
-    }
-	
-    public List<Territory> getLstTerritorios() {
-        return lstTerritorios;
-    }
-    
-    // Bloco de inicialização dos territ�rios
-    // Estou assumindo que a classe territorio tem um nome e um poligono definindo sua área de clique.
-    {
+    public void initializeTerritories(){  
         List<Territory> tempList = new ArrayList();
+        List<Territory> lstTerritorios = new ArrayList(0);
         Territory t;
         // Adicionando os territorios na lista de territorios.
         
@@ -1143,39 +949,319 @@ public class MapPanel extends JPanel {
         
         getContinentList().add(new Continent("OC",tempList));
         
-    }
-
-    /**
-     * @param lstTerritorios the lstTerritorios to set
-     */
-    public void setLstTerritorios(List<Territory> lstTerritorios) {
-        this.lstTerritorios = lstTerritorios;
-    }
-
-    /**
-     * @param neighbourMap the neighbourMap to set
-     */
-    public void setNeighbourMap(Map<Territory,List<Territory>> neighbourMap) {
-        this.neighbourMap = neighbourMap;
-    }
-    
-    public Territory getCurrentTerritory() {
-        return currentTerritory;
-    }
-    
-    public void setCurrentTerritory(Territory currentTerritory) {
-        this.currentTerritory = currentTerritory;
-    }   
-
-    public Map<Territory,List<Territory>> getNeighbourMap() {
-        return neighbourMap;
-    }
-    
-    public BufferedImage getMapImage(){
-        return mapImage;
+        territoryList = lstTerritorios;
+        
     }
 
     public List<Continent> getContinentList() {
         return continentList;
+    }
+
+    public void setContinentList(List<Continent> continentList) {
+        this.continentList = continentList;
+    }
+
+    public MapPanel getMapPanel() {
+        return mapPanel;
+    }
+
+    public void setMapPanel(MapPanel mapPanel) {
+        this.mapPanel = mapPanel;
+    }
+    
+    private void createNeighbourMap(){
+        List<Territory> neighbourList = new ArrayList<>();
+        setNeighbourMap(new HashMap<>());
+        
+        ArrayList<Line2D.Double> tLines = new ArrayList<>();
+        ArrayList<Line2D.Double> nLines = new ArrayList<>();
+        
+        //Search for neighbours(n) around territory(t)
+        for(Territory t : territoryList){
+            tLines = getLineSegments(t.getPoligono());
+            for(Territory n : territoryList){
+              if(!t.getNome().equals(n.getNome())){
+                    //Try to intersect territory lines with neighbour lines
+                    nLines = getLineSegments(n.getPoligono());
+                    for(Line2D.Double tLine : tLines){
+                        for(Line2D.Double nLine : nLines){
+                            if(tLine.intersectsLine(nLine)){
+                                neighbourList.add(n);
+                            }
+                        }
+                    }
+                }
+            }
+         
+            //Removing duplicates
+            Set<Territory> neighbourSet = new HashSet<>(neighbourList);
+            getNeighbourMap().put(t, new ArrayList<>(neighbourSet));
+            
+           // New neighbours are coming
+            neighbourList.clear();
+        }
+        
+        addSeaNeighbours();
+    }
+    
+     private void addSeaNeighbours(){
+        
+        List<Territory> seaNeighbours = new ArrayList<>();
+        Territory t = null;
+        Territory n = null;
+        
+        for (Iterator<Territory> it = territoryList.iterator(); it.hasNext();) {
+            t = it.next();
+            
+            //BRASIL
+            if(t.getNome().equals("Brasil")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Nigeria")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //ALASCA
+            if(t.getNome().equals("Alasca")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Siberia")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //GROELANDIA
+            if(t.getNome().equals("Groelandia")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Quebec")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Reino Unido")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //FRANÇA
+            if(t.getNome().equals("Franca")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Suecia")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Reino Unido")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //ITALIA
+            if(t.getNome().equals("Italia")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Suecia")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Argelia")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //ARGELIA
+            if(t.getNome().equals("Argelia")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Espanha")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //EGITO
+            if(t.getNome().equals("Egito")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Romania")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Jordania")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //SOMALIA
+            if(t.getNome().equals("Somalia")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Arabia Saudita")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //INDONESIA
+            if(t.getNome().equals("Indonesia")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("India")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Bangladesh")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Australia")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Nova Zelandia")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //NOVA ZELANDIA
+            if(t.getNome().equals("Nova Zelandia")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Australia")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+            
+            //JAPAO
+            if(t.getNome().equals("Japao")){
+                n = null;
+                for (Iterator<Territory> neighbours = territoryList.iterator(); neighbours.hasNext();) {
+                    n = neighbours.next();
+                    if(n != null && n.getNome().equals("Cazaquistao")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Mongolia")){
+                        seaNeighbours.add(n);
+                    }
+                    else if(n != null && n.getNome().equals("Coreia do Norte")){
+                        seaNeighbours.add(n);
+                    }
+                }
+                seaNeighbour(t,seaNeighbours);
+            }
+        }
+    }
+    
+    private void seaNeighbour(Territory t, List<Territory> nList){
+        
+        List<Territory> neighbourList = null;
+        
+        //Append the seaNeighbours
+        neighbourList = getNeighbourMap().get(t);
+        neighbourList.addAll(nList);
+        
+        //Reflect it!
+        for(Territory n : nList){
+            neighbourList = getNeighbourMap().get(n);
+            neighbourList.add(t);
+            getNeighbourMap().put(n, neighbourList);
+        }
+        
+        //Clear list for next country
+        nList.clear();
+    }
+    
+    //getLineSegments's body was written by Peter http://stackoverflow.com/users/559415/peter
+    private ArrayList<Line2D.Double> getLineSegments(GeneralPath p){
+        
+        ArrayList<double[]> linePoints = new ArrayList<>();
+        ArrayList<Line2D.Double> lineSegments = new ArrayList<>();
+              
+        double[] coords = new double[6];    
+        
+        for(PathIterator pi = p.getPathIterator(null); !pi.isDone(); pi.next()){
+            // The type will be SEG_LINETO, SEG_MOVETO, or SEG_CLOSE
+            // since p is composed of straight lines
+            int type = pi.currentSegment(coords);
+            
+            // We record a double array of {segment type, x coord, y coord}
+            double[] pathIteratorCoords = {type,coords[0],coords[1]};
+            linePoints.add(pathIteratorCoords);
+        }
+        
+        double[] start = new double[3]; // To record where each polygon starts
+
+        for (int i = 0; i < linePoints.size(); i++) {
+            // If we're not on the last point, return a line from this point to the next
+            double[] currentElement = linePoints.get(i);
+
+            // We need a default value in case we've reached the end of the ArrayList
+            double[] nextElement = {-1, -1, -1};
+            if (i < linePoints.size() - 1) {
+                nextElement = linePoints.get(i + 1);
+            }
+
+            // Make the lines
+            if (currentElement[0] == PathIterator.SEG_MOVETO) {
+                start = currentElement; // Record where the polygon started to close it later
+            } 
+
+            if (nextElement[0] == PathIterator.SEG_LINETO) {
+                lineSegments.add(
+                        new Line2D.Double(
+                            currentElement[1], currentElement[2],
+                            nextElement[1], nextElement[2]
+                        )
+                    );
+            } else if (nextElement[0] == PathIterator.SEG_CLOSE) {
+                lineSegments.add(
+                        new Line2D.Double(
+                            currentElement[1], currentElement[2],
+                            start[1], start[2]
+                        )
+                    );
+            }
+        }
+        return lineSegments;
+    }
+    
+    public void defineTerritories(){
+        for(Territory t : territoryList){
+            //Transforming path and offsetting borders
+            t.getPoligono().transform(AffineTransform.getScaleInstance(0.94,0.94));
+            t.getPoligono().transform(AffineTransform.getTranslateInstance(3, 3));
+            t.setCenterX((int)(t.getCenterX()*0.94));
+            t.setCenterY((int)(t.getCenterY()*0.94));
+        }
+    }
+
+    public Map<Territory,List<Territory>> getNeighbourMap() {
+        return neighbourMap;
+    }
+
+    public void setNeighbourMap(Map<Territory,List<Territory>> neighbourMap) {
+        this.neighbourMap = neighbourMap;
     }
 }

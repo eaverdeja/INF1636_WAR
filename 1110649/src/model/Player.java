@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import viewController.Turn;
+import controller.GameManager;
 /**
  *
  * @author lorenzosaraiva
@@ -146,7 +146,7 @@ public class Player {
     public int newArmyAmount(){
         int ret = (int) Math.floor(this.getCurrentTerritories()/2);
         if (hasChanged()){
-            ret += Turn.getInstance().getCardsChangeAmount();
+            ret += GameManager.getInstance().getCardsChangeAmount();
         }
         ret += getContinentBonus();
         if (ret > 3)

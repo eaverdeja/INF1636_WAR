@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package viewController;
+package controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +22,8 @@ import model.Player;
 public class CardsController implements Controller {
     
     private List<Card> cardDeck = new ArrayList<>();
-    private Turn turnController = Turn.getInstance();
+    private GameManager gameManager = GameManager.getInstance();
+   
     public Card getRandomCard(){
             Random randomGenerator = new Random();
             int randValue = randomGenerator.nextInt(cardDeck.size());
@@ -30,7 +31,7 @@ public class CardsController implements Controller {
             Card card = cardDeck.get(randValue);
             cardDeck.remove(randValue);
             if (cardDeck.size()==0){
-                for (Player p : turnController.getPlayers()){
+                for (Player p : gameManager.getPlayers()){
                 p.removeCards();
                 createAndRandomizeCards();
                 }

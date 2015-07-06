@@ -1,4 +1,4 @@
-package viewController;
+package view;
 
 import javax.swing.*;
 import java.awt.BorderLayout;

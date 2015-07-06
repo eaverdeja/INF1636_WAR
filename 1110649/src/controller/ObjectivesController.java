@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package viewController;
+package controller;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -23,11 +23,11 @@ public class ObjectivesController {
     
     private List<Continent> continentList = new ArrayList();
     private List<Objective> objectiveList = new ArrayList();
-    private Turn turnController = Turn.getInstance();
+    private GameManager gameManager = GameManager.getInstance();
     int playersLacking;
     
     public ObjectivesController(){
-        playersLacking = 6 - turnController.getPlayers().size(); 
+        playersLacking = 6 - gameManager.getPlayers().size(); 
         for (int i = 0; i< 14 - playersLacking; i++){
             Objective o = objFactory(i);
             objectiveList.add(o);
@@ -88,7 +88,7 @@ public class ObjectivesController {
     
     public void randomizeObjectives(){
         Random random = new Random();
-        for (Player p :turnController.getPlayers()){
+        for (Player p :gameManager.getPlayers()){
             int randValue = random.nextInt(objectiveList.size());
             Objective o = objectiveList.get(randValue);
             while (o.getType() == 8 && p.getColor() == Color.BLUE){

@@ -1,4 +1,4 @@
-import viewController.WelcomeFrame;
+import view.WelcomeFrame;
 
 public class INF1636_War {
     

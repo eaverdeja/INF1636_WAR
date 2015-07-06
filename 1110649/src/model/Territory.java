@@ -5,7 +5,7 @@ import java.awt.Rectangle;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.List;
-import viewController.Turn;
+import controller.GameManager;
 
 public class Territory {
 

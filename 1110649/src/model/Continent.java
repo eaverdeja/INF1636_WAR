@@ -24,9 +24,7 @@ public class Continent {
     
     public boolean playerHasContinent(Player p){
         for (Territory t:getTerritoryList()){
-            System.out.println("vez de " + t.getNome());
             if (t.getOwnerPlayer() != p){
-                System.out.println("o errado eh" + t.getNome());
                 return false;
             }
         }

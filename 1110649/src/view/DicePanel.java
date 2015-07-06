@@ -1,5 +1,5 @@
 
-package viewController;
+package view;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
