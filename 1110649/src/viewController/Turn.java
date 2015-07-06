@@ -122,10 +122,6 @@ public class Turn extends Observable implements Controller, Observer{
         notifyObservers();
         clearChanged();
     }
-    
-    public void goToMovePhase(){
-        currentPhase = turnPhase.moveArmyPhase;
-    }
 
     public void nextTurn() {
         int index = 0;

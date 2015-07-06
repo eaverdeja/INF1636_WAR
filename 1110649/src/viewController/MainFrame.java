@@ -137,7 +137,8 @@ public class MainFrame extends JFrame{
         finishAttacks.setVisible(false);
         finishAttacks.addActionListener((ActionEvent e) -> {
             try {
-                turnController.goToMovePhase();
+                turnController.setFinishedAttacking(true);
+                turnController.goToNextPhase();
                 finishAttacks.setVisible(false);
                 finishMoves.setVisible(true);
                 repaint();
