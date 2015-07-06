@@ -17,6 +17,7 @@ public class Player {
     private int playerId;
     private static int playerQuantity = 0;
     private int currentTerritories = 0;
+    private int continentBonus = 0;
     private List<Card> currentCards = new ArrayList<>();
     private boolean hasChanged = false;
     private Objective objective;
@@ -147,6 +148,7 @@ public class Player {
         if (hasChanged()){
             ret += Turn.getInstance().getCardsChangeAmount();
         }
+        ret += getContinentBonus();
         if (ret > 3)
             return ret;
         return 3;
@@ -190,4 +192,13 @@ public class Player {
     public void setObjective(Objective objective) {
         this.objective = objective;
     }
+
+    public int getContinentBonus() {
+        return continentBonus;
+    }
+
+    public void setContinentBonus(int continentBonus) {
+        this.continentBonus = continentBonus;
+    }
+    
 }

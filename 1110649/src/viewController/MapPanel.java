@@ -499,7 +499,7 @@ public class MapPanel extends JPanel {
         
         getContinentList().add(new Continent("AS",tempList));
         
-        tempList.clear();
+        tempList = new ArrayList();
         
         t = new Territory("AF","Africa do Sul", new Ponto[] { new Ponto(528.4, 545.4),
                         new Ponto(558.1, 600.2),
