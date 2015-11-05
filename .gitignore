@@ -47,8 +47,6 @@ build/classes/.netbeans_automatic_build
 *.class
 *.jar
 *.TXT
-images/Leiame.gdoc
-*.png
 manifest.mf
 *.zip
 build/classes/.netbeans_update_resources
