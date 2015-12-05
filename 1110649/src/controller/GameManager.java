@@ -10,6 +10,8 @@ import java.awt.BorderLayout;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
+import java.io.IOException;
+
 import view.Console;
 import view.MapPanel;
 import model.Click;
@@ -25,6 +27,7 @@ import java.util.Observer;
 import model.Player;
 import java.util.Set;
 import model.Continent;
+import model.GameState;
 import model.Territory;
 
 /**
@@ -56,12 +59,15 @@ public class GameManager extends Observable implements Controller, Observer{
     private MapController mapController;
     private ButtonsController buttonsController;
     private PlayerController playerController;
+    private SerializationController serializationController;
     
     private Boolean hasConquered = false;
     private Boolean finishedAttacking = false;
     
-    private int cardsChangeAmount = 4;
     private int armiesAdded = 0;
+    private int cardsChangeAmount = 0;
+    
+    public GameState currentState;
 
 
     //Implementing Singleton pattern
@@ -80,6 +86,7 @@ public class GameManager extends Observable implements Controller, Observer{
      
     public void gameSetUp(int players){
         playerController = new PlayerController(players);
+        serializationController = new SerializationController();
         turnController = new TurnController();
         mapController = new MapController();
         attackController = new GameplayController();
@@ -89,12 +96,14 @@ public class GameManager extends Observable implements Controller, Observer{
         playerController.randomizeTerritories();
         getObjController().setContinentList(getMapController().getContinentList());
         buttonsController = new ButtonsController();
+        currentState = new GameState();
     }
     
     
     //START turn and phase control
     
     public void goToNextPhase() {
+    	
         turnController.goToNextPhase();
         setChanged();
         notifyObservers();
@@ -102,10 +111,16 @@ public class GameManager extends Observable implements Controller, Observer{
     }
    
     public void nextTurn() {
+    	
+    	if (armiesAdded == 0){
+    		serializationController.saveState();
+    	armiesAdded++;
+    	}
     	turnController.nextTurn();
         setChanged();
         notifyObservers();
         clearChanged();
+    	hasConquered = false;
     }
       
     @Override
@@ -268,5 +283,14 @@ public class GameManager extends Observable implements Controller, Observer{
     public boolean checkPlayerHasContinent(String s,Player p){
         
         return playerController.checkPlayerHasContinent(s, p);
+    }
+    
+    public void applyState() throws IOException{
+    	serializationController.applyState();
+    	
+    }
+    
+    public Player getPlayerForId(int id){
+    	return playerController.getPlayerForId(id);	
     }
 }

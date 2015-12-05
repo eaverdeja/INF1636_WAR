@@ -189,9 +189,19 @@ public class GameplayController extends Observable implements Controller{
         }while(true);
 
         JOptionPane.showMessageDialog(null, "Voce passou " + val + " exercitos.");
+        
+        
+
+        
         lostTerritory.setQtdExercitos(val);
         currentTerritory.setQtdExercitos(currentTerritory.getQtdExercitos() - val);
         
+//        gameManager.currentPlay.getOwnerChanged().add(lostTerritory);
+//        gameManager.currentPlay.getPlayer().add(gameManager.getCurrentPlayer());
+//        gameManager.currentPlay.getNewTerritoryArmies().add(val);
+//
+//        gameManager.currentPlay.getArmyChanged().add(currentTerritory);
+//        gameManager.currentPlay.getNewArmyAmount().add(-val);
     }
     
     private void showInputForMove(){
@@ -222,6 +232,12 @@ public class GameplayController extends Observable implements Controller{
         }while(true);
 
         JOptionPane.showMessageDialog(null, "Voce passou " + val + " exércitos.");
+        
+//        gameManager.currentPlay.getArmyChanged().add(currentTerritory);
+//        gameManager.currentPlay.getNewArmyAmount().add(-val);
+//        gameManager.currentPlay.getArmyChanged().add(targetTerritory);
+//        gameManager.currentPlay.getNewArmyAmount().add(val);
+        
         currentTerritory.removeArmies(val);
         targetTerritory.addMovedArmies(val);
         setCurrentTerritory(null);

@@ -71,6 +71,18 @@ public class PlayerController {
         this.currentPlayer = currentPlayer;
     }
     
+    public Player getPlayerForId(int id){
+    	Player newPlayer = new Player();
+
+    	for (int i = 0; i < playerQuantity; i++) {
+            newPlayer = getPlayerArray()[i];
+            if (newPlayer.getPlayerId() == id){
+            	return newPlayer;
+            }
+        }
+    	return newPlayer;
+    }
+    
     public boolean checkPlayerHasContinent(String s,Player p){
         
         for (Continent c: gameManager.getObjController().getContinentList()){

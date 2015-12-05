@@ -8,9 +8,13 @@ package controller;
 import static java.awt.Component.TOP_ALIGNMENT;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.List;
+
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import model.Card;
+import model.Territory;
 import view.CardPanel;
 
 /**
@@ -25,6 +29,7 @@ public class ButtonsController {
     private final int cardsOffset = 360;
     
     private JButton finishAttacks;
+    private JButton serializeGame;
     private JButton finishMoves;
     private JButton addArmy;
     private JButton changeCards;
@@ -40,6 +45,7 @@ public class ButtonsController {
         createChangeCards();
         createShowCards();
         createShowObjective();
+        createSerializeButton();
     }
     
     private void createAddArmy(){
@@ -100,6 +106,25 @@ public class ButtonsController {
         });
     }
     
+    
+    private void createSerializeButton(){
+    	serializeGame = new JButton("Serialize");
+        
+    	serializeGame.setAlignmentY(TOP_ALIGNMENT);
+    	serializeGame.setPreferredSize(new Dimension(20,20));
+        gameManager.getMapPanel().setLayout(null);
+        gameManager.getMapPanel().add(serializeGame);
+        serializeGame.setBounds(DEF_WIDTH - nextPhaseOffset, 70, 100, 30);
+        serializeGame.setVisible(true);
+        serializeGame.addActionListener((ActionEvent e) -> {
+            try {
+            	serialize();
+            }
+            catch (Exception ex){
+                System.out.println("Erro ao serializar!" + ex.getMessage());   
+            }
+        });
+    }
     private void createFinishMovesButton(){
         finishMoves = new JButton("End Moves");
         
@@ -116,7 +141,10 @@ public class ButtonsController {
                     gameManager.getCurrentPlayer().giveCard(card);                   
                     card.showCard();
                 }
+
                 GameManager.getInstance().nextTurn();
+                
+
                 addArmy.setVisible(true);
                 finishMoves.setVisible(false);
                 gameManager.nextTurn();
@@ -128,7 +156,10 @@ public class ButtonsController {
             }
         });
     }
-    
+    private void serialize() throws IOException{
+    	
+    	gameManager.applyState();
+    }
     private void createChangeCards(){
     
         changeCards = new JButton("Change");
