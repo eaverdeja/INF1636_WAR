@@ -1,10 +1,13 @@
 package view;
 
 import javax.swing.*;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+
 import static java.awt.Component.BOTTOM_ALIGNMENT;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
@@ -32,7 +35,7 @@ public class WelcomeFrame extends JFrame{
         
         //creating text field
         createBox();
-        createLabel();
+        createRadioOptions();
         createTextField();
     }
     
@@ -47,15 +50,18 @@ public class WelcomeFrame extends JFrame{
         welcomePanel.add(box, BorderLayout.PAGE_END);
     }
     
-    private void createLabel(){
-        
-        label = new JLabel("Digite o numero de jogadores! (3-6)",JLabel.CENTER);
+    private void createRadioOptions(){
+    	
+    	label = new JLabel("Digite o ip do servidor",JLabel.CENTER);
         label.setPreferredSize(new Dimension(200, 100));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         label.setBackground(Color.WHITE);
+        label.setBackground(Color.WHITE);
         label.setOpaque(true);
         box.add(label, BorderLayout.CENTER);
+        
     }
+    
     
     private void createTextField(){
         
@@ -72,7 +78,7 @@ public class WelcomeFrame extends JFrame{
 
                     //Start the game
                     this.setVisible(false);
-                    MainFrame mf = new MainFrame(input);
+                    MainFrame mf = new MainFrame();
                     mf.setTitle("War!");
                     mf.setVisible(true);
 
@@ -88,4 +94,5 @@ public class WelcomeFrame extends JFrame{
         
         box.add(textField);
     }
+    
 }

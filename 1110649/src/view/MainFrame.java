@@ -17,7 +17,7 @@ public class MainFrame extends JFrame{
     
     private Map<Territory,List<Territory>> neighbourMap;
     
-    public MainFrame(int players){
+    public MainFrame(){
         
         setSize(DEF_WIDTH,DEF_HEIGHT);
         setResizable(false);
@@ -25,7 +25,7 @@ public class MainFrame extends JFrame{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
         //Define number of players and turn scheme
-        this.players = players;
+        this.players = 3;
         gameManager = GameManager.getInstance();
         gameManager.setMainFrame(this);
         gameManager.gameSetUp(players);

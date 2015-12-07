@@ -1,10 +1,10 @@
-import view.WelcomeFrame;
+import view.ClientWelcome;
 
 public class INF1636_War {
     
     public static void main(String[] args) {
-        WelcomeFrame wf = new WelcomeFrame();
-        wf.setTitle("Welcome!");
-        wf.setVisible(true);
+        ClientWelcome cw = new ClientWelcome();
+        cw.setTitle("Welcome!");
+        cw.setVisible(true);
     }
 }
