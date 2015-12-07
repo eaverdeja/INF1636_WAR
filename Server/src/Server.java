@@ -1,12 +1,17 @@
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.PrintStream;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class Server {
-	static ArrayList<PrintStream> listaClientes = null;
+	//static ArrayList<Socket> listaClientes = null;
+	static HashMap<Socket, ClienteTask> listaClientes;
 	
 	public static void main(String[] args) throws IOException {
 		
@@ -15,17 +20,20 @@ public class Server {
 			@Override
 			public void run() {
 				Socket cliente = null;
-				listaClientes = new ArrayList<>();
+				listaClientes = new HashMap<>();
 				try{
 					ServerSocket servidor = new ServerSocket(12345);
 					System.out.println("Porta 12345 aberta!");
-					while(true) {
+					do {
 						cliente = servidor.accept();
 						System.out.println("Nova conexão com o cliente " + cliente.getInetAddress().getHostAddress());
-						listaClientes.add(new PrintStream(cliente.getOutputStream()));
-						new Thread(new ClienteTask(cliente)).start();
-					}
+						ClienteTask worker = new ClienteTask(cliente);
+						new Thread(worker).start();
 						
+						listaClientes.put(cliente, worker);
+					} while(!isGameReady());
+					
+					System.out.println("end!");						
 				} catch(IOException e) {
                     System.err.println("Unable to process client request");
                     e.printStackTrace();
@@ -37,7 +45,15 @@ public class Server {
 		serverThread.start();
 	}
 	
-	public static ArrayList<PrintStream> getClientes() {
-		return listaClientes;
+	public static Boolean isGameReady() {
+		Boolean gameReady = false;
+		for(ClienteTask cliente : listaClientes.values()) {
+			gameReady = cliente.isReady();
+		}
+		return gameReady;
+	}
+	
+	public static ArrayList<Socket> getClientes() {
+		return new ArrayList<Socket>(listaClientes.keySet());
 	}
 }
