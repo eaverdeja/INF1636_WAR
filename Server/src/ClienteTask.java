@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Scanner;
 
 public class ClienteTask implements Runnable {
@@ -11,7 +13,7 @@ public class ClienteTask implements Runnable {
     private Boolean startGame = false;
     String currentMsg;
     BufferedWriter bw;
-    ArrayList<Socket> listaClientes;
+    static ArrayList<Socket> listaClientes;
 
     public ClienteTask(Socket clientSocket) throws IOException {
         this.clienteSocket = clientSocket;
@@ -27,6 +29,8 @@ public class ClienteTask implements Runnable {
         		currentMsg = in.nextLine();
         		if(currentMsg.compareTo("StartGame") == 0) {
         			startGame = true;
+        			//Warn server
+        			Server.isGameReady();
         		}
         		broadcast(currentMsg);
             }
@@ -57,5 +61,10 @@ public class ClienteTask implements Runnable {
     
     public Boolean isReady() {
     	return startGame;
+    }
+    
+    public void startGame() {
+    	System.out.println("I, " + clienteSocket.getInetAddress() + ", WILL START!");
+    	
     }
 }

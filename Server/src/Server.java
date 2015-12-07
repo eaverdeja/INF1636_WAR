@@ -10,7 +10,8 @@ import java.util.HashMap;
 
 
 public class Server {
-	//static ArrayList<Socket> listaClientes = null;
+	static Boolean boot;
+	static int players;
 	static HashMap<Socket, ClienteTask> listaClientes;
 	
 	public static void main(String[] args) throws IOException {
@@ -21,6 +22,10 @@ public class Server {
 			public void run() {
 				Socket cliente = null;
 				listaClientes = new HashMap<>();
+				do {
+					boot = setup();
+				} while(!boot);
+					
 				try{
 					ServerSocket servidor = new ServerSocket(12345);
 					System.out.println("Porta 12345 aberta!");
@@ -31,9 +36,8 @@ public class Server {
 						new Thread(worker).start();
 						
 						listaClientes.put(cliente, worker);
-					} while(!isGameReady());
+					} while(true);
 					
-					System.out.println("end!");						
 				} catch(IOException e) {
                     System.err.println("Unable to process client request");
                     e.printStackTrace();
@@ -45,12 +49,36 @@ public class Server {
 		serverThread.start();
 	}
 	
-	public static Boolean isGameReady() {
+	public static void isGameReady() {
 		Boolean gameReady = false;
+		
 		for(ClienteTask cliente : listaClientes.values()) {
-			gameReady = cliente.isReady();
+			gameReady = (cliente.isReady() && listaClientes.size() == players);
 		}
-		return gameReady;
+		
+		if(gameReady) {
+			//Start!
+			for(ClienteTask cliente : listaClientes.values()) {
+				cliente.startGame();
+			}
+		}
+	}
+	
+	private static boolean setup() {
+		try {
+	        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	        System.out.print("Quantos jogadores irão jogar?\n");
+	        try{
+	            players = Integer.parseInt(br.readLine());
+	        }catch(NumberFormatException nfe){
+	            System.err.println("Digite um numero!");
+	            return false;
+	        }
+		} catch (IOException ex) {
+			ex.getMessage();
+			return false;
+		}
+		return true;
 	}
 	
 	public static ArrayList<Socket> getClientes() {
