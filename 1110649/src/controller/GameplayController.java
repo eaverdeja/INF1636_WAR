@@ -171,7 +171,7 @@ public class GameplayController extends Observable implements Controller{
         panel.add(lbl);
         panel.add(txt);
         do{
-            int nome = JOptionPane.showOptionDialog(null, panel, "AtenÃ§Ã£o", JOptionPane.NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options , options[0]);
+            int nome = JOptionPane.showOptionDialog(null, panel, "Atenção", JOptionPane.NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options , options[0]);
 
 
             if (nome == 0){
@@ -214,7 +214,7 @@ public class GameplayController extends Observable implements Controller{
         panel.add(lbl);
         panel.add(txt);
         do{
-        int nome = JOptionPane.showOptionDialog(null, panel, "AtenÃ§Ã£o", JOptionPane.NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options , options[0]);
+        int nome = JOptionPane.showOptionDialog(null, panel, "Atenção", JOptionPane.NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options , options[0]);
          
         
         if (nome == 0){
@@ -231,7 +231,7 @@ public class GameplayController extends Observable implements Controller{
             }
         }while(true);
 
-        JOptionPane.showMessageDialog(null, "Voce passou " + val + " exÃ©rcitos.");
+        JOptionPane.showMessageDialog(null, "Voce passou " + val + " exércitos.");
         
 //        gameManager.currentPlay.getArmyChanged().add(currentTerritory);
 //        gameManager.currentPlay.getNewArmyAmount().add(-val);

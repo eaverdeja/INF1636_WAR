@@ -6,6 +6,7 @@
 package controller;
 
 import view.MainFrame;
+
 import java.awt.BorderLayout;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import view.Console;
 import view.MapPanel;
 import model.Click;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,11 +26,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+
 import model.Player;
+
 import java.util.Set;
+
 import model.Continent;
 import model.GameState;
 import model.Territory;
+import network.Client;
 
 /**
  *
@@ -112,10 +118,9 @@ public class GameManager extends Observable implements Controller, Observer{
    
     public void nextTurn() {
     	
-    	if (armiesAdded == 0){
-    		serializationController.saveState();
-    	armiesAdded++;
-    	}
+    	serializationController.saveState();
+    	Client.sendMessage("state_"+serializationController.parseIntoString());
+    	
     	turnController.nextTurn();
         setChanged();
         notifyObservers();

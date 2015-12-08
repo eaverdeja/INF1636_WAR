@@ -7,6 +7,8 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
+import view.ClientWelcome;
+
 public class Reader implements Runnable {
 	Socket cliente;
 		
@@ -20,7 +22,11 @@ public class Reader implements Runnable {
         	Scanner in = new Scanner(cliente.getInputStream());
             
         	while (in.hasNextLine()) {
-        		System.out.println(in.nextLine());
+        		String msg = in.nextLine();
+        		if(msg.equals("start_game")) {
+        			Client.getInstance().start();
+        		}
+        		System.out.println(msg);
             }
         	
         	in.close();

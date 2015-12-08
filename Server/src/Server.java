@@ -57,12 +57,25 @@ public class Server {
 		}
 		
 		if(gameReady) {
-			//Start!
-			for(ClienteTask cliente : listaClientes.values()) {
-				cliente.startGame();
-			}
+			broadcast("start_game", null);
 		}
 	}
+    
+    public static void broadcast(String msg, ClienteTask sender) {
+		System.out.println("Broadcasting to " + listaClientes.size() + " clients\n");
+    	for (ClienteTask cliente : listaClientes.values()) {
+    		if(cliente != sender) {
+	    		try {
+	    	        cliente.getWriter().write(msg);
+	    	        cliente.getWriter().newLine();
+	    	        cliente.getWriter().flush();
+	    					
+	    		} catch (IOException e) {
+	                e.getMessage();
+	            }
+    		}
+		}
+    }
 	
 	private static boolean setup() {
 		try {

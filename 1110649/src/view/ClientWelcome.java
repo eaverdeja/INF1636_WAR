@@ -80,23 +80,13 @@ public class ClientWelcome extends JFrame{
             try {
                 ip = textField.getText();
                 client = Client.getInstance();
-                if (client.connect(ip)) {
+                if (client.connect(ip, this)) {
                 	//Feedback
                     JOptionPane.showMessageDialog(null,"Conectado!");
                 	box.remove(textField);
                 	
                 	//Start game
                     createStartGame();
-                    
-                    /*
-                    label.setVisible(false);
-
-                    //Start the game
-                    this.setVisible(false);
-                    MainFrame mf = new MainFrame();
-                    mf.setTitle("War!");
-                    mf.setVisible(true);
-                    */
 
                 } else {
                     textField.setText(null);
@@ -119,7 +109,7 @@ public class ClientWelcome extends JFrame{
     	
     	startGame.addActionListener((ActionEvent e) -> {
             try {
-				Client.getInstance().sendMessage("StartGame");
+				Client.getInstance().sendMessage("start_game");
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -131,5 +121,14 @@ public class ClientWelcome extends JFrame{
     	startGame.setVisible(true);
     	welcomePanel.revalidate();
     	welcomePanel.repaint();
+    }
+    
+    public void start() {
+        //Start the game
+    	System.out.println("hi");
+        this.setVisible(false);
+        MainFrame mf = new MainFrame();
+        mf.setTitle("War!");
+        mf.setVisible(true);
     }
 }

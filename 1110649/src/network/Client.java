@@ -10,15 +10,18 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
+import view.ClientWelcome;
+
 public class Client {
 	private static Client client;
 	private Socket cli;
 	private Scanner teclado;
     private InputStream in;
     private OutputStream out;
-    BufferedWriter bw;
+    private static BufferedWriter bw;
 	private String address;
 	private String msg;
+	ClientWelcome welcomePanel;
 	
     //Implementing Singleton pattern
     protected Client() {
@@ -31,7 +34,8 @@ public class Client {
         return client;
     }
     
-    public Boolean connect(String address) throws IOException {
+    public Boolean connect(String address, ClientWelcome welcomePanel) throws IOException {
+    	this.welcomePanel = welcomePanel;
     	try {
 			cli = new Socket(address, 12345);
 			teclado = new Scanner(System.in);
@@ -51,9 +55,18 @@ public class Client {
 		}
     }
     
-    public void sendMessage(String msg) throws UnknownHostException, IOException {
-		bw.write(msg); 
-		bw.newLine();
-		bw.flush();
+    public static void sendMessage(String msg) {
+    	try { 
+			bw.write(msg); 
+			bw.newLine();
+			bw.flush();
+    	} catch(IOException ex) {
+    		ex.getMessage();
+    	}
 	}
+    
+    public void start() {
+		System.out.println("hi");
+    	welcomePanel.start();
+    }
 }

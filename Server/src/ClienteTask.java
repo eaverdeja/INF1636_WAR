@@ -26,13 +26,7 @@ public class ClienteTask implements Runnable {
         	Scanner in = new Scanner(clienteSocket.getInputStream());
             
         	while (in.hasNextLine()) {
-        		currentMsg = in.nextLine();
-        		if(currentMsg.compareTo("StartGame") == 0) {
-        			startGame = true;
-        			//Warn server
-        			Server.isGameReady();
-        		}
-        		broadcast(currentMsg);
+        		read(in.nextLine());
             }
             
             in.close();
@@ -43,28 +37,19 @@ public class ClienteTask implements Runnable {
         }
     }
     
-    private void broadcast(String msg) throws IOException {
-    	listaClientes = Server.getClientes();
-		
-    	for (Socket cliente : listaClientes) {
-    		try {
-    	    	System.out.println("Broadcasting: " + msg + " to: " + cliente.getInetAddress());
-    	        bw.write(msg);
-    	        bw.newLine();
-    	        bw.flush();
-    					
-    		} catch (IOException e) {
-                e.getMessage();
-            }
-		}
-    }
-    
     public Boolean isReady() {
     	return startGame;
     }
     
-    public void startGame() {
-    	System.out.println("I, " + clienteSocket.getInetAddress() + ", WILL START!");
-    	
+    private void read(String msg) {
+		if(msg.compareTo("start_game") == 0) {
+			startGame = true;
+			//Warn server
+			Server.isGameReady();
+		}
+    }
+     
+    public BufferedWriter getWriter() {
+    	return bw;
     }
 }

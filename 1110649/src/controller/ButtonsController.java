@@ -177,7 +177,7 @@ public class ButtonsController {
                     JOptionPane.showMessageDialog(null, "Troca efetuada!");
                     gameManager.getCurrentPlayer().setHasChanged(true);
                 }else{
-                    JOptionPane.showMessageDialog(null, "VocÃª nÃ£o pode trocar!");
+                    JOptionPane.showMessageDialog(null, "Você não pode trocar!");
                 }
             }
             catch (Exception ex){
