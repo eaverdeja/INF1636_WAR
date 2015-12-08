@@ -52,6 +52,7 @@ public class PlayerController {
                 counter = 0;
             }
         }
+        System.out.println("randomize");
     }
 
 

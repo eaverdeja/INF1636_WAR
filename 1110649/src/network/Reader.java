@@ -7,10 +7,12 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
+import controller.GameManager;
 import view.ClientWelcome;
 
 public class Reader implements Runnable {
 	Socket cliente;
+	private GameManager gameManager = GameManager.getInstance();
 		
 	public Reader(Socket cliente) throws IOException {
 		this.cliente = cliente;
@@ -26,7 +28,21 @@ public class Reader implements Runnable {
         		if(msg.equals("start_game")) {
         			Client.getInstance().start();
         		}
-        		System.out.println(msg);
+        		if(msg.equals("0"))
+        			gameManager.setPlayer(0);
+        		if(msg.equals("1"))
+       				gameManager.setPlayer(1);
+       			if(msg.equals("2"))
+        			gameManager.setPlayer(2);
+        		if (msg.equals("nextTurn"))
+        			gameManager.nextTurn();
+        		if (msg.length() >= 5){
+        			String temp = msg.substring(0,5);
+        			if (temp.equals("state")){
+        					gameManager.applyState(msg.substring(6));
+              				System.out.println(msg.substring(6));
+        			}
+        		}
             }
         	
         	in.close();

@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import model.Card;
 import model.Territory;
+import network.Client;
 import view.CardPanel;
 
 /**
@@ -142,8 +143,8 @@ public class ButtonsController {
                     card.showCard();
                 }
 
-                GameManager.getInstance().nextTurn();
-                
+//                GameManager.getInstance().nextTurn();
+                Client.getInstance().sendMessage("end_of_turn");
 
                 addArmy.setVisible(true);
                 finishMoves.setVisible(false);
@@ -158,7 +159,7 @@ public class ButtonsController {
     }
     private void serialize() throws IOException{
     	
-    	gameManager.applyState();
+//    	gameManager.applyState();
     }
     private void createChangeCards(){
     
@@ -177,7 +178,7 @@ public class ButtonsController {
                     JOptionPane.showMessageDialog(null, "Troca efetuada!");
                     gameManager.getCurrentPlayer().setHasChanged(true);
                 }else{
-                    JOptionPane.showMessageDialog(null, "Você não pode trocar!");
+                    JOptionPane.showMessageDialog(null, "VocÃª nÃ£o pode trocar!");
                 }
             }
             catch (Exception ex){

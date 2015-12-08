@@ -13,8 +13,9 @@ public class SerializationController {
 	private String currentString = new String();
     private GameManager gameManager = GameManager.getInstance();
 	
-	public void applyState() throws IOException{
-		currentState = unparseFromString(currentString);
+	public void applyState(String s) throws IOException{
+		currentState = unparseFromString(s);
+		System.out.println("CHAMOU!!!");
 		List<Territory> territoryList = gameManager.getMapController().getTerritoryList();
 		Territory t;
 		for (int i = 0; i < territoryList.size(); i++) {
@@ -30,18 +31,18 @@ public class SerializationController {
 	public void saveState(){
 		
     	Territory t;
-
+    	GameState g = new GameState();
 		for (int i = 0; i < gameManager.getMapController().getTerritoryList().size(); i++){
     		t = gameManager.getMapController().getTerritoryList().get(i);
-    		currentState.getArmyAmounts().add(t.getQtdExercitos());
-    		currentState.getPlayerOwner().add(t.getOwnerPlayer());
+    		g.getArmyAmounts().add(t.getQtdExercitos());
+    		g.getPlayerOwner().add(t.getOwnerPlayer());
     	}
 
     	Integer s;
     	for (int i = 0; i < currentState.getArmyAmounts().size(); i++){
-    		s = currentState.getArmyAmounts().get(i);
+    		s = g.getArmyAmounts().get(i);
     	}
-    	
+    	currentState = g;
     	currentString = parseIntoString();
 	}
 	
@@ -71,6 +72,7 @@ public class SerializationController {
     		reader.read();
     		
     	}
+		currentState = state;
 		return state;
 	}
 }

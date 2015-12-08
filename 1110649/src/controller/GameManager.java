@@ -57,7 +57,7 @@ public class GameManager extends Observable implements Controller, Observer{
     private Map<Territory,List<Territory>> neighbourMap;
 
     private Click click = null; 
- 
+    private int player;
     private GameplayController attackController;
     private CardsController cardsController;
     private ObjectivesController objController;
@@ -73,7 +73,6 @@ public class GameManager extends Observable implements Controller, Observer{
     private int armiesAdded = 0;
     private int cardsChangeAmount = 0;
     
-    public GameState currentState;
 
 
     //Implementing Singleton pattern
@@ -102,7 +101,9 @@ public class GameManager extends Observable implements Controller, Observer{
         playerController.randomizeTerritories();
         getObjController().setContinentList(getMapController().getContinentList());
         buttonsController = new ButtonsController();
-        currentState = new GameState();
+        System.out.println("game manager");
+        serializationController.saveState();
+        Client.sendMessage("state_"+serializationController.parseIntoString());
     }
     
     
@@ -290,12 +291,20 @@ public class GameManager extends Observable implements Controller, Observer{
         return playerController.checkPlayerHasContinent(s, p);
     }
     
-    public void applyState() throws IOException{
-    	serializationController.applyState();
+    public void applyState(String s) throws IOException{
+    	serializationController.applyState(s);
     	
     }
     
     public Player getPlayerForId(int id){
     	return playerController.getPlayerForId(id);	
     }
+
+	public int getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(int player) {
+		this.player = player;
+	}
 }

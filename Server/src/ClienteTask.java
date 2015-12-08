@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class ClienteTask implements Runnable {
     private final Socket clienteSocket;
     private Boolean startGame = false;
+    public int id;
     String currentMsg;
     BufferedWriter bw;
     static ArrayList<Socket> listaClientes;
@@ -45,7 +46,29 @@ public class ClienteTask implements Runnable {
 		if(msg.compareTo("start_game") == 0) {
 			startGame = true;
 			//Warn server
+			try {
+				getWriter().write(String.format("%d",this.id));
+				getWriter().newLine();
+    	        getWriter().flush();
+			} catch (IOException e) {
+				System.out.println("ERRO AO ESCREVER ID");
+				e.printStackTrace();
+			}
 			Server.isGameReady();
+		}
+		
+		if (msg.length() >= 5){
+			String temp = msg.substring(0,5);
+			if (temp.equals("state")){
+				
+				Server.broadcast(msg,null);
+				System.out.println(msg);
+			}
+		}
+		
+		if (msg.compareTo("end_of_turn") == 0){
+			
+			Server.broadcast("nextTurn", null);
 		}
     }
      

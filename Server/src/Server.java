@@ -31,11 +31,13 @@ public class Server {
 					System.out.println("Porta 12345 aberta!");
 					do {
 						cliente = servidor.accept();
-						System.out.println("Nova conex„o com o cliente " + cliente.getInetAddress().getHostAddress());
+						System.out.println("Nova conex√£o com o cliente " + cliente.getInetAddress().getHostAddress());
 						ClienteTask worker = new ClienteTask(cliente);
 						new Thread(worker).start();
 						
 						listaClientes.put(cliente, worker);
+						worker.id = listaClientes.size() - 1;
+						System.out.printf("O numero desse task √© %d \n", worker.id);
 					} while(true);
 					
 				} catch(IOException e) {
@@ -51,11 +53,12 @@ public class Server {
 	
 	public static void isGameReady() {
 		Boolean gameReady = false;
-		
 		for(ClienteTask cliente : listaClientes.values()) {
-			gameReady = (cliente.isReady() && listaClientes.size() == players);
+			gameReady = (cliente.isReady() && (listaClientes.size() == players));
+			if (!gameReady)
+				return;
 		}
-		
+
 		if(gameReady) {
 			broadcast("start_game", null);
 		}
@@ -80,7 +83,7 @@ public class Server {
 	private static boolean setup() {
 		try {
 	        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	        System.out.print("Quantos jogadores ir„o jogar?\n");
+	        System.out.print("Quantos jogadores ir√£o jogar?\n");
 	        try{
 	            players = Integer.parseInt(br.readLine());
 	        }catch(NumberFormatException nfe){

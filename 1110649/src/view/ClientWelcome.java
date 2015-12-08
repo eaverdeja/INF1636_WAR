@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.*;
 
+import controller.GameManager;
 import network.Client;
 
 import java.awt.BorderLayout;
@@ -28,6 +29,8 @@ public class ClientWelcome extends JFrame{
     private JLabel label;
     private JTextField textField;
     private JPanel box;
+    
+    private GameManager gameManager = GameManager.getInstance();
     
     public ClientWelcome(){
         setSize(DEF_WIDTH, DEF_HEIGHT);
@@ -90,7 +93,7 @@ public class ClientWelcome extends JFrame{
 
                 } else {
                     textField.setText(null);
-                    JOptionPane.showMessageDialog(null, "Digite um ip válido!");
+                    JOptionPane.showMessageDialog(null, "Digite um ip vÃ¡lido!");
                 }
             }
             catch (NumberFormatException ne) {
@@ -105,7 +108,7 @@ public class ClientWelcome extends JFrame{
     
     private void createStartGame() throws IOException {
     	JCheckBox startGame = new JCheckBox();
-    	startGame.setText("Começar!");
+    	startGame.setText("ComeÃ§ar!");
     	
     	startGame.addActionListener((ActionEvent e) -> {
             try {

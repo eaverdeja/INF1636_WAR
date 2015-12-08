@@ -10,10 +10,12 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
+import controller.GameManager;
 import view.ClientWelcome;
 
 public class Client {
 	private static Client client;
+	private int players = 0;
 	private Socket cli;
 	private Scanner teclado;
     private InputStream in;
@@ -42,7 +44,6 @@ public class Client {
 	        in = cli.getInputStream();
 	        out = cli.getOutputStream();
 	        bw = new BufferedWriter(new OutputStreamWriter(out));
-	        
 	        //Reader usado para ouvir mensagens do servidor
 	        new Thread(new Reader(cli)).start();
 			return true;
