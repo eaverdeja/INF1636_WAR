@@ -36,11 +36,22 @@ public class Reader implements Runnable {
         			gameManager.setPlayer(2);
         		if (msg.equals("nextTurn"))
         			gameManager.nextTurn();
-        		if (msg.length() >= 5){
-        			String temp = msg.substring(0,5);
-        			if (temp.equals("state")){
-        					gameManager.applyState(msg.substring(6));
+        		if (msg.length() >= 10){
+        			String temp = msg.substring(0,10);
+        			if (temp.equals("firststate")){
+        					gameManager.applyState(msg.substring(11));
               				System.out.println(msg.substring(6));
+        			}
+        			temp = msg.substring(0,5);
+        			if (temp.equals("state")){
+        				char c = msg.charAt(5);
+        				
+        				if (Character.getNumericValue(c) == gameManager.getPlayer()){
+        					System.out.println("EH IGUAL");
+        					return;
+        				}
+    					gameManager.applyState(msg.substring(6));
+    					gameManager.nextTurn();
         			}
         		}
             }

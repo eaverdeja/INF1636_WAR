@@ -101,11 +101,9 @@ public class GameManager extends Observable implements Controller, Observer{
         playerController.randomizeTerritories();
         getObjController().setContinentList(getMapController().getContinentList());
         buttonsController = new ButtonsController();
-        System.out.println("game manager");
         serializationController.saveState();
-        Client.sendMessage("state_"+serializationController.parseIntoString());
+        Client.sendMessage("firststate_"+serializationController.parseIntoString());
     }
-    
     
     //START turn and phase control
     
@@ -119,12 +117,16 @@ public class GameManager extends Observable implements Controller, Observer{
    
     public void nextTurn() {
     	
+    	if (getCurrentPlayer().getPlayerId() == player){
+    	System.out.println("O player eh"+ player);
     	serializationController.saveState();
-    	Client.sendMessage("state_"+serializationController.parseIntoString());
-    	
+    	Client.sendMessage(String.format("state%d", player)+serializationController.parseIntoString());
+    	}
+    	System.out.println("2222 - O player eh"+ player);
+
     	turnController.nextTurn();
         setChanged();
-        notifyObservers();
+//        notifyObservers();
         clearChanged();
     	hasConquered = false;
     }

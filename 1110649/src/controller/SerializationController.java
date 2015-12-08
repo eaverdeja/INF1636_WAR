@@ -15,7 +15,6 @@ public class SerializationController {
 	
 	public void applyState(String s) throws IOException{
 		currentState = unparseFromString(s);
-		System.out.println("CHAMOU!!!");
 		List<Territory> territoryList = gameManager.getMapController().getTerritoryList();
 		Territory t;
 		for (int i = 0; i < territoryList.size(); i++) {

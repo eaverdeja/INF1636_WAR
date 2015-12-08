@@ -40,19 +40,21 @@ public class PlayerController {
     }
     
      public void randomizeTerritories() {
-        int counter = 0;
-        long seed = System.nanoTime();
-        Collections.shuffle(gameManager.getTerritoryList(), new Random(seed));
+        int counter = 0, max = 0, playerTerritories[] = {0,0,0,0,0,0};
+//        long seed = System.nanoTime();
+        Random rand = new Random();
+        max = gameManager.getTerritoryList().size()/playerQuantity;
+//        Collections.shuffle(gameManager.getTerritoryList(), new Random(seed));
         for (Territory t : gameManager.getTerritoryList()) {
+        	counter = rand.nextInt(playerQuantity);
+        	while (playerTerritories[counter] == max){
+        		counter = rand.nextInt(playerQuantity);
+        	}
             t.setOwnerPlayer(this.getPlayerArray()[counter]);
             t.setQtdExercitos(1);
             this.getPlayerArray()[counter].setCurrentTerritories(this.getPlayerArray()[counter].getCurrentTerritories() + 1);
-            counter++;
-            if (counter == playerQuantity) {
-                counter = 0;
-            }
+            playerTerritories[counter]++;
         }
-        System.out.println("randomize");
     }
 
 
