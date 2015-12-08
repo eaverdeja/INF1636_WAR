@@ -51,25 +51,26 @@ public class ClienteTask implements Runnable {
 				getWriter().newLine();
     	        getWriter().flush();
 			} catch (IOException e) {
-				System.out.println("ERRO AO ESCREVER ID");
 				e.printStackTrace();
 			}
 			Server.isGameReady();
 		}
 		
-		if (msg.length() >= 5){
-			String temp = msg.substring(0,5);
-			if (temp.equals("state")){
+		if (msg.length() >= 10){
+			String temp = msg.substring(0,10);
+			if (temp.equals("firststate")){
 				
 				Server.broadcast(msg,null);
 				System.out.println(msg);
 			}
-		}
-		
-		if (msg.compareTo("end_of_turn") == 0){
 			
-			Server.broadcast("nextTurn", null);
+			temp = msg.substring(0,5);
+			if (temp.equals("state")){
+				Server.broadcast(msg,null);
+			}
 		}
+		System.out.println(msg);
+
     }
      
     public BufferedWriter getWriter() {
