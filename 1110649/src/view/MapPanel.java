@@ -215,12 +215,6 @@ public class MapPanel extends JPanel {
                g2.fillOval(xCoord+diameter/4,20+diameter/4,diameter/2,diameter/2);
            }
            
-           //Am i painting myself?
-           if(c == gameManager.getPlayers().get(gameManager.getPlayer()).getColor()) {
-	       g2.setPaint(Color.BLACK);
-	       g2.fillOval(xCoord+5+diameter/5,60+diameter/5,diameter/3,diameter/3);
-           }
-           
            xCoord += 70;
         }
     }

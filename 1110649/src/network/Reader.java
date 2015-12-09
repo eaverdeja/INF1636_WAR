@@ -44,10 +44,11 @@ public class Reader implements Runnable {
         			}
         			temp = msg.substring(0,5);
         			if (temp.equals("state")){
-        				char c = msg.charAt(5);
-        				
-        				if (Character.getNumericValue(c) == gameManager.getPlayer()){
-        					System.out.println("EH IGUAL");
+    					System.out.println(temp + "\n");
+
+        				String c = msg.substring(5,6);
+        				System.out.println(c + "\n");
+        				if (Integer.parseInt(c) == gameManager.getPlayer()){
         					return;
         				}
     					gameManager.applyState(msg.substring(6));

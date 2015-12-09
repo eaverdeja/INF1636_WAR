@@ -66,7 +66,7 @@ public class ClienteTask implements Runnable {
 			
 			temp = msg.substring(0,5);
 			if (temp.equals("state")){
-				Server.broadcast(msg,null);
+				Server.broadcast(msg,this);
 			}
 		}
 		System.out.println(msg);

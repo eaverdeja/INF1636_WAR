@@ -42,7 +42,7 @@ public class GameplayController extends Observable implements Controller{
         Player currentPlayer = gameManager.getCurrentPlayer();
         
         if (gameManager.getPlayer() != gameManager.getCurrentPlayer().getPlayerId()){
-        	System.out.printf("Current %d This %d Not your turn!!", gameManager.getPlayer(),gameManager.getCurrentPlayer().getPlayerId() );
+        	System.out.printf("Current %d This %d Not your turn!! \n", gameManager.getPlayer(),gameManager.getCurrentPlayer().getPlayerId() );
         	return;
         }
         //Add the console so it listens to bussiness

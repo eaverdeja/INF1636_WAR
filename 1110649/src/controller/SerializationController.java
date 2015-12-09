@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import model.GameState;
 import model.Territory;
@@ -60,15 +61,14 @@ public class SerializationController {
 	public GameState unparseFromString(String string) throws IOException{
 		StringReader reader = new StringReader(string);
 		GameState state = new GameState();
+		
+		StringTokenizer strToken = new StringTokenizer(string);
+	    //Reads in the numbers to the array
+
+	    
 		for (int i = 0; i < gameManager.getMapController().getTerritoryList().size(); i++){
-    		char armies = (char)reader.read();
-    		Integer a = Integer.parseInt(String.format("%c", armies));
-    		reader.read();
-    		char player = (char)reader.read();
-    		int p = Integer.parseInt(String.format("%c", player));    		
-    		state.getArmyAmounts().add(i, a);
-    		state.getPlayerOwner().add(i, gameManager.getPlayerForId(p));
-    		reader.read();
+    		state.getArmyAmounts().add(i, Integer.parseInt((String)strToken.nextElement()));
+    		state.getPlayerOwner().add(i, gameManager.getPlayerForId(Integer.parseInt((String)strToken.nextElement())));
     		
     	}
 		currentState = state;
