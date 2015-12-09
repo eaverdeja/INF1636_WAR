@@ -118,11 +118,10 @@ public class GameManager extends Observable implements Controller, Observer{
     public void nextTurn() {
     	
     	if (getCurrentPlayer().getPlayerId() == player){
-    	System.out.println("O player eh"+ player);
+    		
     	serializationController.saveState();
     	Client.sendMessage(String.format("state%d", player)+serializationController.parseIntoString());
     	}
-    	System.out.println("2222 - O player eh"+ player);
 
     	turnController.nextTurn();
         setChanged();

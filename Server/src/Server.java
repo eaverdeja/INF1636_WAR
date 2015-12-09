@@ -31,13 +31,12 @@ public class Server {
 					System.out.println("Porta 12345 aberta!");
 					do {
 						cliente = servidor.accept();
-						System.out.println("Nova conexão com o cliente " + cliente.getInetAddress().getHostAddress());
+						System.out.println("Nova conexao com o cliente " + cliente.getInetAddress().getHostAddress());
 						ClienteTask worker = new ClienteTask(cliente);
 						new Thread(worker).start();
 						
 						listaClientes.put(cliente, worker);
 						worker.id = listaClientes.size() - 1;
-						System.out.printf("O numero desse task é %d \n", worker.id);
 					} while(true);
 					
 				} catch(IOException e) {
@@ -65,7 +64,6 @@ public class Server {
 	}
     
     public static void broadcast(String msg, ClienteTask sender) {
-		System.out.println("Broadcasting to " + listaClientes.size() + " clients\n");
     	for (ClienteTask cliente : listaClientes.values()) {
     		if(cliente != sender) {
 	    		try {
@@ -83,7 +81,7 @@ public class Server {
 	private static boolean setup() {
 		try {
 	        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	        System.out.print("Quantos jogadores irão jogar?\n");
+	        System.out.print("Quantos jogadores irao jogar?\n");
 	        try{
 	            players = Integer.parseInt(br.readLine());
 	        }catch(NumberFormatException nfe){

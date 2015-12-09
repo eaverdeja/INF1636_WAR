@@ -61,7 +61,6 @@ public class ClienteTask implements Runnable {
 			if (temp.equals("firststate")){
 				
 				Server.broadcast(msg,null);
-				System.out.println(msg);
 			}
 			
 			temp = msg.substring(0,5);
@@ -69,7 +68,6 @@ public class ClienteTask implements Runnable {
 				Server.broadcast(msg,this);
 			}
 		}
-		System.out.println(msg);
 
     }
      

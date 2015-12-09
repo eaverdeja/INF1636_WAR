@@ -40,14 +40,11 @@ public class Reader implements Runnable {
         			String temp = msg.substring(0,10);
         			if (temp.equals("firststate")){
         					gameManager.applyState(msg.substring(11));
-              				System.out.println(msg.substring(6));
         			}
         			temp = msg.substring(0,5);
         			if (temp.equals("state")){
-    					System.out.println(temp + "\n");
 
         				String c = msg.substring(5,6);
-        				System.out.println(c + "\n");
         				if (Integer.parseInt(c) == gameManager.getPlayer()){
         					return;
         				}

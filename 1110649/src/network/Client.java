@@ -67,7 +67,6 @@ public class Client {
 	}
     
     public void start() {
-		System.out.println("hi");
     	welcomePanel.start();
     }
 }

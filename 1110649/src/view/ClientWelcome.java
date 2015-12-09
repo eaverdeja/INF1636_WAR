@@ -93,7 +93,7 @@ public class ClientWelcome extends JFrame{
 
                 } else {
                     textField.setText(null);
-                    JOptionPane.showMessageDialog(null, "Digite um ip válido!");
+                    JOptionPane.showMessageDialog(null, "Digite um ip valido!");
                 }
             }
             catch (NumberFormatException ne) {
@@ -108,7 +108,7 @@ public class ClientWelcome extends JFrame{
     
     private void createStartGame() throws IOException {
     	JCheckBox startGame = new JCheckBox();
-    	startGame.setText("Começar!");
+    	startGame.setText("Comecar!");
     	
     	startGame.addActionListener((ActionEvent e) -> {
             try {
@@ -128,7 +128,6 @@ public class ClientWelcome extends JFrame{
     
     public void start() {
         //Start the game
-    	System.out.println("hi");
         this.setVisible(false);
         MainFrame mf = new MainFrame();
         mf.setTitle("War!");
